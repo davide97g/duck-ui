@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import { site } from "@/lib/site";
+import { legalNav, site } from "@/lib/site";
 import { components } from "@/lib/registry-docs";
 import { DuckMark } from "@/components/brand/duck-mark";
 
@@ -81,7 +81,28 @@ export function SiteFooter() {
             </a>
             .
           </p>
-          <p className="font-mono text-xs">MIT licensed</p>
+          <nav
+            aria-label="Legal"
+            className="flex flex-wrap items-center gap-x-4 gap-y-1"
+          >
+            {legalNav.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="transition-colors hover:text-foreground"
+              >
+                {item.label}
+              </Link>
+            ))}
+            <a
+              href={`${site.repo}/blob/main/LICENSE`}
+              rel="noopener noreferrer"
+              target="_blank"
+              className="font-mono text-xs transition-colors hover:text-foreground"
+            >
+              {site.license} licensed
+            </a>
+          </nav>
         </div>
       </div>
     </footer>

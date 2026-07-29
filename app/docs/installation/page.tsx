@@ -9,6 +9,7 @@ export const metadata: Metadata = {
   title: "Installation",
   description:
     "Add the @duck registry to components.json, install the theme, then pull in the components you want.",
+  alternates: { canonical: "/docs/installation" },
 };
 
 const componentsJson = `{

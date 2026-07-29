@@ -6,6 +6,7 @@ import { GeistSans } from "geist/font/sans";
 import { Providers } from "@/components/providers";
 import { SiteFooter } from "@/components/site/site-footer";
 import { SiteHeader } from "@/components/site/site-header";
+import { JsonLd, siteGraph } from "@/components/seo/structured-data";
 import { cn } from "@/lib/utils";
 import { site } from "@/lib/site";
 
@@ -34,17 +35,48 @@ export const metadata: Metadata = {
     "duck ui",
   ],
   authors: [{ name: site.author.name, url: site.author.url }],
+  creator: site.author.name,
+  publisher: site.author.name,
+  applicationName: site.name,
+  category: "technology",
+  alternates: {
+    canonical: "/",
+    // Advertises the machine-readable index in <head>, which is how the
+    // llms.txt convention expects agents to discover it without guessing.
+    types: {
+      "text/plain": [
+        { url: "/llms.txt", title: `${site.name} index for AI assistants` },
+      ],
+      "application/json": [
+        { url: "/r/registry.json", title: `${site.name} shadcn registry` },
+      ],
+    },
+  },
   openGraph: {
     type: "website",
     url: site.url,
     title: `${site.name}, ${site.tagline.toLowerCase()}`,
     description: site.description,
     siteName: site.name,
+    locale: "en",
   },
   twitter: {
     card: "summary_large_image",
     title: `${site.name}, ${site.tagline.toLowerCase()}`,
     description: site.description,
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      // Let Google show full text snippets and large image previews. The
+      // defaults are conservative and truncate the description in SERPs.
+      "max-snippet": -1,
+      "max-image-preview": "large",
+      "max-video-preview": -1,
+    },
   },
 };
 
@@ -70,6 +102,7 @@ export default function RootLayout({
       )}
     >
       <body className="min-h-dvh bg-background font-sans antialiased">
+        <JsonLd data={siteGraph()} />
         <Providers>
           <a
             href="#content"

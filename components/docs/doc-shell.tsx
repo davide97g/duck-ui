@@ -3,7 +3,12 @@ import Link from "next/link";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 
 import { cn } from "@/lib/utils";
-import { getPager } from "@/lib/doc-routes";
+import { getPager, routeExists } from "@/lib/doc-routes";
+import {
+  JsonLd,
+  breadcrumbSchema,
+  pageSchema,
+} from "@/components/seo/structured-data";
 
 export interface TocItem {
   id: string;
@@ -11,26 +16,58 @@ export interface TocItem {
 }
 
 /**
+ * Derives the breadcrumb trail from the URL, skipping segments that are
+ * grouping-only and have no page behind them (/docs/components, /legal). The
+ * final segment is always kept — it is the page being rendered.
+ */
+function trailFor(pathname: string, title: string) {
+  const segments = pathname.split("/").filter(Boolean);
+  const trail = [{ name: "Home", path: "/" }];
+
+  segments.forEach((segment, index) => {
+    const path = `/${segments.slice(0, index + 1).join("/")}`;
+    const last = index === segments.length - 1;
+    if (!last && !routeExists(path)) return;
+    trail.push({
+      name: last
+        ? title
+        : segment === "docs"
+          ? "Docs"
+          : segment.replace(/-/g, " ").replace(/^./, (c) => c.toUpperCase()),
+      path,
+    });
+  });
+
+  return trail;
+}
+
+/**
  * DocShell — one page frame for every doc: title block, content column, on
- * this page rail, and the pager that keeps the reader moving.
+ * this page rail, and the pager that keeps the reader moving. It also emits the
+ * page's JSON-LD, since it already knows the title, description and path.
  */
 export function DocShell({
   title,
   description,
   pathname,
   toc,
+  docType = "TechArticle",
   children,
 }: {
   title: string;
   description: string;
   pathname: string;
   toc?: TocItem[];
+  /** Legal and policy pages are plain WebPages, not technical documentation. */
+  docType?: "TechArticle" | "WebPage";
   children: React.ReactNode;
 }) {
   const { previous, next } = getPager(pathname);
 
   return (
     <div className="flex gap-10">
+      <JsonLd data={pageSchema({ title, description, path: pathname, docType })} />
+      <JsonLd data={breadcrumbSchema(trailFor(pathname, title))} />
       <article className="min-w-0 flex-1 pb-16">
         <header className="mb-10 flex flex-col gap-3">
           <h1 className="font-display text-4xl font-extrabold tracking-tight text-balance">

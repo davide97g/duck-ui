@@ -11,6 +11,7 @@ export const metadata: Metadata = {
   title: "Introduction",
   description:
     "What duck/ui is, what it is not, and the four rules the system runs on.",
+  alternates: { canonical: "/docs" },
 };
 
 const rules = [

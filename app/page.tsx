@@ -26,7 +26,7 @@ import { Terminal } from "@/components/ui/terminal";
 const registryConfig = `{
   "$schema": "https://ui.shadcn.com/schema.json",
   "registries": {
-    "@duck": "https://duckui.dev/r/{name}.json"
+    "@duck": "${site.registryUrl}"
   }
 }`;
 
@@ -41,7 +41,7 @@ const aiSurfaces = [
   },
   {
     title: "llms.txt",
-    body: "One index at duckui.dev/llms.txt states the components, the tokens and the rules the system expects.",
+    body: `One index at ${site.domain}/llms.txt states the components, the tokens and the rules the system expects.`,
   },
 ];
 

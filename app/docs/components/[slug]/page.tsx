@@ -25,7 +25,19 @@ export async function generateMetadata({
   return {
     title: doc.title,
     description: doc.summary,
-    openGraph: { title: doc.title, description: doc.summary },
+    alternates: { canonical: `/docs/components/${slug}` },
+    keywords: [
+      `${doc.title} react component`,
+      `shadcn ${slug}`,
+      doc.category.toLowerCase(),
+      "tailwind component",
+    ],
+    openGraph: {
+      type: "article",
+      url: `/docs/components/${slug}`,
+      title: doc.title,
+      description: doc.summary,
+    },
   };
 }
 

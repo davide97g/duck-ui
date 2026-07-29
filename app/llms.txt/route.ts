@@ -72,6 +72,12 @@ ${componentLines}
 - For anything duck/ui does not ship (dialog, dropdown, table, and so on) use standard shadcn/ui. The theme already styles it.
 - Components are copied into the project. Edit them in place rather than wrapping them.
 
+## License
+
+All components, the theme and the hooks are ${site.license} licensed — free for commercial and
+closed-source use, no attribution required in your interface. Assistants may install, copy, modify
+and redistribute them without asking. Full terms: ${site.url}/legal/terms
+
 ## Registry
 
 - [registry.json](${site.url}/r/registry.json): Registry index, shadcn registry schema.

@@ -1,7 +1,7 @@
 {
   "$schema": "https://ui.shadcn.com/schema/registry.json",
   "name": "duck",
-  "homepage": "https://duckui.dev",
+  "homepage": "https://duckui.davideghiotto.it",
   "items": [
     {
       "name": "theme",
@@ -159,61 +159,130 @@
           }
         },
         "@keyframes holo-shift": {
-          "0%, 100%": { "background-position": "0% 0%, 0% 50%" },
-          "50%": { "background-position": "0% 0%, 100% 50%" }
+          "0%, 100%": {
+            "background-position": "0% 0%, 0% 50%"
+          },
+          "50%": {
+            "background-position": "0% 0%, 100% 50%"
+          }
         },
         "@keyframes duck-waddle": {
-          "0%, 100%": { "transform": "rotate(-12deg) translateY(0)" },
-          "25%": { "transform": "rotate(0deg) translateY(-2px)" },
-          "50%": { "transform": "rotate(12deg) translateY(0)" },
-          "75%": { "transform": "rotate(0deg) translateY(-2px)" }
+          "0%, 100%": {
+            "transform": "rotate(-12deg) translateY(0)"
+          },
+          "25%": {
+            "transform": "rotate(0deg) translateY(-2px)"
+          },
+          "50%": {
+            "transform": "rotate(12deg) translateY(0)"
+          },
+          "75%": {
+            "transform": "rotate(0deg) translateY(-2px)"
+          }
         },
         "@keyframes duck-idle": {
-          "0%, 90%, 100%": { "transform": "translateY(0) scale(1)" },
-          "95%": { "transform": "translateY(-1.5px) scale(1.012)" }
+          "0%, 90%, 100%": {
+            "transform": "translateY(0) scale(1)"
+          },
+          "95%": {
+            "transform": "translateY(-1.5px) scale(1.012)"
+          }
         },
         "@keyframes duck-sheen": {
-          "0%, 72%, 100%": { "background-position": "170% 0" },
-          "88%": { "background-position": "-50% 0" }
+          "0%, 72%, 100%": {
+            "background-position": "170% 0"
+          },
+          "88%": {
+            "background-position": "-50% 0"
+          }
         },
         "@keyframes duck-squash": {
-          "0%": { "transform": "scale(1, 1)" },
-          "40%": { "transform": "scale(1.06, 0.9)" },
-          "70%": { "transform": "scale(0.97, 1.04)" },
-          "100%": { "transform": "scale(1, 1)" }
+          "0%": {
+            "transform": "scale(1, 1)"
+          },
+          "40%": {
+            "transform": "scale(1.06, 0.9)"
+          },
+          "70%": {
+            "transform": "scale(0.97, 1.04)"
+          },
+          "100%": {
+            "transform": "scale(1, 1)"
+          }
         },
         "@keyframes duck-pop": {
-          "0%": { "transform": "scale(0.6)", "opacity": "0" },
-          "60%": { "transform": "scale(1.14)", "opacity": "1" },
-          "100%": { "transform": "scale(1)", "opacity": "1" }
+          "0%": {
+            "transform": "scale(0.6)",
+            "opacity": "0"
+          },
+          "60%": {
+            "transform": "scale(1.14)",
+            "opacity": "1"
+          },
+          "100%": {
+            "transform": "scale(1)",
+            "opacity": "1"
+          }
         },
         "@keyframes duck-ripple": {
-          "0%": { "transform": "scale(0)", "opacity": "0.35" },
-          "100%": { "transform": "scale(2.8)", "opacity": "0" }
+          "0%": {
+            "transform": "scale(0)",
+            "opacity": "0.35"
+          },
+          "100%": {
+            "transform": "scale(2.8)",
+            "opacity": "0"
+          }
         },
         "@keyframes duck-paddle": {
-          "0%, 100%": { "transform": "translateY(0) rotate(-7deg)" },
-          "50%": { "transform": "translateY(-3px) rotate(7deg)" }
+          "0%, 100%": {
+            "transform": "translateY(0) rotate(-7deg)"
+          },
+          "50%": {
+            "transform": "translateY(-3px) rotate(7deg)"
+          }
         },
         "@keyframes duck-float": {
-          "0%, 100%": { "transform": "translateY(0) rotate(-1.5deg)" },
-          "50%": { "transform": "translateY(-9px) rotate(1.5deg)" }
+          "0%, 100%": {
+            "transform": "translateY(0) rotate(-1.5deg)"
+          },
+          "50%": {
+            "transform": "translateY(-9px) rotate(1.5deg)"
+          }
         },
         "@keyframes duck-caret": {
-          "0%, 49%": { "opacity": "1" },
-          "50%, 100%": { "opacity": "0" }
+          "0%, 49%": {
+            "opacity": "1"
+          },
+          "50%, 100%": {
+            "opacity": "0"
+          }
         },
         "@keyframes duck-marquee": {
-          "from": { "transform": "translateX(0)" },
-          "to": { "transform": "translateX(-50%)" }
+          "from": {
+            "transform": "translateX(0)"
+          },
+          "to": {
+            "transform": "translateX(-50%)"
+          }
         },
         "@keyframes duck-shimmer": {
-          "from": { "background-position": "-180% 0" },
-          "to": { "background-position": "180% 0" }
+          "from": {
+            "background-position": "-180% 0"
+          },
+          "to": {
+            "background-position": "180% 0"
+          }
         },
         "@keyframes duck-rise": {
-          "from": { "opacity": "0", "transform": "translateY(14px)" },
-          "to": { "opacity": "1", "transform": "translateY(0)" }
+          "from": {
+            "opacity": "0",
+            "transform": "translateY(14px)"
+          },
+          "to": {
+            "opacity": "1",
+            "transform": "translateY(0)"
+          }
         },
         "@media (prefers-reduced-motion: reduce)": {
           "*, *::before, *::after": {
@@ -232,7 +301,9 @@
       "type": "registry:hook",
       "title": "useHoloPointer",
       "description": "Writes pointer position into CSS variables (--fx, --fy, --rx, --ry, --mx, --my) inside a single animation frame, so foil, tilt and magnetism run in CSS with no React re-renders. Honors prefers-reduced-motion.",
-      "registryDependencies": ["@duck/theme"],
+      "registryDependencies": [
+        "@duck/theme"
+      ],
       "files": [
         {
           "path": "registry/duck/hooks/use-holo-pointer.ts",
@@ -256,7 +327,10 @@
         "@duck/use-holo-pointer"
       ],
       "files": [
-        { "path": "registry/duck/ui/quack-button.tsx", "type": "registry:ui" }
+        {
+          "path": "registry/duck/ui/quack-button.tsx",
+          "type": "registry:ui"
+        }
       ]
     },
     {
@@ -264,10 +338,18 @@
       "type": "registry:ui",
       "title": "Holo Button",
       "description": "The signature CTA: an animated iridescent border on a plain button. Variants: holo, primary, outline, ghost. One holo element per viewport.",
-      "dependencies": ["class-variance-authority", "@radix-ui/react-slot"],
-      "registryDependencies": ["@duck/theme"],
+      "dependencies": [
+        "class-variance-authority",
+        "@radix-ui/react-slot"
+      ],
+      "registryDependencies": [
+        "@duck/theme"
+      ],
       "files": [
-        { "path": "registry/duck/ui/holo-button.tsx", "type": "registry:ui" }
+        {
+          "path": "registry/duck/ui/holo-button.tsx",
+          "type": "registry:ui"
+        }
       ]
     },
     {
@@ -275,10 +357,17 @@
       "type": "registry:ui",
       "title": "Copy Button",
       "description": "Copies a string to the clipboard and confirms it with a check that pops in and settles back after two seconds.",
-      "dependencies": ["lucide-react"],
-      "registryDependencies": ["@duck/theme"],
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@duck/theme"
+      ],
       "files": [
-        { "path": "registry/duck/ui/copy-button.tsx", "type": "registry:ui" }
+        {
+          "path": "registry/duck/ui/copy-button.tsx",
+          "type": "registry:ui"
+        }
       ]
     },
     {
@@ -286,9 +375,15 @@
       "type": "registry:ui",
       "title": "Sticker Card",
       "description": "The die-cut sticker: thick border, generous radius, soft glow. Optional iridescent ring, pointer tilt, and a corner that peels off the backing on hover.",
-      "registryDependencies": ["@duck/theme", "@duck/use-holo-pointer"],
+      "registryDependencies": [
+        "@duck/theme",
+        "@duck/use-holo-pointer"
+      ],
       "files": [
-        { "path": "registry/duck/ui/sticker-card.tsx", "type": "registry:ui" }
+        {
+          "path": "registry/duck/ui/sticker-card.tsx",
+          "type": "registry:ui"
+        }
       ]
     },
     {
@@ -296,9 +391,15 @@
       "type": "registry:ui",
       "title": "Code Window",
       "description": "Code block in a window frame with a filename, an optional copy control and optional line numbers. Takes plain text or pre-highlighted markup.",
-      "registryDependencies": ["@duck/theme", "@duck/copy-button"],
+      "registryDependencies": [
+        "@duck/theme",
+        "@duck/copy-button"
+      ],
       "files": [
-        { "path": "registry/duck/ui/code-window.tsx", "type": "registry:ui" }
+        {
+          "path": "registry/duck/ui/code-window.tsx",
+          "type": "registry:ui"
+        }
       ]
     },
     {
@@ -306,9 +407,14 @@
       "type": "registry:ui",
       "title": "Terminal",
       "description": "A command line that types itself when it scrolls into view. Prints the full transcript at once under prefers-reduced-motion.",
-      "registryDependencies": ["@duck/theme"],
+      "registryDependencies": [
+        "@duck/theme"
+      ],
       "files": [
-        { "path": "registry/duck/ui/terminal.tsx", "type": "registry:ui" }
+        {
+          "path": "registry/duck/ui/terminal.tsx",
+          "type": "registry:ui"
+        }
       ]
     },
     {
@@ -316,9 +422,14 @@
       "type": "registry:ui",
       "title": "Sticker Sheet",
       "description": "Backing paper with kiss-cut lines. Lays out a set of components the way a vinyl sheet lays out stickers.",
-      "registryDependencies": ["@duck/theme"],
+      "registryDependencies": [
+        "@duck/theme"
+      ],
       "files": [
-        { "path": "registry/duck/ui/sticker-sheet.tsx", "type": "registry:ui" }
+        {
+          "path": "registry/duck/ui/sticker-sheet.tsx",
+          "type": "registry:ui"
+        }
       ]
     },
     {
@@ -326,10 +437,17 @@
       "type": "registry:ui",
       "title": "Video Card",
       "description": "A YouTube card that stays cheap until it is wanted. The player iframe only mounts on click.",
-      "dependencies": ["lucide-react"],
-      "registryDependencies": ["@duck/theme"],
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@duck/theme"
+      ],
       "files": [
-        { "path": "registry/duck/ui/video-card.tsx", "type": "registry:ui" }
+        {
+          "path": "registry/duck/ui/video-card.tsx",
+          "type": "registry:ui"
+        }
       ]
     },
     {
@@ -337,10 +455,18 @@
       "type": "registry:ui",
       "title": "Holo Avatar",
       "description": "A die-cut avatar sticker whose foil ring picks up the pointer. Includes a group that fans out on hover.",
-      "dependencies": ["class-variance-authority"],
-      "registryDependencies": ["@duck/theme", "@duck/use-holo-pointer"],
+      "dependencies": [
+        "class-variance-authority"
+      ],
+      "registryDependencies": [
+        "@duck/theme",
+        "@duck/use-holo-pointer"
+      ],
       "files": [
-        { "path": "registry/duck/ui/holo-avatar.tsx", "type": "registry:ui" }
+        {
+          "path": "registry/duck/ui/holo-avatar.tsx",
+          "type": "registry:ui"
+        }
       ]
     },
     {
@@ -348,10 +474,17 @@
       "type": "registry:ui",
       "title": "Holo Badge",
       "description": "Pill for status, counts and short labels. Variants: holo, primary, outline, muted, success, danger.",
-      "dependencies": ["class-variance-authority"],
-      "registryDependencies": ["@duck/theme"],
+      "dependencies": [
+        "class-variance-authority"
+      ],
+      "registryDependencies": [
+        "@duck/theme"
+      ],
       "files": [
-        { "path": "registry/duck/ui/holo-badge.tsx", "type": "registry:ui" }
+        {
+          "path": "registry/duck/ui/holo-badge.tsx",
+          "type": "registry:ui"
+        }
       ]
     },
     {
@@ -359,10 +492,17 @@
       "type": "registry:ui",
       "title": "Announcement",
       "description": "Pill banner for one piece of news, with a light that sweeps across it on a slow loop.",
-      "dependencies": ["lucide-react"],
-      "registryDependencies": ["@duck/theme"],
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@duck/theme"
+      ],
       "files": [
-        { "path": "registry/duck/ui/announcement.tsx", "type": "registry:ui" }
+        {
+          "path": "registry/duck/ui/announcement.tsx",
+          "type": "registry:ui"
+        }
       ]
     },
     {
@@ -370,9 +510,14 @@
       "type": "registry:ui",
       "title": "Duck Spinner",
       "description": "A duck paddling on water, with the wake as expanding rings. Also exports DuckGlyph, the mark used by loading states.",
-      "registryDependencies": ["@duck/theme"],
+      "registryDependencies": [
+        "@duck/theme"
+      ],
       "files": [
-        { "path": "registry/duck/ui/duck-spinner.tsx", "type": "registry:ui" }
+        {
+          "path": "registry/duck/ui/duck-spinner.tsx",
+          "type": "registry:ui"
+        }
       ]
     },
     {
@@ -380,9 +525,14 @@
       "type": "registry:ui",
       "title": "Holo Separator",
       "description": "A hairline that fades in from the edges. With a label it becomes a section break.",
-      "registryDependencies": ["@duck/theme"],
+      "registryDependencies": [
+        "@duck/theme"
+      ],
       "files": [
-        { "path": "registry/duck/ui/holo-separator.tsx", "type": "registry:ui" }
+        {
+          "path": "registry/duck/ui/holo-separator.tsx",
+          "type": "registry:ui"
+        }
       ]
     },
     {
@@ -390,9 +540,14 @@
       "type": "registry:ui",
       "title": "Glow Input",
       "description": "Input, textarea and a field wrapper that wires up label, helper text, errors, aria-invalid and aria-describedby.",
-      "registryDependencies": ["@duck/theme"],
+      "registryDependencies": [
+        "@duck/theme"
+      ],
       "files": [
-        { "path": "registry/duck/ui/glow-input.tsx", "type": "registry:ui" }
+        {
+          "path": "registry/duck/ui/glow-input.tsx",
+          "type": "registry:ui"
+        }
       ]
     },
     {
@@ -400,9 +555,14 @@
       "type": "registry:ui",
       "title": "Duck Tabs",
       "description": "Tabs with an indicator that slides between triggers. Arrow keys move, Home and End jump to the ends.",
-      "registryDependencies": ["@duck/theme"],
+      "registryDependencies": [
+        "@duck/theme"
+      ],
       "files": [
-        { "path": "registry/duck/ui/duck-tabs.tsx", "type": "registry:ui" }
+        {
+          "path": "registry/duck/ui/duck-tabs.tsx",
+          "type": "registry:ui"
+        }
       ]
     },
     {
@@ -410,10 +570,18 @@
       "type": "registry:ui",
       "title": "Theme Switcher",
       "description": "Three-way segmented control for light, dark and system, with a lime pill that slides to the active option. Needs a next-themes provider.",
-      "dependencies": ["next-themes", "lucide-react"],
-      "registryDependencies": ["@duck/theme"],
+      "dependencies": [
+        "next-themes",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@duck/theme"
+      ],
       "files": [
-        { "path": "registry/duck/ui/theme-switcher.tsx", "type": "registry:ui" }
+        {
+          "path": "registry/duck/ui/theme-switcher.tsx",
+          "type": "registry:ui"
+        }
       ]
     },
     {
@@ -421,10 +589,18 @@
       "type": "registry:ui",
       "title": "Quack Toast",
       "description": "Toast provider and hook. Messages slide in from the corner, never steal focus, and the queue is capped so a burst of events cannot bury the page.",
-      "dependencies": ["lucide-react"],
-      "registryDependencies": ["@duck/theme", "@duck/duck-spinner"],
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@duck/theme",
+        "@duck/duck-spinner"
+      ],
       "files": [
-        { "path": "registry/duck/ui/quack-toast.tsx", "type": "registry:ui" }
+        {
+          "path": "registry/duck/ui/quack-toast.tsx",
+          "type": "registry:ui"
+        }
       ]
     }
   ]

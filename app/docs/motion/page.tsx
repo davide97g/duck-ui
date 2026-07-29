@@ -7,6 +7,7 @@ export const metadata: Metadata = {
   title: "Motion",
   description:
     "The animation vocabulary: idle loops, transitions, composed transforms, and how reduced motion is handled.",
+  alternates: { canonical: "/docs/motion" },
 };
 
 const keyframes = [

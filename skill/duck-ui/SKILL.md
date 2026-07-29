@@ -12,7 +12,7 @@ duck/ui is a shadcn-compatible registry by dacoder. Dark-first canvas, duck-lime
 A project uses duck/ui if `components.json` contains:
 
 ```json
-{ "registries": { "@duck": "https://duckui.dev/r/{name}.json" } }
+{ "registries": { "@duck": "https://duckui.davideghiotto.it/r/{name}.json" } }
 ```
 
 If that block is missing and the user asks for duck/ui, add it first.
@@ -96,6 +96,6 @@ Keyframes: `holo-shift`, `duck-idle`, `duck-sheen`, `duck-squash`, `duck-pop`, `
 
 ## Docs
 
-- Site: https://duckui.dev
-- Index for assistants: https://duckui.dev/llms.txt, full version at https://duckui.dev/llms-full.txt
-- Theme editor: https://duckui.dev/create
+- Site: https://duckui.davideghiotto.it
+- Index for assistants: https://duckui.davideghiotto.it/llms.txt, full version at https://duckui.davideghiotto.it/llms-full.txt
+- Theme editor: https://duckui.davideghiotto.it/create

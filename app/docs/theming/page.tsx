@@ -9,6 +9,7 @@ export const metadata: Metadata = {
   title: "Theming",
   description:
     "The token contract, the duck extras, the utility classes, and how to retune the palette without touching a component.",
+  alternates: { canonical: "/docs/theming" },
 };
 
 const surfaceTokens = [

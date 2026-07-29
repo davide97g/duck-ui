@@ -10,10 +10,10 @@
 </p>
 
 <p align="center">
-  <a href="https://duckui.dev">duckui.dev</a> ·
-  <a href="https://duckui.dev/docs">Docs</a> ·
-  <a href="https://duckui.dev/create">Theme editor</a> ·
-  <a href="https://duckui.dev/llms.txt">llms.txt</a>
+  <a href="https://duckui.davideghiotto.it">duckui.davideghiotto.it</a> ·
+  <a href="https://duckui.davideghiotto.it/docs">Docs</a> ·
+  <a href="https://duckui.davideghiotto.it/create">Theme editor</a> ·
+  <a href="https://duckui.davideghiotto.it/llms.txt">llms.txt</a>
 </p>
 
 ---
@@ -28,7 +28,7 @@ they are yours to edit.
 
 ```jsonc
 // components.json
-{ "registries": { "@duck": "https://duckui.dev/r/{name}.json" } }
+{ "registries": { "@duck": "https://duckui.davideghiotto.it/r/{name}.json" } }
 ```
 
 ```bash
@@ -40,7 +40,7 @@ npx shadcn@latest add @duck/quack-button @duck/holo-avatar @duck/sticker-card
 component assumes it is there. Registry dependencies resolve on their own — `@duck/quack-button`
 pulls `@duck/duck-spinner` and `@duck/use-holo-pointer` without being asked.
 
-Working with an AI assistant? Point it at [`/llms.txt`](https://duckui.dev/llms.txt), or install the
+Working with an AI assistant? Point it at [`/llms.txt`](https://duckui.davideghiotto.it/llms.txt), or install the
 skill: `skills add dacoder/duck-ui`.
 
 ## Components
@@ -76,14 +76,28 @@ pnpm registry:build   # rebuild public/r/*.json from registry.json
 pnpm build            # production build
 ```
 
-Requires Node 20+ and pnpm. Run `pnpm registry:build` after touching anything under `registry/` —
-the served JSON embeds the component source.
+Requires Node 20+ and pnpm. `pnpm build` runs `registry:build` first, so the served JSON always
+matches the sources — run `pnpm registry:build` on its own after touching anything under `registry/`
+if you want the change visible in `pnpm dev`.
+
+### Environment
+
+Copy `.env.example` to `.env.local`. There is one variable that matters:
+
+| Variable | Default | Why |
+|---|---|---|
+| `NEXT_PUBLIC_SITE_URL` | `https://duckui.davideghiotto.it` | Absolute origin, no trailing slash. Drives `metadataBase`, canonical tags, `sitemap.xml`, `robots.txt`, `llms.txt` and the `@duck` registry URL shown throughout the docs. |
+
+It is read at **build** time, not runtime — `NEXT_PUBLIC_*` is inlined into the client bundle and the
+prerendered HTML. Changing it means rebuilding, which is why the Dockerfile takes it as a build arg.
+Moving the site to another domain is that one variable plus a rebuild; nothing else hardcodes an
+origin.
 
 ## Layout
 
 | Path | What |
 |---|---|
-| `app/` | duckui.dev: landing, docs, theme editor, `llms.txt` routes |
+| `app/` | duckui.davideghiotto.it: landing, docs, theme editor, `llms.txt` routes |
 | `registry.json` | Registry index: shadcn schema, `@duck` namespace, dependencies |
 | `registry/duck/ui/` | The 17 components. Source of truth. |
 | `registry/duck/hooks/` | `use-holo-pointer` |
@@ -93,6 +107,10 @@ the served JSON embeds the component source.
 | `public/r/` | Built registry JSON, served statically |
 | `public/duck.png`, `app/icon.png` | The mark, and the favicon derived from it |
 | `skill/duck-ui/SKILL.md` | Skill for skills.sh (`skills add dacoder/duck-ui`) |
+| `app/legal/` | Terms, privacy and cookie notices, driven by `lib/site.ts` |
+| `components/seo/structured-data.tsx` | JSON-LD emitters: site graph, breadcrumbs, per-page schema |
+| `scripts/sync-registry-homepage.mjs` | Keeps `registry.json`'s `homepage` on `NEXT_PUBLIC_SITE_URL` |
+| `Dockerfile` | Multi-stage standalone build used by Dokploy |
 | `docs/PLAN.md` | Product plan and roadmap |
 
 ## How it fits together
@@ -116,10 +134,37 @@ it with Shiki.
 
 ## Deploy
 
-Vercel: `pnpm registry:build && pnpm build`, then point `duckui.dev` at it. The registry is static
-JSON under `/r/`, so consuming it needs no server.
+Every route prerenders to static HTML at build time, so there is no server-side rendering at
+request time and no runtime dependency beyond serving files. The registry under `/r/` is plain JSON
+with permissive CORS, so consuming it needs no server at all.
+
+The repo ships a multi-stage `Dockerfile` built on `output: "standalone"`. The runner stage copies
+only the traced server bundle, `public/` and `.next/static`, and runs as a non-root user.
+
+```bash
+docker build --build-arg NEXT_PUBLIC_SITE_URL=https://duckui.davideghiotto.it -t duck-ui .
+docker run -p 3000:3000 duck-ui
+```
+
+**Dokploy.** Create an Application, point it at this repo, set Build Type to `Dockerfile`, and add
+`NEXT_PUBLIC_SITE_URL` as a **build-time argument** — not only a runtime env var, or the default
+origin gets baked into the HTML. Set the domain to `duckui.davideghiotto.it` with HTTPS and
+Let's Encrypt, container port `3000`.
+
+Static hosting works too: add `output: "export"` to `next.config.ts` and serve `out/`. That drops the
+custom headers in `next.config.ts`, so CORS and caching for `/r/` would move to the CDN or reverse
+proxy.
+
+## Legal
+
+`/legal/terms`, `/legal/privacy` and `/legal/cookies` are generated from `lib/site.ts` — the
+controller name, contact address and the `lastUpdated` date all live in the `legal` export there.
+Bump `lastUpdated` when you edit the copy.
+
+The site sets **no cookies** and runs **no analytics**, which is why there is no consent banner. If
+that ever changes, the privacy and cookie notices have to be rewritten before the change ships.
 
 ---
 
-MIT licensed. Built by [dacoder](https://dacoder.it) — the build is documented on
+[MIT licensed](LICENSE). Built by [dacoder](https://dacoder.it) — the build is documented on
 [YouTube](https://www.youtube.com/@davideghi).

@@ -8,6 +8,7 @@ export const metadata: Metadata = {
   title: "For AI assistants",
   description:
     "llms.txt, the shadcn MCP server, and the duck/ui skill. Three ways an assistant can install and use this system correctly.",
+  alternates: { canonical: "/docs/ai" },
 };
 
 const mcpJson = `{

@@ -3,6 +3,7 @@
 import * as React from "react";
 
 import { cn } from "@/lib/utils";
+import { site } from "@/lib/site";
 import {
   DuckTabs,
   DuckTabsList,
@@ -100,7 +101,7 @@ export function ThemeProof() {
                 helper="The CLI reads one JSON file per component."
               >
                 <GlowInput
-                  defaultValue="https://duckui.dev/r/{name}.json"
+                  defaultValue={site.registryUrl}
                   spellCheck={false}
                 />
               </GlowField>

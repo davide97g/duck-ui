@@ -18,6 +18,6 @@
     "hooks": "@/hooks"
   },
   "registries": {
-    "@duck": "https://duckui.dev/r/{name}.json"
+    "@duck": "https://duckui.davideghiotto.it/r/{name}.json"
   }
 }

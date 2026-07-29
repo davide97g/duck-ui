@@ -6,6 +6,7 @@ export const metadata: Metadata = {
   title: "Theme editor",
   description:
     "Retune the duck palette on live components, then copy the CSS or share the preset as a link.",
+  alternates: { canonical: "/create" },
 };
 
 export default function CreatePage() {

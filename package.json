@@ -4,10 +4,11 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "next build",
+    "build": "pnpm registry:build && next build",
     "start": "next start",
     "lint": "next lint",
-    "registry:build": "shadcn build"
+    "typecheck": "tsc --noEmit",
+    "registry:build": "node scripts/sync-registry-homepage.mjs && shadcn build"
   },
   "dependencies": {
     "@radix-ui/react-slot": "^1.3.3",

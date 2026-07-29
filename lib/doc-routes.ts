@@ -1,4 +1,5 @@
 import { components, componentsByCategory, guides } from "@/lib/registry-docs";
+import { legalNav } from "@/lib/site";
 
 export interface DocRoute {
   href: string;
@@ -39,3 +40,21 @@ export const allDocRoutes: DocRoute[] = [
     summary: item.summary,
   })),
 ];
+
+/**
+ * Every path that resolves to a real page. Some URL segments are grouping-only
+ * — /docs/components and /legal have no index page — so breadcrumbs have to
+ * check membership here before turning a segment into a link. Structured data
+ * pointing at a 404 is worse than a shorter trail.
+ */
+const realPaths = new Set<string>([
+  "/",
+  "/create",
+  "/docs",
+  ...allDocRoutes.map((route) => route.href),
+  ...legalNav.map((item) => item.href),
+]);
+
+export function routeExists(path: string) {
+  return realPaths.has(path);
+}
