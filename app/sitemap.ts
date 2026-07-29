@@ -22,6 +22,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   const primary: Entry[] = [
     { path: "/docs", priority: 0.9 },
+    { path: "/docs/components", priority: 0.9 },
     { path: "/create", priority: 0.9 },
   ].map(({ path, priority }) => ({
     url: `${site.url}${path}`,
@@ -38,12 +39,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: route.href === "/docs/ai" ? 0.8 : 0.7,
   }));
 
-  const legalPages: Entry[] = legalNav.map((item) => ({
-    url: `${site.url}${item.href}`,
-    lastModified: new Date(legal.lastUpdated),
-    changeFrequency: "yearly",
-    priority: 0.2,
-  }));
+  const legalPages: Entry[] = ["/legal", ...legalNav.map((i) => i.href)].map(
+    (href) => ({
+      url: `${site.url}${href}`,
+      lastModified: new Date(legal.lastUpdated),
+      changeFrequency: "yearly",
+      priority: 0.2,
+    })
+  );
 
   return [landing, ...primary, ...docs, ...legalPages];
 }

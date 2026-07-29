@@ -1,5 +1,47 @@
 import type { NextConfig } from "next";
 
+/**
+ * Content-Security-Policy.
+ *
+ * script-src carries 'unsafe-inline' deliberately, and that is the ceiling for
+ * this app rather than an oversight. Every page ships 28-42 inline scripts
+ * holding the RSC flight payload, so their content differs per page and per
+ * build:
+ *
+ *   - hash-based CSP would need per-page hashes that change on every build, so
+ *     it cannot be expressed in a static header;
+ *   - nonce-based CSP means reading headers() in a server component, which opts
+ *     every route into dynamic rendering and gives up all 37 prerendered pages.
+ *
+ * What the policy still buys, which is the majority of the value here: no
+ * external script can load (the practical defence against a compromised
+ * dependency injecting a remote <script>), no exfiltration to another origin,
+ * no framing, no base-tag or form-action hijacking, no plugins. The site takes
+ * no user input that reaches the DOM as markup — the one untrusted value, the
+ * ?c= theme preset, is parsed to clamped numbers in theme-editor.tsx — so there
+ * is no injection point for 'unsafe-inline' to widen.
+ *
+ * style-src needs 'unsafe-inline' for React style attributes, which the theme
+ * editor writes on every slider change.
+ */
+const csp = [
+  "default-src 'self'",
+  "script-src 'self' 'unsafe-inline'",
+  "style-src 'self' 'unsafe-inline'",
+  // data: covers the grain noise SVG in globals.css and the inlined duck mark.
+  "img-src 'self' data:",
+  // Fonts are downloaded at build time by next/font and served from this origin.
+  "font-src 'self'",
+  "connect-src 'self'",
+  "manifest-src 'self'",
+  "object-src 'none'",
+  "frame-src 'none'",
+  "frame-ancestors 'none'",
+  "base-uri 'self'",
+  "form-action 'self'",
+  "upgrade-insecure-requests",
+].join("; ");
+
 const nextConfig: NextConfig = {
   // Emits .next/standalone with a self-contained server.js and only the
   // node_modules it actually traced. Required by the Dockerfile — without it
@@ -35,13 +77,14 @@ const nextConfig: NextConfig = {
         ],
       },
       {
-        // Baseline hardening. No CSP here: the app inlines styles and JSON-LD,
-        // so a useful policy needs nonces, which is a separate change.
         source: "/:path*",
         headers: [
+          { key: "Content-Security-Policy", value: csp },
           { key: "X-Content-Type-Options", value: "nosniff" },
           { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
-          { key: "X-Frame-Options", value: "SAMEORIGIN" },
+          // Matches frame-ancestors 'none' above. Legacy fallback for browsers
+          // that do not honour frame-ancestors; the two must not disagree.
+          { key: "X-Frame-Options", value: "DENY" },
           {
             key: "Permissions-Policy",
             value: "camera=(), microphone=(), geolocation=(), payment=()",

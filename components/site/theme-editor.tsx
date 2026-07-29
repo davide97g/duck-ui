@@ -37,6 +37,21 @@ const DEFAULTS: Preset = {
 
 const ORDER = ["hue", "chroma", "lightness", "radius", "glow", "border"] as const;
 
+/**
+ * The bounds the sliders enforce. decode() applies them too, because the ?c=
+ * parameter is the only untrusted input on the site: Number() already rules out
+ * string injection, but nothing stopped a shared link from carrying
+ * border=99999 and rendering the page unusable for whoever opened it.
+ */
+const LIMITS: Record<keyof Preset, { min: number; max: number }> = {
+  hue: { min: 0, max: 360 },
+  chroma: { min: 0, max: 30 },
+  lightness: { min: 40, max: 96 },
+  radius: { min: 0, max: 200 },
+  glow: { min: 0, max: 80 },
+  border: { min: 1, max: 6 },
+};
+
 function encode(preset: Preset) {
   return ORDER.map((key) => preset[key]).join("-");
 }
@@ -44,11 +59,17 @@ function encode(preset: Preset) {
 function decode(code: string | null): Preset | null {
   if (!code) return null;
   const parts = code.split("-").map(Number);
-  if (parts.length !== ORDER.length || parts.some(Number.isNaN)) return null;
-  return ORDER.reduce(
-    (accumulator, key, index) => ({ ...accumulator, [key]: parts[index] }),
-    {} as Preset
-  );
+  if (parts.length !== ORDER.length) return null;
+  // Rejects NaN and ±Infinity in one check; both would produce invalid CSS.
+  if (!parts.every(Number.isFinite)) return null;
+
+  return ORDER.reduce((accumulator, key, index) => {
+    const { min, max } = LIMITS[key];
+    return {
+      ...accumulator,
+      [key]: Math.min(max, Math.max(min, Math.round(parts[index]))),
+    };
+  }, {} as Preset);
 }
 
 function buildVars(preset: Preset) {

@@ -164,6 +164,25 @@ Bump `lastUpdated` when you edit the copy.
 The site sets **no cookies** and runs **no analytics**, which is why there is no consent banner. If
 that ever changes, the privacy and cookie notices have to be rewritten before the change ships.
 
+## Security headers
+
+`next.config.ts` sets a CSP plus the usual hardening headers. One deliberate compromise is worth
+knowing about before someone "fixes" it:
+
+`script-src` includes `'unsafe-inline'`. Every page ships 28–42 inline scripts carrying the RSC
+flight payload, so their content varies per page and per build. Hashes would therefore change on
+every build and cannot live in a static header, and a nonce means reading `headers()` in a server
+component — which opts all 39 routes into dynamic rendering and throws away the prerendering the
+whole site depends on.
+
+What the policy still enforces: no external script can load, no connection to another origin, no
+framing, no `<base>` or form-action hijacking, no plugins. The only untrusted input on the site is
+the `?c=` theme preset, and `theme-editor.tsx` parses it to range-clamped finite numbers, so there
+is no place for injected markup to land.
+
+Verified with a real browser against a production build — zero CSP violations across the landing
+page, the theme editor mid-slider-drag, component pages, the command menu and a theme switch.
+
 ---
 
 [MIT licensed](LICENSE). Built by [dacoder](https://dacoder.it) — the build is documented on

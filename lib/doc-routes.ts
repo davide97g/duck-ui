@@ -42,15 +42,16 @@ export const allDocRoutes: DocRoute[] = [
 ];
 
 /**
- * Every path that resolves to a real page. Some URL segments are grouping-only
- * — /docs/components and /legal have no index page — so breadcrumbs have to
- * check membership here before turning a segment into a link. Structured data
- * pointing at a 404 is worse than a shorter trail.
+ * Every path that resolves to a real page. Breadcrumbs check membership here
+ * before turning a URL segment into a link, so a grouping-only segment never
+ * becomes a link to a 404. Keep this in step with the routes under app/.
  */
 const realPaths = new Set<string>([
   "/",
   "/create",
   "/docs",
+  "/docs/components",
+  "/legal",
   ...allDocRoutes.map((route) => route.href),
   ...legalNav.map((item) => item.href),
 ]);

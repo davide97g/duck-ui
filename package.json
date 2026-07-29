@@ -6,7 +6,8 @@
     "dev": "next dev --turbopack",
     "build": "pnpm registry:build && next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
     "typecheck": "tsc --noEmit",
     "registry:build": "node scripts/sync-registry-homepage.mjs && shadcn build"
   },
@@ -25,10 +26,13 @@
     "tailwind-merge": "^3.3.0"
   },
   "devDependencies": {
+    "@eslint/eslintrc": "^3.3.6",
     "@tailwindcss/postcss": "^4.1.0",
     "@types/node": "^24.0.0",
     "@types/react": "^19.1.0",
     "@types/react-dom": "^19.1.0",
+    "eslint": "^9.39.5",
+    "eslint-config-next": "^15.5.22",
     "shadcn": "^3.0.0",
     "tailwindcss": "^4.1.0",
     "typescript": "^5.8.0"

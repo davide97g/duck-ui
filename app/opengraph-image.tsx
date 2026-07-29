@@ -27,7 +27,7 @@ export default function OpenGraphImage() {
         }}
       >
         <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
+          {/* satori renders this, not the browser — next/image would not work */}
           <img src={duckLogo} width={88} height={88} alt="" />
           <div style={{ display: "flex", fontSize: 48, fontWeight: 800 }}>
             <span>duck</span>

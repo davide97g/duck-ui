@@ -28,7 +28,7 @@ export const site = {
     url: "https://dacoder.it",
     youtube: "https://www.youtube.com/@davideghi",
   },
-  repo: "https://github.com/dacoder/duck-ui",
+  repo: "https://github.com/davide97g/duck-ui",
   registryUrl: `${url}/r/{name}.json`,
   install: "npx shadcn add @duck/theme",
   license: "MIT",
@@ -36,15 +36,12 @@ export const site = {
 
 /**
  * Identity behind the legal pages. The controller is a private individual, so
- * there is no VAT number or registered address to publish.
- *
- * TODO before launch: replace contactEmail with the address you actually want
- * published. It is the channel for GDPR data-subject requests, so it has to be
- * one you read.
+ * there is no VAT number or registered address to publish. contactEmail is the
+ * published channel for GDPR data-subject requests.
  */
 export const legal = {
   controllerName: "Davide Ghiotto",
-  contactEmail: "hello@dacoder.it",
+  contactEmail: "ghiotto.davidenko@gmail.com",
   jurisdiction: "Italy",
   /** Shown as "Last updated" on every legal page. Bump when you edit them. */
   lastUpdated: "2026-07-29",
@@ -52,7 +49,7 @@ export const legal = {
 
 export const mainNav = [
   { href: "/docs", label: "Docs" },
-  { href: "/docs/components/quack-button", label: "Components" },
+  { href: "/docs/components", label: "Components" },
   { href: "/create", label: "Theme editor" },
   { href: "/docs/ai", label: "For AI" },
 ] as const;
