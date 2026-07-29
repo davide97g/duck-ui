@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "copy-button",
+  "title": "Copy Button",
+  "description": "Copies a string to the clipboard and confirms it with a check that pops in and settles back after two seconds.",
+  "dependencies": [
+    "lucide-react"
+  ],
+  "registryDependencies": [
+    "@duck/theme"
+  ],
+  "files": [
+    {
+      "path": "registry/duck/ui/copy-button.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\nimport { Check, Copy } from \"lucide-react\";\n\nimport { cn } from \"@/lib/utils\";\n\n/**\n * CopyButton — copies a string and reports it. The check mark pops in, then\n * the button returns to rest after two seconds.\n */\nfunction CopyButton({\n  value,\n  className,\n  label = \"Copy\",\n  copiedLabel = \"Copied\",\n  onCopied,\n  ...props\n}: Omit<React.ComponentProps<\"button\">, \"value\"> & {\n  value: string;\n  label?: string;\n  copiedLabel?: string;\n  onCopied?: (value: string) => void;\n}) {\n  const [copied, setCopied] = React.useState(false);\n\n  React.useEffect(() => {\n    if (!copied) return;\n    const timer = window.setTimeout(() => setCopied(false), 2000);\n    return () => window.clearTimeout(timer);\n  }, [copied]);\n\n  async function copy() {\n    try {\n      await navigator.clipboard.writeText(value);\n      setCopied(true);\n      onCopied?.(value);\n    } catch {\n      setCopied(false);\n    }\n  }\n\n  return (\n    <button\n      type=\"button\"\n      data-slot=\"copy-button\"\n      onClick={copy}\n      aria-label={copied ? copiedLabel : label}\n      className={cn(\n        \"inline-grid size-8 shrink-0 cursor-pointer place-items-center rounded-md border border-border/60 bg-card/60 text-muted-foreground\",\n        \"transition-[color,background-color,border-color,transform] duration-200 ease-[var(--ease-duck)]\",\n        \"hover:border-primary/60 hover:text-primary active:scale-95\",\n        \"focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background\",\n        copied && \"border-primary/70 text-primary\",\n        className\n      )}\n      {...props}\n    >\n      {copied ? (\n        <Check\n          className=\"size-3.5 [animation:duck-pop_0.35s_var(--ease-squash)]\"\n          strokeWidth={3}\n        />\n      ) : (\n        <Copy className=\"size-3.5\" />\n      )}\n      <span aria-live=\"polite\" className=\"sr-only\">\n        {copied ? copiedLabel : \"\"}\n      </span>\n    </button>\n  );\n}\n\nexport { CopyButton };\n",
+      "type": "registry:ui"
+    }
+  ],
+  "type": "registry:ui"
+}

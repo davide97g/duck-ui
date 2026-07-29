@@ -1,0 +1,431 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry.json",
+  "name": "duck",
+  "homepage": "https://duckui.dev",
+  "items": [
+    {
+      "name": "theme",
+      "type": "registry:theme",
+      "title": "Duck Theme",
+      "description": "duck/ui theme: dark-first canvas, duck-lime primary, holographic accents. Installs the full shadcn CSS-variable contract plus the holo utilities and the motion vocabulary, so every existing shadcn component is duck-styled with no markup changes.",
+      "cssVars": {
+        "theme": {
+          "radius": "0.75rem",
+          "ease-duck": "cubic-bezier(0.16, 1, 0.3, 1)",
+          "ease-squash": "cubic-bezier(0.34, 1.56, 0.64, 1)",
+          "color-sheet": "var(--sheet)",
+          "color-sheet-line": "var(--sheet-line)",
+          "color-cut": "var(--cut)",
+          "color-vinyl": "var(--vinyl)"
+        },
+        "light": {
+          "background": "oklch(0.985 0.004 285)",
+          "foreground": "oklch(0.18 0.012 285)",
+          "card": "oklch(1 0 0)",
+          "card-foreground": "oklch(0.18 0.012 285)",
+          "popover": "oklch(1 0 0)",
+          "popover-foreground": "oklch(0.18 0.012 285)",
+          "primary": "oklch(0.76 0.16 115)",
+          "primary-foreground": "oklch(0.22 0.06 115)",
+          "secondary": "oklch(0.945 0.006 285)",
+          "secondary-foreground": "oklch(0.25 0.012 285)",
+          "muted": "oklch(0.955 0.005 285)",
+          "muted-foreground": "oklch(0.48 0.012 285)",
+          "accent": "oklch(0.93 0.03 200)",
+          "accent-foreground": "oklch(0.25 0.05 220)",
+          "destructive": "oklch(0.58 0.22 27)",
+          "destructive-foreground": "oklch(0.98 0 0)",
+          "border": "oklch(0.895 0.006 285)",
+          "input": "oklch(0.895 0.006 285)",
+          "ring": "oklch(0.76 0.16 115)",
+          "chart-1": "oklch(0.72 0.2 305)",
+          "chart-2": "oklch(0.75 0.14 220)",
+          "chart-3": "oklch(0.78 0.14 160)",
+          "chart-4": "oklch(0.8 0.17 115)",
+          "chart-5": "oklch(0.7 0.19 350)",
+          "holo": "linear-gradient(135deg, oklch(0.72 0.2 305), oklch(0.76 0.15 250), oklch(0.8 0.14 195), oklch(0.85 0.17 150))",
+          "foil": "conic-gradient(from 200deg at 50% 50%, oklch(0.79 0.19 20), oklch(0.85 0.16 72), oklch(0.88 0.18 118), oklch(0.84 0.14 172), oklch(0.78 0.16 236), oklch(0.74 0.21 304), oklch(0.79 0.19 20))",
+          "glow": "0 0 24px oklch(0.78 0.15 195 / 0.2)",
+          "glow-primary": "0 0 24px oklch(0.76 0.16 115 / 0.35)",
+          "sticker-border": "3px",
+          "vinyl": "oklch(0.975 0.004 285)",
+          "sheet": "oklch(0.97 0.004 285)",
+          "sheet-line": "oklch(0.9 0.006 285)",
+          "cut": "oklch(0.78 0.01 285)",
+          "fx": "50",
+          "fy": "50",
+          "rx": "0deg",
+          "ry": "0deg"
+        },
+        "dark": {
+          "background": "oklch(0.145 0.006 285)",
+          "foreground": "oklch(0.965 0.004 285)",
+          "card": "oklch(0.185 0.007 285)",
+          "card-foreground": "oklch(0.965 0.004 285)",
+          "popover": "oklch(0.175 0.007 285)",
+          "popover-foreground": "oklch(0.965 0.004 285)",
+          "primary": "oklch(0.85 0.17 115)",
+          "primary-foreground": "oklch(0.24 0.07 115)",
+          "secondary": "oklch(0.235 0.008 285)",
+          "secondary-foreground": "oklch(0.965 0.004 285)",
+          "muted": "oklch(0.225 0.008 285)",
+          "muted-foreground": "oklch(0.68 0.012 285)",
+          "accent": "oklch(0.26 0.03 200)",
+          "accent-foreground": "oklch(0.9 0.05 200)",
+          "destructive": "oklch(0.65 0.2 25)",
+          "destructive-foreground": "oklch(0.98 0 0)",
+          "border": "oklch(0.275 0.009 285)",
+          "input": "oklch(0.275 0.009 285)",
+          "ring": "oklch(0.85 0.17 115)",
+          "chart-1": "oklch(0.72 0.2 305)",
+          "chart-2": "oklch(0.75 0.14 220)",
+          "chart-3": "oklch(0.78 0.14 160)",
+          "chart-4": "oklch(0.85 0.17 115)",
+          "chart-5": "oklch(0.7 0.19 350)",
+          "glow": "0 0 32px oklch(0.78 0.15 195 / 0.25)",
+          "glow-primary": "0 0 32px oklch(0.85 0.17 115 / 0.35)",
+          "sheet": "oklch(0.175 0.006 285)",
+          "sheet-line": "oklch(0.225 0.008 285)",
+          "cut": "oklch(0.34 0.01 285)"
+        }
+      },
+      "css": {
+        "@layer utilities": {
+          ".holo-border": {
+            "border": "2px solid transparent",
+            "background": "linear-gradient(var(--card), var(--card)) padding-box, var(--holo) border-box"
+          },
+          ".holo-border-animated": {
+            "border": "2px solid transparent",
+            "background": "linear-gradient(var(--card), var(--card)) padding-box, var(--holo) border-box",
+            "background-size": "100% 100%, 300% 300%",
+            "animation": "holo-shift 4s ease-in-out infinite"
+          },
+          ".holo-text": {
+            "background": "var(--holo)",
+            "background-size": "200% 200%",
+            "background-clip": "text",
+            "-webkit-background-clip": "text",
+            "color": "transparent",
+            "animation": "holo-shift 6s ease-in-out infinite"
+          },
+          ".duck-glow": {
+            "box-shadow": "var(--glow)"
+          },
+          ".duck-glow-primary": {
+            "box-shadow": "var(--glow-primary)"
+          },
+          ".sticker": {
+            "border-width": "var(--sticker-border)"
+          },
+          ".foil": {
+            "background-image": "radial-gradient(80% 80% at calc(var(--fx) * 1%) calc(var(--fy) * 1%), oklch(1 0 0 / 0.6), oklch(1 0 0 / 0) 60%), var(--foil)",
+            "background-size": "170% 170%, 230% 230%",
+            "background-position": "center, calc(50% + (var(--fx) - 50) * 0.6%) calc(50% + (var(--fy) - 50) * 0.6%)",
+            "background-blend-mode": "overlay, normal"
+          },
+          ".sheen": {
+            "position": "relative",
+            "overflow": "hidden"
+          },
+          ".sheen::after": {
+            "content": "\"\"",
+            "position": "absolute",
+            "inset": "0",
+            "pointer-events": "none",
+            "background": "linear-gradient(105deg, transparent 42%, oklch(1 0 0 / 0.16) 49%, transparent 56%)",
+            "background-size": "250% 100%",
+            "background-position": "160% 0",
+            "transition": "background-position 0.7s var(--ease-duck)"
+          },
+          ".sheen:hover::after": {
+            "background-position": "-40% 0"
+          },
+          ".tilt": {
+            "transform": "perspective(900px) rotateX(var(--rx)) rotateY(var(--ry))",
+            "transform-style": "preserve-3d",
+            "transition": "transform 0.4s var(--ease-duck)"
+          },
+          ".tilt-live": {
+            "transition": "transform 0.08s linear"
+          },
+          ".kiss-cut": {
+            "background-color": "var(--sheet)",
+            "background-image": "repeating-linear-gradient(to right, var(--sheet-line) 0 1px, transparent 1px 100%), repeating-linear-gradient(to bottom, var(--sheet-line) 0 1px, transparent 1px 100%)",
+            "background-size": "28px 28px"
+          },
+          ".cut-line": {
+            "border": "1.5px dashed var(--cut)"
+          }
+        },
+        "@keyframes holo-shift": {
+          "0%, 100%": { "background-position": "0% 0%, 0% 50%" },
+          "50%": { "background-position": "0% 0%, 100% 50%" }
+        },
+        "@keyframes duck-waddle": {
+          "0%, 100%": { "transform": "rotate(-12deg) translateY(0)" },
+          "25%": { "transform": "rotate(0deg) translateY(-2px)" },
+          "50%": { "transform": "rotate(12deg) translateY(0)" },
+          "75%": { "transform": "rotate(0deg) translateY(-2px)" }
+        },
+        "@keyframes duck-idle": {
+          "0%, 90%, 100%": { "transform": "translateY(0) scale(1)" },
+          "95%": { "transform": "translateY(-1.5px) scale(1.012)" }
+        },
+        "@keyframes duck-sheen": {
+          "0%, 72%, 100%": { "background-position": "170% 0" },
+          "88%": { "background-position": "-50% 0" }
+        },
+        "@keyframes duck-squash": {
+          "0%": { "transform": "scale(1, 1)" },
+          "40%": { "transform": "scale(1.06, 0.9)" },
+          "70%": { "transform": "scale(0.97, 1.04)" },
+          "100%": { "transform": "scale(1, 1)" }
+        },
+        "@keyframes duck-pop": {
+          "0%": { "transform": "scale(0.6)", "opacity": "0" },
+          "60%": { "transform": "scale(1.14)", "opacity": "1" },
+          "100%": { "transform": "scale(1)", "opacity": "1" }
+        },
+        "@keyframes duck-ripple": {
+          "0%": { "transform": "scale(0)", "opacity": "0.35" },
+          "100%": { "transform": "scale(2.8)", "opacity": "0" }
+        },
+        "@keyframes duck-paddle": {
+          "0%, 100%": { "transform": "translateY(0) rotate(-7deg)" },
+          "50%": { "transform": "translateY(-3px) rotate(7deg)" }
+        },
+        "@keyframes duck-float": {
+          "0%, 100%": { "transform": "translateY(0) rotate(-1.5deg)" },
+          "50%": { "transform": "translateY(-9px) rotate(1.5deg)" }
+        },
+        "@keyframes duck-caret": {
+          "0%, 49%": { "opacity": "1" },
+          "50%, 100%": { "opacity": "0" }
+        },
+        "@keyframes duck-marquee": {
+          "from": { "transform": "translateX(0)" },
+          "to": { "transform": "translateX(-50%)" }
+        },
+        "@keyframes duck-shimmer": {
+          "from": { "background-position": "-180% 0" },
+          "to": { "background-position": "180% 0" }
+        },
+        "@keyframes duck-rise": {
+          "from": { "opacity": "0", "transform": "translateY(14px)" },
+          "to": { "opacity": "1", "transform": "translateY(0)" }
+        },
+        "@media (prefers-reduced-motion: reduce)": {
+          "*, *::before, *::after": {
+            "animation-duration": "0.001ms !important",
+            "animation-iteration-count": "1 !important",
+            "transition-duration": "0.001ms !important"
+          },
+          ".tilt": {
+            "transform": "none !important"
+          }
+        }
+      }
+    },
+    {
+      "name": "use-holo-pointer",
+      "type": "registry:hook",
+      "title": "useHoloPointer",
+      "description": "Writes pointer position into CSS variables (--fx, --fy, --rx, --ry, --mx, --my) inside a single animation frame, so foil, tilt and magnetism run in CSS with no React re-renders. Honors prefers-reduced-motion.",
+      "registryDependencies": ["@duck/theme"],
+      "files": [
+        {
+          "path": "registry/duck/hooks/use-holo-pointer.ts",
+          "type": "registry:hook"
+        }
+      ]
+    },
+    {
+      "name": "quack-button",
+      "type": "registry:ui",
+      "title": "Quack Button",
+      "description": "Button with a full motion cycle: an idle animation while it waits, magnetic pull toward the pointer, a squash on press, and animated loading, success and error states.",
+      "dependencies": [
+        "class-variance-authority",
+        "@radix-ui/react-slot",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@duck/theme",
+        "@duck/duck-spinner",
+        "@duck/use-holo-pointer"
+      ],
+      "files": [
+        { "path": "registry/duck/ui/quack-button.tsx", "type": "registry:ui" }
+      ]
+    },
+    {
+      "name": "holo-button",
+      "type": "registry:ui",
+      "title": "Holo Button",
+      "description": "The signature CTA: an animated iridescent border on a plain button. Variants: holo, primary, outline, ghost. One holo element per viewport.",
+      "dependencies": ["class-variance-authority", "@radix-ui/react-slot"],
+      "registryDependencies": ["@duck/theme"],
+      "files": [
+        { "path": "registry/duck/ui/holo-button.tsx", "type": "registry:ui" }
+      ]
+    },
+    {
+      "name": "copy-button",
+      "type": "registry:ui",
+      "title": "Copy Button",
+      "description": "Copies a string to the clipboard and confirms it with a check that pops in and settles back after two seconds.",
+      "dependencies": ["lucide-react"],
+      "registryDependencies": ["@duck/theme"],
+      "files": [
+        { "path": "registry/duck/ui/copy-button.tsx", "type": "registry:ui" }
+      ]
+    },
+    {
+      "name": "sticker-card",
+      "type": "registry:ui",
+      "title": "Sticker Card",
+      "description": "The die-cut sticker: thick border, generous radius, soft glow. Optional iridescent ring, pointer tilt, and a corner that peels off the backing on hover.",
+      "registryDependencies": ["@duck/theme", "@duck/use-holo-pointer"],
+      "files": [
+        { "path": "registry/duck/ui/sticker-card.tsx", "type": "registry:ui" }
+      ]
+    },
+    {
+      "name": "code-window",
+      "type": "registry:ui",
+      "title": "Code Window",
+      "description": "Code block in a window frame with a filename, an optional copy control and optional line numbers. Takes plain text or pre-highlighted markup.",
+      "registryDependencies": ["@duck/theme", "@duck/copy-button"],
+      "files": [
+        { "path": "registry/duck/ui/code-window.tsx", "type": "registry:ui" }
+      ]
+    },
+    {
+      "name": "terminal",
+      "type": "registry:ui",
+      "title": "Terminal",
+      "description": "A command line that types itself when it scrolls into view. Prints the full transcript at once under prefers-reduced-motion.",
+      "registryDependencies": ["@duck/theme"],
+      "files": [
+        { "path": "registry/duck/ui/terminal.tsx", "type": "registry:ui" }
+      ]
+    },
+    {
+      "name": "sticker-sheet",
+      "type": "registry:ui",
+      "title": "Sticker Sheet",
+      "description": "Backing paper with kiss-cut lines. Lays out a set of components the way a vinyl sheet lays out stickers.",
+      "registryDependencies": ["@duck/theme"],
+      "files": [
+        { "path": "registry/duck/ui/sticker-sheet.tsx", "type": "registry:ui" }
+      ]
+    },
+    {
+      "name": "video-card",
+      "type": "registry:ui",
+      "title": "Video Card",
+      "description": "A YouTube card that stays cheap until it is wanted. The player iframe only mounts on click.",
+      "dependencies": ["lucide-react"],
+      "registryDependencies": ["@duck/theme"],
+      "files": [
+        { "path": "registry/duck/ui/video-card.tsx", "type": "registry:ui" }
+      ]
+    },
+    {
+      "name": "holo-avatar",
+      "type": "registry:ui",
+      "title": "Holo Avatar",
+      "description": "A die-cut avatar sticker whose foil ring picks up the pointer. Includes a group that fans out on hover.",
+      "dependencies": ["class-variance-authority"],
+      "registryDependencies": ["@duck/theme", "@duck/use-holo-pointer"],
+      "files": [
+        { "path": "registry/duck/ui/holo-avatar.tsx", "type": "registry:ui" }
+      ]
+    },
+    {
+      "name": "holo-badge",
+      "type": "registry:ui",
+      "title": "Holo Badge",
+      "description": "Pill for status, counts and short labels. Variants: holo, primary, outline, muted, success, danger.",
+      "dependencies": ["class-variance-authority"],
+      "registryDependencies": ["@duck/theme"],
+      "files": [
+        { "path": "registry/duck/ui/holo-badge.tsx", "type": "registry:ui" }
+      ]
+    },
+    {
+      "name": "announcement",
+      "type": "registry:ui",
+      "title": "Announcement",
+      "description": "Pill banner for one piece of news, with a light that sweeps across it on a slow loop.",
+      "dependencies": ["lucide-react"],
+      "registryDependencies": ["@duck/theme"],
+      "files": [
+        { "path": "registry/duck/ui/announcement.tsx", "type": "registry:ui" }
+      ]
+    },
+    {
+      "name": "duck-spinner",
+      "type": "registry:ui",
+      "title": "Duck Spinner",
+      "description": "A duck paddling on water, with the wake as expanding rings. Also exports DuckGlyph, the mark used by loading states.",
+      "registryDependencies": ["@duck/theme"],
+      "files": [
+        { "path": "registry/duck/ui/duck-spinner.tsx", "type": "registry:ui" }
+      ]
+    },
+    {
+      "name": "holo-separator",
+      "type": "registry:ui",
+      "title": "Holo Separator",
+      "description": "A hairline that fades in from the edges. With a label it becomes a section break.",
+      "registryDependencies": ["@duck/theme"],
+      "files": [
+        { "path": "registry/duck/ui/holo-separator.tsx", "type": "registry:ui" }
+      ]
+    },
+    {
+      "name": "glow-input",
+      "type": "registry:ui",
+      "title": "Glow Input",
+      "description": "Input, textarea and a field wrapper that wires up label, helper text, errors, aria-invalid and aria-describedby.",
+      "registryDependencies": ["@duck/theme"],
+      "files": [
+        { "path": "registry/duck/ui/glow-input.tsx", "type": "registry:ui" }
+      ]
+    },
+    {
+      "name": "duck-tabs",
+      "type": "registry:ui",
+      "title": "Duck Tabs",
+      "description": "Tabs with an indicator that slides between triggers. Arrow keys move, Home and End jump to the ends.",
+      "registryDependencies": ["@duck/theme"],
+      "files": [
+        { "path": "registry/duck/ui/duck-tabs.tsx", "type": "registry:ui" }
+      ]
+    },
+    {
+      "name": "theme-switcher",
+      "type": "registry:ui",
+      "title": "Theme Switcher",
+      "description": "Three-way segmented control for light, dark and system, with a lime pill that slides to the active option. Needs a next-themes provider.",
+      "dependencies": ["next-themes", "lucide-react"],
+      "registryDependencies": ["@duck/theme"],
+      "files": [
+        { "path": "registry/duck/ui/theme-switcher.tsx", "type": "registry:ui" }
+      ]
+    },
+    {
+      "name": "quack-toast",
+      "type": "registry:ui",
+      "title": "Quack Toast",
+      "description": "Toast provider and hook. Messages slide in from the corner, never steal focus, and the queue is capped so a burst of events cannot bury the page.",
+      "dependencies": ["lucide-react"],
+      "registryDependencies": ["@duck/theme", "@duck/duck-spinner"],
+      "files": [
+        { "path": "registry/duck/ui/quack-toast.tsx", "type": "registry:ui" }
+      ]
+    }
+  ]
+}

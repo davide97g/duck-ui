@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "announcement",
+  "title": "Announcement",
+  "description": "Pill banner for one piece of news, with a light that sweeps across it on a slow loop.",
+  "dependencies": [
+    "lucide-react"
+  ],
+  "registryDependencies": [
+    "@duck/theme"
+  ],
+  "files": [
+    {
+      "path": "registry/duck/ui/announcement.tsx",
+      "content": "import * as React from \"react\";\nimport { ArrowRight } from \"lucide-react\";\n\nimport { cn } from \"@/lib/utils\";\n\nconst announcementClasses = [\n  \"group/announcement relative inline-flex w-fit items-center gap-2 overflow-hidden rounded-full\",\n  \"border border-border bg-card/70 py-1 pr-3 pl-1 text-sm text-muted-foreground backdrop-blur\",\n  \"transition-[border-color,color] duration-300 ease-[var(--ease-duck)]\",\n  \"after:pointer-events-none after:absolute after:inset-0\",\n  \"after:bg-[linear-gradient(105deg,transparent_40%,oklch(1_0_0/0.18)_48%,transparent_56%)]\",\n  \"after:bg-[length:250%_100%] after:[animation:duck-sheen_6s_ease-in-out_infinite]\",\n];\n\n/**\n * Announcement — a pill banner for one piece of news. A light sweeps across\n * it on a slow loop so it reads as live without demanding attention.\n */\nfunction Announcement({\n  className,\n  children,\n  tag,\n  href,\n  arrow,\n  ...props\n}: React.ComponentProps<\"a\"> & {\n  /** Short label in the leading chip, for example \"new\". */\n  tag?: string;\n  arrow?: boolean;\n}) {\n  const showArrow = arrow ?? Boolean(href);\n\n  const content = (\n    <>\n      {tag && (\n        <span className=\"relative rounded-full bg-primary px-2 py-0.5 text-xs font-semibold text-primary-foreground\">\n          {tag}\n        </span>\n      )}\n      <span className=\"relative\">{children}</span>\n      {showArrow && (\n        <ArrowRight className=\"relative size-3.5 transition-transform duration-300 ease-[var(--ease-duck)] group-hover/announcement:translate-x-0.5\" />\n      )}\n    </>\n  );\n\n  if (!href) {\n    return (\n      <div\n        data-slot=\"announcement\"\n        className={cn(announcementClasses, !tag && \"pl-3\", className)}\n      >\n        {content}\n      </div>\n    );\n  }\n\n  return (\n    <a\n      data-slot=\"announcement\"\n      href={href}\n      className={cn(\n        announcementClasses,\n        !tag && \"pl-3\",\n        \"cursor-pointer hover:border-primary/60 hover:text-foreground\",\n        className\n      )}\n      {...props}\n    >\n      {content}\n    </a>\n  );\n}\n\nexport { Announcement };\n",
+      "type": "registry:ui"
+    }
+  ],
+  "type": "registry:ui"
+}

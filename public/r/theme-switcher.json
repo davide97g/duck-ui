@@ -1,0 +1,21 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "theme-switcher",
+  "title": "Theme Switcher",
+  "description": "Three-way segmented control for light, dark and system, with a lime pill that slides to the active option. Needs a next-themes provider.",
+  "dependencies": [
+    "next-themes",
+    "lucide-react"
+  ],
+  "registryDependencies": [
+    "@duck/theme"
+  ],
+  "files": [
+    {
+      "path": "registry/duck/ui/theme-switcher.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\nimport { useTheme } from \"next-themes\";\nimport { Monitor, Moon, Sun } from \"lucide-react\";\n\nimport { cn } from \"@/lib/utils\";\n\nconst options = [\n  { value: \"light\", label: \"Light\", Icon: Sun },\n  { value: \"dark\", label: \"Dark\", Icon: Moon },\n  { value: \"system\", label: \"System\", Icon: Monitor },\n] as const;\n\n/** Button box (size-7) plus the gap between buttons (gap-1), in px. The pill\n * slides by exactly this, so the geometry can only ever be edited in one place. */\nconst STEP = 28 + 4;\n\n/**\n * ThemeSwitcher — a three-way segmented control. The lime pill slides to the\n * active option so the change reads as movement, not a repaint.\n *\n * Requires a next-themes ThemeProvider above it.\n */\nfunction ThemeSwitcher({\n  className,\n  ...props\n}: Omit<React.ComponentProps<\"div\">, \"children\">) {\n  const { theme, setTheme } = useTheme();\n  const [mounted, setMounted] = React.useState(false);\n\n  React.useEffect(() => setMounted(true), []);\n\n  const activeIndex = Math.max(\n    0,\n    options.findIndex((option) => option.value === (mounted ? theme : \"system\"))\n  );\n\n  return (\n    <div\n      data-slot=\"theme-switcher\"\n      role=\"radiogroup\"\n      aria-label=\"Color theme\"\n      className={cn(\n        \"relative inline-flex items-center gap-1 rounded-full border border-border bg-card/70 p-1 backdrop-blur\",\n        className\n      )}\n      {...props}\n    >\n      <span\n        aria-hidden\n        className=\"absolute top-1 left-1 size-7 rounded-full bg-primary transition-transform duration-400 ease-[var(--ease-duck)]\"\n        style={{\n          transform: `translateX(${activeIndex * STEP}px)`,\n          opacity: mounted ? 1 : 0,\n        }}\n      />\n      {options.map(({ value, label, Icon }) => {\n        const active = mounted && theme === value;\n        return (\n          <button\n            key={value}\n            type=\"button\"\n            role=\"radio\"\n            aria-checked={active}\n            aria-label={label}\n            onClick={() => setTheme(value)}\n            className={cn(\n              \"relative grid size-7 cursor-pointer place-items-center rounded-full transition-colors duration-200\",\n              \"focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background\",\n              active\n                ? \"text-primary-foreground\"\n                : \"text-muted-foreground hover:text-foreground\"\n            )}\n          >\n            <Icon className=\"size-3.5\" />\n          </button>\n        );\n      })}\n    </div>\n  );\n}\n\nexport { ThemeSwitcher };\n",
+      "type": "registry:ui"
+    }
+  ],
+  "type": "registry:ui"
+}

@@ -1,0 +1,18 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "code-window",
+  "title": "Code Window",
+  "description": "Code block in a window frame with a filename, an optional copy control and optional line numbers. Takes plain text or pre-highlighted markup.",
+  "registryDependencies": [
+    "@duck/theme",
+    "@duck/copy-button"
+  ],
+  "files": [
+    {
+      "path": "registry/duck/ui/code-window.tsx",
+      "content": "import * as React from \"react\";\n\nimport { cn } from \"@/lib/utils\";\nimport { CopyButton } from \"@/components/ui/copy-button\";\n\n/**\n * CodeWindow — a code block in a window frame. Built for tutorial content:\n * a filename, an optional copy control and optional line numbers.\n *\n * Pass plain text as children, or pre-highlighted markup through `html`\n * (for example from Shiki) when the page renders on the server.\n */\nfunction CodeWindow({\n  className,\n  title,\n  children,\n  html,\n  holo = false,\n  copyValue,\n  lineNumbers = false,\n  ...props\n}: Omit<React.ComponentProps<\"div\">, \"children\"> & {\n  title?: string;\n  children?: React.ReactNode;\n  html?: string;\n  holo?: boolean;\n  /** Show a copy control that writes this string to the clipboard. */\n  copyValue?: string;\n  lineNumbers?: boolean;\n}) {\n  return (\n    <div\n      data-slot=\"code-window\"\n      className={cn(\n        \"overflow-hidden rounded-xl bg-card\",\n        holo ? \"holo-border\" : \"border-2 border-border\",\n        className\n      )}\n      {...props}\n    >\n      <div className=\"flex items-center gap-2 border-b-2 border-border px-4 py-2.5\">\n        <span className=\"size-3 rounded-full bg-[oklch(0.65_0.2_25)]\" />\n        <span className=\"size-3 rounded-full bg-[oklch(0.82_0.16_75)]\" />\n        <span className=\"size-3 rounded-full bg-[oklch(0.78_0.14_160)]\" />\n        {title && (\n          <span className=\"ml-2 truncate font-mono text-xs text-muted-foreground\">\n            {title}\n          </span>\n        )}\n        {copyValue && (\n          <CopyButton\n            value={copyValue}\n            className=\"ml-auto size-7 border-transparent bg-transparent\"\n          />\n        )}\n      </div>\n      <div\n        className={cn(\n          \"overflow-x-auto font-mono text-sm leading-relaxed\",\n          lineNumbers &&\n            \"[counter-reset:line] [&_.line]:before:mr-4 [&_.line]:before:inline-block [&_.line]:before:w-4 [&_.line]:before:text-right [&_.line]:before:text-muted-foreground/60 [&_.line]:before:[content:counter(line)] [&_.line]:before:[counter-increment:line]\"\n        )}\n      >\n        {html ? (\n          <div\n            className=\"[&_pre]:overflow-x-auto [&_pre]:!bg-transparent [&_pre]:p-4\"\n            dangerouslySetInnerHTML={{ __html: html }}\n          />\n        ) : (\n          <pre className=\"p-4\">{children}</pre>\n        )}\n      </div>\n    </div>\n  );\n}\n\nexport { CodeWindow };\n",
+      "type": "registry:ui"
+    }
+  ],
+  "type": "registry:ui"
+}
