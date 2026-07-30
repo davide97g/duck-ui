@@ -1,4 +1,8 @@
-import { GlowField, GlowInput } from "@/components/ui/glow-input";
+import {
+  GlowField,
+  GlowFieldset,
+  GlowInput,
+} from "@/components/ui/glow-input";
 
 export default function GlowInputDemo() {
   return (
@@ -20,6 +24,13 @@ export default function GlowInputDemo() {
           defaultValue="mira.okonkwo@pondstudio.dev"
         />
       </GlowField>
+      <GlowFieldset
+        legend="Invoice address"
+        helper="Both lines print on the receipt."
+      >
+        <GlowInput placeholder="Street" defaultValue="14 Reedbank Way" />
+        <GlowInput placeholder="City" defaultValue="Padua" />
+      </GlowFieldset>
     </div>
   );
 }

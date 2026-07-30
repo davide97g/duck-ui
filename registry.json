@@ -37,7 +37,7 @@
           "destructive-foreground": "oklch(0.98 0 0)",
           "border": "oklch(0.895 0.006 285)",
           "input": "oklch(0.895 0.006 285)",
-          "ring": "oklch(0.76 0.16 115)",
+          "ring": "oklch(0.62 0.14 115)",
           "chart-1": "oklch(0.72 0.2 305)",
           "chart-2": "oklch(0.75 0.14 220)",
           "chart-3": "oklch(0.78 0.14 160)",
@@ -138,7 +138,7 @@
             "background-position": "160% 0",
             "transition": "background-position 0.7s var(--ease-duck)"
           },
-          ".sheen:hover::after": {
+          ".sheen:hover::after, .sheen:focus-visible::after": {
             "background-position": "-40% 0"
           },
           ".tilt": {
@@ -288,7 +288,8 @@
           "*, *::before, *::after": {
             "animation-duration": "0.001ms !important",
             "animation-iteration-count": "1 !important",
-            "transition-duration": "0.001ms !important"
+            "transition-duration": "0.001ms !important",
+            "scroll-behavior": "auto !important"
           },
           ".tilt": {
             "transform": "none !important"
@@ -539,7 +540,7 @@
       "name": "glow-input",
       "type": "registry:ui",
       "title": "Glow Input",
-      "description": "Input, textarea and a field wrapper that wires up label, helper text, errors, aria-invalid and aria-describedby.",
+      "description": "Input, textarea and two field wrappers that wire up label, helper text, errors, aria-invalid and aria-describedby. GlowField wraps one control; GlowFieldset emits a real fieldset and legend for groups.",
       "registryDependencies": [
         "@duck/theme"
       ],
@@ -599,6 +600,225 @@
       "files": [
         {
           "path": "registry/duck/ui/quack-toast.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "duck-switch",
+      "type": "registry:ui",
+      "title": "Duck Switch",
+      "description": "Toggle built on a real checkbox, so it submits with the form. Off it rests on the bank, on the track floods lime and a ripple spreads from the entry point. Sizes: sm, default.",
+      "registryDependencies": [
+        "@duck/theme"
+      ],
+      "files": [
+        {
+          "path": "registry/duck/ui/duck-switch.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "sticker-checkbox",
+      "type": "registry:ui",
+      "title": "Sticker Checkbox",
+      "description": "A kiss-cut square you apply rather than fill in: the tick lands with a squash and the box takes its vinyl edge in the same beat. Real checkbox underneath, with indeterminate support.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@duck/theme"
+      ],
+      "files": [
+        {
+          "path": "registry/duck/ui/sticker-checkbox.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "sticker-radio-group",
+      "type": "registry:ui",
+      "title": "Sticker Radio Group",
+      "description": "A strip of kiss-cut cells where only the chosen sticker has been peeled off the backing. Native radios, so arrow keys and roving tab order come from the browser.",
+      "registryDependencies": [
+        "@duck/theme"
+      ],
+      "files": [
+        {
+          "path": "registry/duck/ui/sticker-radio-group.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "duck-slider",
+      "type": "registry:ui",
+      "title": "Duck Slider",
+      "description": "The waterline: the filled track is water, the thumb floats on it, and letting go leaves a wake. A real input type=range, so arrows, PageUp/PageDown, Home/End, touch and RTL are the browser's job. Single value.",
+      "registryDependencies": [
+        "@duck/theme"
+      ],
+      "files": [
+        {
+          "path": "registry/duck/ui/duck-slider.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "sticker-otp",
+      "type": "registry:ui",
+      "title": "Sticker OTP",
+      "description": "A die-cut strip of code cells. One real input lies transparent across all of them, so paste, iOS SMS autofill and password managers keep working. Digits land with a pop; the strip glows as one object when the code completes.",
+      "registryDependencies": [
+        "@duck/theme"
+      ],
+      "files": [
+        {
+          "path": "registry/duck/ui/sticker-otp.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "sticker-drop",
+      "type": "registry:ui",
+      "title": "Sticker Drop",
+      "description": "File dropzone built on the backing paper: the zone is the kiss-cut sheet, dragging lights the cut lines, and each accepted file lands as its own sticker. Wraps a clipped — not hidden — file input, so it stays keyboard operable.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@duck/theme"
+      ],
+      "files": [
+        {
+          "path": "registry/duck/ui/sticker-drop.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "duck-mark",
+      "type": "registry:ui",
+      "title": "Duck Mark",
+      "description": "The mascot as flat vector, for the sizes the photographic logo cannot take. Inherits currentColor, stays crisp at any size, adds nothing to the bundle. Poses: rest, swim.",
+      "registryDependencies": [
+        "@duck/theme"
+      ],
+      "files": [
+        {
+          "path": "registry/duck/ui/duck-mark.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "sticker-skeleton",
+      "type": "registry:ui",
+      "title": "Sticker Skeleton",
+      "description": "The un-inked sticker: die-cut and on the sheet, art not printed yet. One shimmer wave crosses the whole group on a shared delay ramp, so a page reads as one thing arriving.",
+      "registryDependencies": [
+        "@duck/theme"
+      ],
+      "files": [
+        {
+          "path": "registry/duck/ui/sticker-skeleton.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "sticker-progress",
+      "type": "registry:ui",
+      "title": "Sticker Progress",
+      "description": "The peel: what is done is solid vinyl, what is left is cut-line dashes, and the boundary is the peel edge. Determinate and indeterminate. Lime only.",
+      "registryDependencies": [
+        "@duck/theme"
+      ],
+      "files": [
+        {
+          "path": "registry/duck/ui/sticker-progress.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "empty-pond",
+      "type": "registry:ui",
+      "title": "Empty Pond",
+      "description": "Still water. The one place the mascot is allowed to be large: a duck at rest, one float, and ripples that are the emptiness rather than decoration on it.",
+      "registryDependencies": [
+        "@duck/theme",
+        "@duck/duck-mark"
+      ],
+      "files": [
+        {
+          "path": "registry/duck/ui/empty-pond.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "sticker-kbd",
+      "type": "registry:ui",
+      "title": "Sticker Kbd",
+      "description": "A keycap is already a die-cut object: a 3px edge and a 2px bottom lip that compresses to nothing when the key goes down. Pass watch and it depresses on the real keystroke.",
+      "registryDependencies": [
+        "@duck/theme"
+      ],
+      "files": [
+        {
+          "path": "registry/duck/ui/sticker-kbd.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "duck-thinking",
+      "type": "registry:ui",
+      "title": "Duck Thinking",
+      "description": "The wake without the duck going anywhere: the mark paddles in place while two rings spread out. A spinner sized and worded for a conversation.",
+      "registryDependencies": [
+        "@duck/theme",
+        "@duck/duck-mark"
+      ],
+      "files": [
+        {
+          "path": "registry/duck/ui/duck-thinking.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "stream-text",
+      "type": "registry:ui",
+      "title": "Stream Text",
+      "description": "Text arriving a piece at a time, ending in the Terminal's caret. Pass text to type a string out, or streaming to render real tokens at the model's pace.",
+      "registryDependencies": [
+        "@duck/theme"
+      ],
+      "files": [
+        {
+          "path": "registry/duck/ui/stream-text.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "quack-bubble",
+      "type": "registry:ui",
+      "title": "Quack Bubble",
+      "description": "A message that has a voice. The assistant's bubble carries the mark and a squared corner on the side it speaks from; the user's is plain lime vinyl.",
+      "registryDependencies": [
+        "@duck/theme",
+        "@duck/duck-mark"
+      ],
+      "files": [
+        {
+          "path": "registry/duck/ui/quack-bubble.tsx",
           "type": "registry:ui"
         }
       ]

@@ -1,0 +1,17 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "sticker-kbd",
+  "title": "Sticker Kbd",
+  "description": "A keycap is already a die-cut object: a 3px edge and a 2px bottom lip that compresses to nothing when the key goes down. Pass watch and it depresses on the real keystroke.",
+  "registryDependencies": [
+    "@duck/theme"
+  ],
+  "files": [
+    {
+      "path": "registry/duck/ui/sticker-kbd.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\n\nimport { cn } from \"@/lib/utils\";\n\n/**\n * StickerKbd — a keycap is already a die-cut object, so it needs no invention:\n * a 3px edge and a 2px hard bottom lip that compresses to nothing when the key\n * goes down. Pass `watch` and it depresses on the real keystroke, not just on\n * the mouse — the cap moves at the moment the user's finger does.\n *\n * All of the motion is reactive, so it costs nothing against the one-idle-\n * animation-per-viewport rule.\n */\nexport interface StickerKbdProps extends React.ComponentProps<\"kbd\"> {\n  /**\n   * A KeyboardEvent.key to listen for, case-insensitive — \"k\", \"Enter\",\n   * \"Escape\". The cap presses while that key is held anywhere on the page.\n   */\n  watch?: string;\n  /** Also require the platform's command key: Meta on Apple, Control elsewhere. */\n  meta?: boolean;\n}\n\nfunction StickerKbd({ className, children, watch, meta, ...props }: StickerKbdProps) {\n  const [down, setDown] = React.useState(false);\n\n  React.useEffect(() => {\n    if (!watch) return;\n    const wanted = watch.toLowerCase();\n    const matches = (event: KeyboardEvent) =>\n      event.key.toLowerCase() === wanted &&\n      (!meta || event.metaKey || event.ctrlKey);\n\n    const onDown = (event: KeyboardEvent) => matches(event) && setDown(true);\n    const onUp = (event: KeyboardEvent) => matches(event) && setDown(false);\n    // A held key that loses the window never fires keyup.\n    const onBlur = () => setDown(false);\n\n    document.addEventListener(\"keydown\", onDown);\n    document.addEventListener(\"keyup\", onUp);\n    window.addEventListener(\"blur\", onBlur);\n    return () => {\n      document.removeEventListener(\"keydown\", onDown);\n      document.removeEventListener(\"keyup\", onUp);\n      window.removeEventListener(\"blur\", onBlur);\n    };\n  }, [watch, meta]);\n\n  return (\n    <kbd\n      data-slot=\"sticker-kbd\"\n      data-pressed={down || undefined}\n      className={cn(\n        \"inline-flex min-w-6 items-center justify-center rounded-md px-1.5 py-0.5\",\n        \"font-mono text-[11px] leading-none font-semibold\",\n        \"sticker border-border bg-card text-foreground select-none\",\n        // The lip is the cap's depth. Losing it and dropping by the same 2px is\n        // what makes the key look pressed rather than merely recoloured.\n        \"shadow-[0_2px_0_var(--border)]\",\n        \"transition-[box-shadow,transform] duration-75 ease-[var(--ease-duck)]\",\n        \"active:translate-y-0.5 active:shadow-none\",\n        \"data-[pressed]:translate-y-0.5 data-[pressed]:border-primary data-[pressed]:shadow-none\",\n        className\n      )}\n      {...props}\n    >\n      {children}\n    </kbd>\n  );\n}\n\nexport { StickerKbd };\n",
+      "type": "registry:ui"
+    }
+  ],
+  "type": "registry:ui"
+}

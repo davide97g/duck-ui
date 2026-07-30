@@ -54,10 +54,24 @@ All imports are `@/components/ui/<name>`, the hook is `@/hooks/use-holo-pointer`
 | `Announcement` | `tag`, `href`, `arrow` |
 | `DuckSpinner` | `size: sm \| default \| lg`, `motion: paddle \| spin`, `src` (any image URL, defaults to the duck/ui logo), `label`; also exports `DuckGlyph` and `DUCK_MARK_SRC` |
 | `HoloSeparator` | `label`, `orientation`, `holo` |
-| `GlowInput` / `GlowTextarea` / `GlowField` | field takes `label`, `helper`, `error`, `required` |
+| `DuckMark` | `pose: rest \| swim`. Flat vector, inherits currentColor. Use above ~48px; below that use `DuckGlyph` |
+| `StickerKbd` | `watch` (a KeyboardEvent.key), `meta` |
+| `StickerSkeleton` / `StickerSkeletonText` | `shape: line \| title \| circle \| card`, `delay`; text takes `lines` |
+| `StickerProgress` | `value` (omit for indeterminate), `max`, `label`, `showValue` |
+| `EmptyPond` | `title`, `hint`, `action`, `compact` |
+| `GlowInput` / `GlowTextarea` / `GlowField` / `GlowFieldset` | `GlowField` takes `label`, `helper`, `error`, `required` and wraps one control; `GlowFieldset` takes `legend` instead of `label` and wraps a group |
+| `DuckSwitch` | `size: sm \| default`, `children` as the label, plus native `checked` / `defaultChecked` / `onChange` |
+| `StickerCheckbox` | `indeterminate`, `children` as the label, plus native checkbox props |
+| `StickerRadioGroup` / `StickerRadio` | group takes `name`, `value`, `defaultValue`, `onValueChange`; radio takes `value` (required) and `description` |
+| `DuckSlider` | `value`, `defaultValue`, `min`, `max`, `step`, `formatValue`, `showValue`. Single value, no range |
+| `StickerOtp` | `length`, `value`, `defaultValue`, `onValueChange`, `onComplete` |
+| `StickerDrop` | `accept`, `multiple`, `maxSize`, `onFilesChange`, `label`, `hint` |
 | `DuckTabs` (+ `List`, `Trigger`, `Content`) | `value`, `defaultValue`, `onValueChange` |
 | `ThemeSwitcher` | none, needs a next-themes provider |
 | `QuackToastProvider` / `useQuackToast` | provider takes `max`; hook returns `toast`, `quack`, `dismiss` |
+| `DuckThinking` | `label`, `showLabel` |
+| `StreamText` | `text` (types it out — demo), `streaming` + `active` (real tokens), `speed`, `onDone` |
+| `QuackBubble` | `from: assistant \| user`, `meta` |
 | `useHoloPointer` | `tilt`, `magnet`, `reset`, `disabled`; returns a ref |
 
 ## Tokens

@@ -103,4 +103,66 @@ function GlowField({
   );
 }
 
-export { GlowInput, GlowTextarea, GlowField };
+/**
+ * GlowFieldset — GlowField for controls that are plural.
+ *
+ * A radio group, a slider pair, an OTP strip and a dropzone are composite: they
+ * have no single element for a <label htmlFor> to point at, so GlowField cannot
+ * host them. A real <fieldset><legend> names the whole group instead, and the
+ * helper or error text is wired to the group rather than to one control.
+ *
+ * Keep the legend short. Screen readers prepend it to every control inside.
+ */
+function GlowFieldset({
+  className,
+  legend,
+  helper,
+  error,
+  required,
+  children,
+  ...props
+}: Omit<React.ComponentProps<"fieldset">, "children"> & {
+  legend: string;
+  helper?: string;
+  error?: string;
+  required?: boolean;
+  children: React.ReactNode;
+}) {
+  const messageId = `${React.useId()}-message`;
+  const message = error ?? helper;
+
+  return (
+    <fieldset
+      data-slot="glow-fieldset"
+      aria-describedby={message ? messageId : undefined}
+      aria-invalid={error ? true : undefined}
+      aria-required={required || undefined}
+      className={cn("flex min-w-0 flex-col gap-2", className)}
+      {...props}
+    >
+      <legend className="text-sm font-medium text-foreground">
+        {legend}
+        {required && (
+          <span className="ml-1 text-destructive" aria-hidden>
+            *
+          </span>
+        )}
+      </legend>
+      {children}
+      {message && (
+        <p
+          id={messageId}
+          role={error ? "alert" : undefined}
+          className={cn(
+            "text-xs",
+            error ? "text-destructive" : "text-muted-foreground"
+          )}
+        >
+          {message}
+        </p>
+      )}
+    </fieldset>
+  );
+}
+
+export { GlowInput, GlowTextarea, GlowField, GlowFieldset };

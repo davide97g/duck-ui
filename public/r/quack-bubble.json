@@ -1,0 +1,18 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "quack-bubble",
+  "title": "Quack Bubble",
+  "description": "A message that has a voice. The assistant's bubble carries the mark and a squared corner on the side it speaks from; the user's is plain lime vinyl.",
+  "registryDependencies": [
+    "@duck/theme",
+    "@duck/duck-mark"
+  ],
+  "files": [
+    {
+      "path": "registry/duck/ui/quack-bubble.tsx",
+      "content": "import * as React from \"react\";\n\nimport { cn } from \"@/lib/utils\";\nimport { DuckMark } from \"@/components/ui/duck-mark\";\n\n/**\n * QuackBubble — a message that has a voice, which is the first time in this\n * registry that the Quack prefix has been literally true.\n *\n * The assistant speaks from the pond side: its bubble carries the mark and a\n * squared corner on the side it speaks from — the corner the die did not round\n * off. No CSS triangle tail: a tail drawn with borders cannot survive a 3px\n * sticker edge, and a clip-path notch would cut the edge open.\n *\n * The user's bubble is plain lime vinyl with no mark. One voice in the\n * conversation is a character; the other is a person.\n */\nexport interface QuackBubbleProps extends React.ComponentProps<\"div\"> {\n  from?: \"assistant\" | \"user\";\n  /** Timestamp, model name, \"edited\" — whatever belongs under the message. */\n  meta?: string;\n}\n\nfunction QuackBubble({\n  className,\n  from = \"assistant\",\n  meta,\n  children,\n  ...props\n}: QuackBubbleProps) {\n  const assistant = from === \"assistant\";\n\n  return (\n    <div\n      data-slot=\"quack-bubble\"\n      data-from={from}\n      className={cn(\n        \"flex w-full gap-3\",\n        assistant ? \"justify-start\" : \"justify-end\",\n        className\n      )}\n      {...props}\n    >\n      {assistant && (\n        <span\n          aria-hidden\n          className=\"mt-0.5 grid size-8 shrink-0 place-items-center rounded-full bg-secondary\"\n        >\n          <DuckMark className=\"size-5\" />\n        </span>\n      )}\n\n      <div className=\"flex max-w-[38rem] min-w-0 flex-col gap-1\">\n        <div\n          className={cn(\n            \"relative rounded-2xl px-4 py-2.5 text-sm\",\n            // The squared corner points back at the speaker.\n            assistant\n              ? \"sticker border-border rounded-tl-md bg-card text-card-foreground\"\n              : \"rounded-br-md bg-primary text-primary-foreground\"\n          )}\n        >\n          {children}\n        </div>\n        {meta && (\n          <span\n            className={cn(\n              \"font-mono text-[11px] text-muted-foreground\",\n              assistant ? \"text-left\" : \"text-right\"\n            )}\n          >\n            {meta}\n          </span>\n        )}\n      </div>\n    </div>\n  );\n}\n\nexport { QuackBubble };\n",
+      "type": "registry:ui"
+    }
+  ],
+  "type": "registry:ui"
+}

@@ -32,7 +32,7 @@
       "destructive-foreground": "oklch(0.98 0 0)",
       "border": "oklch(0.895 0.006 285)",
       "input": "oklch(0.895 0.006 285)",
-      "ring": "oklch(0.76 0.16 115)",
+      "ring": "oklch(0.62 0.14 115)",
       "chart-1": "oklch(0.72 0.2 305)",
       "chart-2": "oklch(0.75 0.14 220)",
       "chart-3": "oklch(0.78 0.14 160)",
@@ -133,7 +133,7 @@
         "background-position": "160% 0",
         "transition": "background-position 0.7s var(--ease-duck)"
       },
-      ".sheen:hover::after": {
+      ".sheen:hover::after, .sheen:focus-visible::after": {
         "background-position": "-40% 0"
       },
       ".tilt": {
@@ -283,7 +283,8 @@
       "*, *::before, *::after": {
         "animation-duration": "0.001ms !important",
         "animation-iteration-count": "1 !important",
-        "transition-duration": "0.001ms !important"
+        "transition-duration": "0.001ms !important",
+        "scroll-behavior": "auto !important"
       },
       ".tilt": {
         "transform": "none !important"

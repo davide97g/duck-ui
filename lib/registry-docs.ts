@@ -478,26 +478,34 @@ export const components: ComponentDoc[] = [
     slug: "glow-input",
     title: "Glow Input",
     summary:
-      "Text input, textarea and a field wrapper that wires up label, helper text and errors so the control stays accessible.",
+      "Text input, textarea and two field wrappers that wire up label, helper text and errors so the control stays accessible.",
     category: "Inputs",
     registryDependencies: ["@duck/theme"],
-    exports: ["GlowInput", "GlowTextarea", "GlowField"],
+    exports: ["GlowInput", "GlowTextarea", "GlowField", "GlowFieldset"],
     props: [
       { name: "label", type: "string", description: "On GlowField: visible label above the control." },
-      { name: "helper", type: "string", description: "On GlowField: persistent hint below the control." },
+      {
+        name: "legend",
+        type: "string",
+        description: "On GlowFieldset: names the whole group. Keep it short — it is read before every control inside.",
+      },
+      { name: "helper", type: "string", description: "Persistent hint below the control or group." },
       {
         name: "error",
         type: "string",
-        description: "On GlowField: replaces the helper, sets aria-invalid and role=alert.",
+        description: "Replaces the helper, sets aria-invalid and role=alert.",
       },
       {
         name: "required",
         type: "boolean",
         default: "false",
-        description: "On GlowField: marks the control and adds the asterisk.",
+        description: "Marks the control or group and adds the asterisk.",
       },
     ],
-    rules: ["Never use the placeholder as the label. GlowField exists so you do not have to."],
+    rules: [
+      "Never use the placeholder as the label. GlowField exists so you do not have to.",
+      "GlowField wraps one control. For anything plural — a radio group, a range, an OTP strip, a dropzone — use GlowFieldset, which emits a real fieldset and legend.",
+    ],
   },
   {
     slug: "duck-tabs",
@@ -555,6 +563,412 @@ export const components: ComponentDoc[] = [
     ],
     rules: [
       "Toasts never steal focus. Anything the user must act on belongs inline, not in a toast.",
+    ],
+  },
+  {
+    slug: "duck-switch",
+    title: "Duck Switch",
+    summary:
+      "The duck entering the water: the track floods lime and one ripple spreads from the entry point.",
+    category: "Inputs",
+    client: true,
+    registryDependencies: ["@duck/theme"],
+    exports: ["DuckSwitch"],
+    props: [
+      {
+        name: "size",
+        type: "sm | default",
+        default: "default",
+        description: "Track size. Both keep a tap target of at least 24px.",
+      },
+      {
+        name: "children",
+        type: "ReactNode",
+        description: "Visible label, rendered inside the <label>. Without one, pass an aria-label.",
+      },
+      {
+        name: "checked / defaultChecked / onChange",
+        type: "native",
+        description: "It is an <input type=\"checkbox\">, so controlled and uncontrolled both work and it submits with the form.",
+      },
+    ],
+    rules: [
+      "The off state is drawn by the 3px border, never by the fill — a muted fill on a card is about 1.2:1 and disappears.",
+      "Knob travel is longer than the knob is wide, so the state survives without colour.",
+      "Space toggles natively. Enter is wired up too, per the ARIA switch pattern.",
+    ],
+  },
+  {
+    slug: "sticker-checkbox",
+    title: "Sticker Checkbox",
+    summary:
+      "A kiss-cut square you apply: the tick lands from oversize with a squash and the box takes its vinyl edge in the same beat.",
+    category: "Inputs",
+    client: true,
+    dependencies: ["lucide-react"],
+    registryDependencies: ["@duck/theme"],
+    exports: ["StickerCheckbox"],
+    props: [
+      {
+        name: "indeterminate",
+        type: "boolean",
+        default: "false",
+        description:
+          "Partial selection. Assigned as a DOM property after render, because the attribute does nothing.",
+      },
+      {
+        name: "children",
+        type: "ReactNode",
+        description: "Visible label. Without one, pass an aria-label.",
+      },
+      {
+        name: "checked / defaultChecked / onChange",
+        type: "native",
+        description: "It is an <input type=\"checkbox\">, so it submits with the form.",
+      },
+    ],
+    rules: [
+      "The box draws at 20px and the tap target at 24px, so the die-cut look does not cost you WCAG 2.5.8.",
+      "Inside a StickerCard with peel, the card clips its overflow — check the focus ring is not cropped.",
+    ],
+  },
+  {
+    slug: "sticker-radio-group",
+    title: "Sticker Radio Group",
+    summary:
+      "A strip of kiss-cut cells where only the chosen sticker has been peeled off the backing.",
+    category: "Inputs",
+    client: true,
+    registryDependencies: ["@duck/theme"],
+    exports: ["StickerRadioGroup", "StickerRadio"],
+    props: [
+      {
+        name: "name",
+        type: "string",
+        description: "On the group: shared radio name. Generated when omitted.",
+      },
+      {
+        name: "value / defaultValue / onValueChange",
+        type: "string",
+        description: "On the group: controlled or uncontrolled selection.",
+      },
+      { name: "value", type: "string", description: "On StickerRadio: the option's value. Required." },
+      {
+        name: "description",
+        type: "string",
+        description: "On StickerRadio: second line, for when the label alone does not explain the choice.",
+      },
+    ],
+    rules: [
+      "Wrap it in a GlowFieldset. A radio group needs a group name and a legend is the only thing that reliably supplies one.",
+      "Selection changes the border style, not only its colour, so the choice survives greyscale and forced colours.",
+      "Arrow keys, roving tab order and the tabbable-when-empty rule are native radio behaviour. Do not reimplement them.",
+    ],
+  },
+  {
+    slug: "duck-slider",
+    title: "Duck Slider",
+    summary:
+      "The waterline: the filled track is water, the thumb floats on it, and letting go leaves a wake.",
+    category: "Inputs",
+    client: true,
+    registryDependencies: ["@duck/theme"],
+    exports: ["DuckSlider"],
+    props: [
+      {
+        name: "value / defaultValue",
+        type: "number",
+        default: "0",
+        description: "Controlled or uncontrolled. min, max and step pass straight through.",
+      },
+      {
+        name: "formatValue",
+        type: "(value: number) => string",
+        description:
+          "Feeds aria-valuetext. Without it a screen reader reads a bare integer, which is useless for anything but a percentage.",
+      },
+      {
+        name: "showValue",
+        type: "boolean",
+        default: "false",
+        description: "Print the formatted value above the track, in tabular figures.",
+      },
+    ],
+    rules: [
+      "No holo variant, on purpose. Settings pages have six sliders and the viewport has one holo budget.",
+      "Single value. A two-thumb range is a different control — do not fake it with two of these.",
+      "Pass formatValue whenever the number is not self-explanatory.",
+    ],
+  },
+  {
+    slug: "sticker-otp",
+    title: "Sticker OTP",
+    summary:
+      "A die-cut strip of code cells. Digits land with a pop and the strip glows as one object when the code completes.",
+    category: "Inputs",
+    client: true,
+    registryDependencies: ["@duck/theme"],
+    exports: ["StickerOtp"],
+    props: [
+      { name: "length", type: "number", default: "6", description: "Number of cells." },
+      {
+        name: "value / defaultValue / onValueChange",
+        type: "string",
+        description: "Digits only. Anything else is stripped as it arrives.",
+      },
+      {
+        name: "onComplete",
+        type: "(value: string) => void",
+        description: "Fires once the last cell fills.",
+      },
+    ],
+    rules: [
+      "One input, not one per cell. Six inputs break paste, break password managers, and announce \"edit blank, one of six\".",
+      "autoComplete=\"one-time-code\" is what triggers iOS SMS autofill. Without it this is worse than a plain text input on a phone.",
+      "Errors go in the field, not in a toast. If you auto-submit on the last digit, still render a submit button.",
+    ],
+  },
+  {
+    slug: "sticker-drop",
+    title: "Sticker Drop",
+    summary:
+      "The backing paper itself: dragging lights the cut lines and each accepted file lands as its own sticker.",
+    category: "Inputs",
+    client: true,
+    dependencies: ["lucide-react"],
+    registryDependencies: ["@duck/theme"],
+    exports: ["StickerDrop"],
+    props: [
+      { name: "accept", type: "string", description: "Same syntax as the native input. Extensions, MIME types and image/* all work." },
+      { name: "multiple", type: "boolean", default: "false", description: "Keep more than one file." },
+      { name: "maxSize", type: "number", description: "Largest file allowed, in bytes. Rejections say which file and why." },
+      {
+        name: "onFilesChange",
+        type: "(files: File[]) => void",
+        description: "Called with the full list every time it changes.",
+      },
+      { name: "label / hint", type: "string", description: "Zone copy. The hint is where the accepted types and size limit belong." },
+    ],
+    rules: [
+      "The file input is clipped, never display:none — a hidden input cannot take focus and the zone stops being keyboard operable.",
+      "Dragging is not the only way in. The picker is the single-pointer alternative WCAG 2.5.7 asks for, so say so in the label.",
+      "The drag-active edge is lime, not a brighter --cut. Cut lines on the sheet are about 1.8:1 and cannot carry a status.",
+    ],
+  },
+  {
+    slug: "duck-mark",
+    title: "Duck Mark",
+    summary:
+      "The mascot as flat vector, for the sizes the photographic logo cannot take.",
+    category: "Display",
+    registryDependencies: ["@duck/theme"],
+    exports: ["DuckMark"],
+    props: [
+      {
+        name: "pose",
+        type: "rest | swim",
+        default: "rest",
+        description: "swim adds two lines of water under the duck.",
+      },
+    ],
+    rules: [
+      "Use DuckGlyph, not this, at 16-24px — the photographic mark is tuned for that size and carries the brand.",
+      "Use this anywhere above about 48px, where the photographic mark's transparent halo starts to show.",
+      "The body is currentColor. Set the colour with a text-* class.",
+    ],
+  },
+  {
+    slug: "sticker-skeleton",
+    title: "Sticker Skeleton",
+    summary:
+      "The un-inked sticker: die-cut and already on the sheet, the art just has not printed yet.",
+    category: "Feedback",
+    registryDependencies: ["@duck/theme"],
+    exports: ["StickerSkeleton", "StickerSkeletonText"],
+    props: [
+      {
+        name: "shape",
+        type: "line | title | circle | card",
+        default: "line",
+        description: "The cut. Override the size with a className when none of them fit.",
+      },
+      {
+        name: "delay",
+        type: "number",
+        default: "0",
+        description: "Milliseconds into the shared wave. Later items sweep later.",
+      },
+      {
+        name: "lines",
+        type: "number",
+        default: "3",
+        description: "On StickerSkeletonText: how many lines, staggered 90ms apart, last one short.",
+      },
+    ],
+    rules: [
+      "Stagger the delays. Twelve skeletons each running their own shimmer reads as twelve things loading, not one page arriving.",
+      "Show a skeleton once a wait passes about 300ms. Below that it is a flash, not feedback.",
+    ],
+  },
+  {
+    slug: "sticker-progress",
+    title: "Sticker Progress",
+    summary:
+      "The peel: solid vinyl behind the edge, cut-line dashes ahead of it.",
+    category: "Feedback",
+    registryDependencies: ["@duck/theme"],
+    exports: ["StickerProgress"],
+    props: [
+      {
+        name: "value",
+        type: "number",
+        description: "0 to max. Omit it entirely for the indeterminate sweep.",
+      },
+      { name: "max", type: "number", default: "100", description: "Upper bound." },
+      { name: "label", type: "string", description: "Also becomes the accessible name." },
+      {
+        name: "showValue",
+        type: "boolean",
+        default: "false",
+        description: "Print the percentage beside the label, in tabular figures.",
+      },
+    ],
+    rules: [
+      "No holo variant. A progress bar is on screen for the whole wait, so it is the worst place to spend the viewport's one holo element.",
+      "Give it a real value as soon as you have one. Indeterminate is for genuinely unknown length, not for laziness.",
+    ],
+  },
+  {
+    slug: "empty-pond",
+    title: "Empty Pond",
+    summary:
+      "Still water: one duck at rest and ripples that are the emptiness rather than decoration on it.",
+    category: "Feedback",
+    registryDependencies: ["@duck/theme", "@duck/duck-mark"],
+    exports: ["EmptyPond"],
+    props: [
+      { name: "title", type: "string", description: "What is not here. Required." },
+      { name: "hint", type: "string", description: "One line on what to do about it." },
+      { name: "action", type: "ReactNode", description: "The way out — usually a button." },
+      {
+        name: "compact",
+        type: "boolean",
+        default: "false",
+        description: "Drop the mascot and the ripples, for empty states inside small panels.",
+      },
+    ],
+    rules: [
+      "An empty screen is an invitation. Give it an action, or say why there is nothing to do.",
+      "The float is the viewport's one idle animation while this is on screen. Do not put a second one beside it.",
+      "This is the only place the mascot goes large. Everywhere else it is a 16px glyph.",
+    ],
+  },
+  {
+    slug: "sticker-kbd",
+    title: "Sticker Kbd",
+    summary:
+      "A keycap with a hard bottom lip that compresses to nothing when the key goes down.",
+    category: "Display",
+    client: true,
+    registryDependencies: ["@duck/theme"],
+    exports: ["StickerKbd"],
+    props: [
+      {
+        name: "watch",
+        type: "string",
+        description:
+          "A KeyboardEvent.key to listen for, case-insensitive. The cap presses while that key is held anywhere on the page.",
+      },
+      {
+        name: "meta",
+        type: "boolean",
+        default: "false",
+        description: "Also require the platform command key — Meta on Apple, Control elsewhere.",
+      },
+    ],
+    rules: [
+      "All of the motion is reactive, so it costs nothing against the one-idle-animation rule. Use as many as the page needs.",
+      "Print the key the user actually has to press. ⌘ on Apple, Ctrl elsewhere — decide at runtime, do not guess in the markup.",
+    ],
+  },
+  {
+    slug: "duck-thinking",
+    title: "Duck Thinking",
+    summary:
+      "The wake without the duck going anywhere: the mark paddles in place while two rings spread out.",
+    category: "Feedback",
+    registryDependencies: ["@duck/theme", "@duck/duck-mark"],
+    exports: ["DuckThinking"],
+    props: [
+      {
+        name: "label",
+        type: "string",
+        default: "Thinking",
+        description: "Announced politely, and shown unless showLabel is false.",
+      },
+      {
+        name: "showLabel",
+        type: "boolean",
+        default: "true",
+        description: "Hide the text and keep it for screen readers only — for use inside a bubble.",
+      },
+    ],
+    rules: [
+      "Say what is happening, not that something is. \"Reading the registry\" beats \"Loading\".",
+      "The ripples are this view's idle animation while it is on screen.",
+    ],
+  },
+  {
+    slug: "stream-text",
+    title: "Stream Text",
+    summary:
+      "Text arriving a piece at a time, ending in the Terminal's caret.",
+    category: "Display",
+    client: true,
+    registryDependencies: ["@duck/theme"],
+    exports: ["StreamText"],
+    props: [
+      {
+        name: "text",
+        type: "string",
+        description: "Typed out at speed. This is the demo mode — a timer, not a stream.",
+      },
+      {
+        name: "streaming",
+        type: "string",
+        description:
+          "Already-streaming content. Rendered as given, so the model sets the pace. This is the real mode.",
+      },
+      { name: "active", type: "boolean", description: "True while more tokens are coming. Keeps the caret lit in streaming mode." },
+      { name: "speed", type: "number", default: "18", description: "Milliseconds per character, in text mode only." },
+      { name: "onDone", type: "() => void", description: "Fires when the typed string finishes." },
+    ],
+    rules: [
+      "Use streaming for real output. Re-typing text you already have wastes the user's time to look busy.",
+      "Under reduced motion the whole string appears at once. Someone who asked for less movement should not be made to wait for a typewriter.",
+    ],
+  },
+  {
+    slug: "quack-bubble",
+    title: "Quack Bubble",
+    summary:
+      "A message that has a voice: the assistant carries the mark, the user gets plain lime vinyl.",
+    category: "Surfaces",
+    registryDependencies: ["@duck/theme", "@duck/duck-mark"],
+    exports: ["QuackBubble"],
+    props: [
+      {
+        name: "from",
+        type: "assistant | user",
+        default: "assistant",
+        description: "Which side speaks. Assistant gets the mark and the sticker edge.",
+      },
+      { name: "meta", type: "string", description: "Timestamp, model name, \"edited\" — whatever belongs under the message." },
+    ],
+    rules: [
+      "No CSS triangle tail. A drawn tail cannot survive a 3px sticker edge, and a clip-path notch would cut the edge open — the squared corner does the pointing.",
+      "Only the assistant carries the mark. One voice in the conversation is a character; the other is a person.",
+      "Compose it with StreamText for the message and DuckThinking for the wait.",
     ],
   },
 ];

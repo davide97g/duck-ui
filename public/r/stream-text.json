@@ -1,0 +1,17 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "stream-text",
+  "title": "Stream Text",
+  "description": "Text arriving a piece at a time, ending in the Terminal's caret. Pass text to type a string out, or streaming to render real tokens at the model's pace.",
+  "registryDependencies": [
+    "@duck/theme"
+  ],
+  "files": [
+    {
+      "path": "registry/duck/ui/stream-text.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\n\nimport { cn } from \"@/lib/utils\";\n\n/**\n * StreamText — text arriving a piece at a time, ending in the Terminal's caret.\n *\n * Two modes, and the difference matters. Give it `text` and it types the string\n * out itself, which is a demo. Give it `streaming` and it just renders whatever\n * you pass and keeps the caret lit, which is what a real token stream needs —\n * the model sets the pace, not a timer.\n *\n * Deliberately unprefixed, like Terminal, whose typing behaviour it shares.\n * Under reduced motion the whole string is there immediately: someone who has\n * asked for less movement should not be made to wait for a typewriter.\n */\nexport interface StreamTextProps\n  extends Omit<React.ComponentProps<\"span\">, \"children\"> {\n  /** The full string, revealed at `speed`. Ignored when `streaming` is set. */\n  text?: string;\n  /** Already-streaming content. Render it and keep the caret while it grows. */\n  streaming?: string;\n  /** True while more tokens are coming. Drives the caret in streaming mode. */\n  active?: boolean;\n  /** Milliseconds per character in `text` mode. */\n  speed?: number;\n  onDone?: () => void;\n}\n\nfunction StreamText({\n  className,\n  text,\n  streaming,\n  active,\n  speed = 18,\n  onDone,\n  ...props\n}: StreamTextProps) {\n  const driven = streaming !== undefined;\n  const [typed, setTyped] = React.useState(\"\");\n\n  React.useEffect(() => {\n    if (driven || !text) return;\n\n    if (window.matchMedia(\"(prefers-reduced-motion: reduce)\").matches) {\n      setTyped(text);\n      onDone?.();\n      return;\n    }\n\n    setTyped(\"\");\n    let index = 0;\n    const id = window.setInterval(() => {\n      index += 1;\n      setTyped(text.slice(0, index));\n      if (index >= text.length) {\n        window.clearInterval(id);\n        onDone?.();\n      }\n    }, speed);\n    return () => window.clearInterval(id);\n  }, [driven, text, speed, onDone]);\n\n  const body = driven ? streaming : typed;\n  const caret = driven ? active : typed.length < (text?.length ?? 0);\n\n  return (\n    <span\n      data-slot=\"stream-text\"\n      // The text is the payload, so announce additions rather than re-reading\n      // the whole message every token.\n      aria-live=\"polite\"\n      aria-atomic={false}\n      className={cn(\"inline\", className)}\n      {...props}\n    >\n      {body}\n      {caret && (\n        <span\n          aria-hidden\n          className=\"ml-0.5 inline-block h-[1em] w-px translate-y-[0.15em] bg-primary [animation:duck-caret_1s_step-end_infinite]\"\n        />\n      )}\n    </span>\n  );\n}\n\nexport { StreamText };\n",
+      "type": "registry:ui"
+    }
+  ],
+  "type": "registry:ui"
+}

@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "sticker-checkbox",
+  "title": "Sticker Checkbox",
+  "description": "A kiss-cut square you apply rather than fill in: the tick lands with a squash and the box takes its vinyl edge in the same beat. Real checkbox underneath, with indeterminate support.",
+  "dependencies": [
+    "lucide-react"
+  ],
+  "registryDependencies": [
+    "@duck/theme"
+  ],
+  "files": [
+    {
+      "path": "registry/duck/ui/sticker-checkbox.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\nimport { Check, Minus } from \"lucide-react\";\n\nimport { cn } from \"@/lib/utils\";\n\n/**\n * StickerCheckbox — a kiss-cut square you apply rather than fill in.\n *\n * The tick does not fade in. It lands from oversize with a squash, and the box\n * takes its vinyl edge in the same beat, the way a sticker goes down under a\n * thumb. Unchecked, it is bare backing: the 3px cut edge and nothing else.\n *\n * A real checkbox underneath, so it submits with the form and label clicks,\n * Space, and indeterminate all behave the way the platform already promises.\n */\nexport interface StickerCheckboxProps\n  extends Omit<React.ComponentProps<\"input\">, \"type\"> {\n  /**\n   * Partial selection — the parent of a half-ticked list. This is a DOM\n   * property, not an attribute, so it has to be assigned after render.\n   */\n  indeterminate?: boolean;\n  /** Visible label. Without one, pass an aria-label. */\n  children?: React.ReactNode;\n}\n\nfunction StickerCheckbox({\n  className,\n  indeterminate = false,\n  children,\n  ref,\n  ...props\n}: StickerCheckboxProps) {\n  const inputRef = React.useRef<HTMLInputElement>(null);\n  React.useImperativeHandle(ref, () => inputRef.current as HTMLInputElement);\n\n  React.useEffect(() => {\n    if (inputRef.current) inputRef.current.indeterminate = indeterminate;\n  }, [indeterminate]);\n\n  return (\n    <label\n      data-slot=\"sticker-checkbox\"\n      className={cn(\n        \"inline-flex cursor-pointer items-start gap-3 py-0.5 text-sm select-none\",\n        \"has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50\",\n        className\n      )}\n    >\n      <input\n        ref={inputRef}\n        type=\"checkbox\"\n        className=\"peer sr-only\"\n        aria-checked={indeterminate ? \"mixed\" : undefined}\n        {...props}\n      />\n      <span\n        aria-hidden\n        className={cn(\n          // Not the card radius: half of 20px is 10px, so --radius-md would\n          // round this into a perfect circle and a checkbox would read as a radio.\n          \"relative grid size-5 shrink-0 place-items-center rounded-[6px]\",\n          // The die-cut box is 20px. The pseudo-element pushes the tap target\n          // out to 24px without moving anything on screen (WCAG 2.5.8).\n          \"before:absolute before:-inset-[2px] before:content-['']\",\n          \"sticker border-border text-primary-foreground\",\n          \"transition-[background-color,border-color] duration-200 ease-[var(--ease-duck)]\",\n          \"peer-checked:border-primary peer-checked:bg-primary peer-checked:[--tick:1]\",\n          \"peer-checked:[animation:duck-squash_0.3s_var(--ease-squash)]\",\n          \"peer-focus-visible:ring-2 peer-focus-visible:ring-ring peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-background\",\n          indeterminate && \"border-primary bg-primary [--tick:1]\"\n        )}\n      >\n        <span className=\"scale-[var(--tick,0)] transition-transform duration-200 ease-[var(--ease-squash)]\">\n          {indeterminate ? (\n            <Minus className=\"size-3.5\" strokeWidth={3.5} />\n          ) : (\n            <Check className=\"size-3.5\" strokeWidth={3.5} />\n          )}\n        </span>\n      </span>\n      {children}\n    </label>\n  );\n}\n\nexport { StickerCheckbox };\n",
+      "type": "registry:ui"
+    }
+  ],
+  "type": "registry:ui"
+}

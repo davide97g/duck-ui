@@ -1,0 +1,17 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "duck-mark",
+  "title": "Duck Mark",
+  "description": "The mascot as flat vector, for the sizes the photographic logo cannot take. Inherits currentColor, stays crisp at any size, adds nothing to the bundle. Poses: rest, swim.",
+  "registryDependencies": [
+    "@duck/theme"
+  ],
+  "files": [
+    {
+      "path": "registry/duck/ui/duck-mark.tsx",
+      "content": "import * as React from \"react\";\n\nimport { cn } from \"@/lib/utils\";\n\n/**\n * DuckMark — the mascot as flat vector.\n *\n * DuckGlyph, over in duck-spinner, is the photographic logo: it carries a\n * transparent halo and is tuned to read at 16px on a button. Blown up to the\n * 96px an empty state wants, that halo shows. This is the same duck drawn as\n * geometry, so it stays crisp at any size, inherits colour from currentColor,\n * and adds nothing to the bundle.\n *\n *   rest   sitting still\n *   swim   sitting on two lines of water\n *\n * The beak and eye are the only literal colours in the registry. They are not\n * semantic — a duck's beak is not \"accent\", it is orange — which is the same\n * exception HoloAvatar's away dot already takes.\n */\nexport interface DuckMarkProps extends React.ComponentProps<\"svg\"> {\n  pose?: \"rest\" | \"swim\";\n}\n\nfunction DuckMark({ className, pose = \"rest\", ...props }: DuckMarkProps) {\n  return (\n    <svg\n      data-slot=\"duck-mark\"\n      viewBox=\"0 0 64 64\"\n      fill=\"none\"\n      aria-hidden\n      className={cn(\"size-10 text-primary\", className)}\n      {...props}\n    >\n      {/* tail */}\n      <path d=\"M10 36 L1 30 L9 46 Z\" fill=\"currentColor\" />\n      {/* body */}\n      <ellipse cx=\"28\" cy=\"41\" rx=\"21\" ry=\"12.5\" fill=\"currentColor\" />\n      {/* head */}\n      <circle cx=\"43\" cy=\"21\" r=\"11\" fill=\"currentColor\" />\n      {/* beak */}\n      <path d=\"M52 17.5 L63.5 21.8 L52 26 Z\" fill=\"oklch(0.75 0.17 62)\" />\n      {/* wing */}\n      <path\n        d=\"M17 41 q9 7.5 20 1\"\n        stroke=\"oklch(0.2 0.01 285 / 0.32)\"\n        strokeWidth=\"2.5\"\n        strokeLinecap=\"round\"\n        fill=\"none\"\n      />\n      {/* eye */}\n      <circle cx=\"45.5\" cy=\"18\" r=\"2.3\" fill=\"oklch(0.2 0.01 285)\" />\n\n      {pose === \"swim\" && (\n        <>\n          <path\n            d=\"M4 52 h24\"\n            stroke=\"currentColor\"\n            strokeWidth=\"3\"\n            strokeLinecap=\"round\"\n            opacity=\"0.35\"\n          />\n          <path\n            d=\"M34 52 h26\"\n            stroke=\"currentColor\"\n            strokeWidth=\"3\"\n            strokeLinecap=\"round\"\n            opacity=\"0.2\"\n          />\n        </>\n      )}\n    </svg>\n  );\n}\n\nexport { DuckMark };\n",
+      "type": "registry:ui"
+    }
+  ],
+  "type": "registry:ui"
+}

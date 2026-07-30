@@ -29,7 +29,10 @@
   --destructive-foreground: oklch(0.98 0 0);
   --border: oklch(0.895 0.006 285);
   --input: oklch(0.895 0.006 285);
-  --ring: oklch(0.76 0.16 115);
+  /* Deeper than --primary on purpose. A focus ring is a non-text indicator, so
+     it owes 3:1 against whatever it sits on (WCAG 1.4.11). Primary lime is 2.1:1
+     on a white card — invisible. This is 3.6:1 there, 3.4:1 on the canvas. */
+  --ring: oklch(0.62 0.14 115);
 
   --chart-1: oklch(0.72 0.2 305);
   --chart-2: oklch(0.75 0.14 220);
@@ -523,12 +526,6 @@
   to {
     opacity: 1;
     transform: translateY(0);
-  }
-}
-
-@keyframes duck-spin {
-  to {
-    transform: rotate(360deg);
   }
 }
 

@@ -20,7 +20,7 @@
 
 **Open code. AI ready. Quack.**
 
-17 components, one theme and one hook, all installed by the standard shadcn CLI under the `@duck`
+31 components, one theme and one hook, all installed by the standard shadcn CLI under the `@duck`
 namespace. Nothing is wrapped, nothing is hidden behind a package — the files land in your repo and
 they are yours to edit.
 
@@ -48,11 +48,11 @@ skill: `skills add dacoder/duck-ui`.
 | Group | Components |
 |---|---|
 | Actions | `quack-button`, `holo-button`, `copy-button` |
-| Surfaces | `sticker-card`, `code-window`, `terminal`, `sticker-sheet`, `video-card` |
-| Display | `holo-avatar`, `holo-badge`, `announcement`, `duck-spinner`, `holo-separator` |
-| Inputs | `glow-input` |
+| Surfaces | `sticker-card`, `code-window`, `terminal`, `sticker-sheet`, `video-card`, `quack-bubble` |
+| Display | `holo-avatar`, `holo-badge`, `announcement`, `duck-spinner`, `holo-separator`, `duck-mark`, `sticker-kbd`, `stream-text` |
+| Inputs | `glow-input`, `duck-switch`, `sticker-checkbox`, `sticker-radio-group`, `duck-slider`, `sticker-otp`, `sticker-drop` |
 | Navigation | `duck-tabs`, `theme-switcher` |
-| Feedback | `quack-toast` |
+| Feedback | `quack-toast`, `sticker-skeleton`, `sticker-progress`, `empty-pond`, `duck-thinking` |
 | Foundation | `theme`, `use-holo-pointer` |
 
 duck/ui is additive. For a dialog, a dropdown or a table, use standard shadcn/ui — the theme already
@@ -99,7 +99,7 @@ origin.
 |---|---|
 | `app/` | duckui.davideghiotto.it: landing, docs, theme editor, `llms.txt` routes |
 | `registry.json` | Registry index: shadcn schema, `@duck` namespace, dependencies |
-| `registry/duck/ui/` | The 17 components. Source of truth. |
+| `registry/duck/ui/` | The 31 components. Source of truth. |
 | `registry/duck/hooks/` | `use-holo-pointer` |
 | `components/previews/` | One live example per component, rendered *and* printed on its docs page |
 | `components/site/`, `components/docs/` | The site itself — not part of the registry |
