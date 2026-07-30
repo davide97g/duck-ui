@@ -29,7 +29,12 @@ const csp = [
   "script-src 'self' 'unsafe-inline'",
   "style-src 'self' 'unsafe-inline'",
   // data: covers the grain noise SVG in globals.css and the inlined duck mark.
-  "img-src 'self' data:",
+  // https: is needed because DuckGlyph renders its mark from a URL — the docs
+  // demo it with remote images, and the default mark is the absolute registry
+  // URL, which is cross-origin in dev. Images cannot execute, every URL on the
+  // site is authored in-repo, and Referrer-Policy already trims what a remote
+  // host learns, so this widens pixel loading only.
+  "img-src 'self' data: https:",
   // Fonts are downloaded at build time by next/font and served from this origin.
   "font-src 'self'",
   "connect-src 'self'",

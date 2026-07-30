@@ -95,6 +95,13 @@ export const components: ComponentDoc[] = [
           "Drives the transition. Loading also sets aria-busy and disables the button.",
       },
       {
+        name: "markSrc",
+        type: "string",
+        default: "DUCK_MARK_SRC",
+        description:
+          "Image URL for the mark shown while loading. Defaults to the official duck/ui logo.",
+      },
+      {
         name: "loadingLabel",
         type: "string",
         description: "Replaces the label while loading.",
@@ -416,18 +423,36 @@ export const components: ComponentDoc[] = [
   {
     slug: "duck-spinner",
     title: "Duck Spinner",
-    summary: "A duck paddling on water. The rings are the wake.",
+    summary:
+      "The duck/ui logo paddling on water, with the wake as expanding rings. Point src at any image URL to spin your own mark instead.",
     category: "Display",
     registryDependencies: ["@duck/theme"],
-    exports: ["DuckSpinner", "DuckGlyph"],
+    exports: ["DuckSpinner", "DuckGlyph", "DUCK_MARK_SRC"],
     props: [
       { name: "size", type: '"sm" | "default" | "lg"', default: '"default"', description: "20px, 32px or 48px." },
+      {
+        name: "src",
+        type: "string",
+        default: "DUCK_MARK_SRC",
+        description:
+          "Mark image. Any remote URL, /public path or data URI. Defaults to the official duck/ui logo, served from the registry origin.",
+      },
+      {
+        name: "motion",
+        type: '"paddle" | "spin"',
+        default: '"paddle"',
+        description: "paddle rocks the mark side to side, spin rotates it a full turn.",
+      },
       {
         name: "label",
         type: "string",
         default: '"Loading"',
         description: "Screen-reader text. The spinner is a live region.",
       },
+    ],
+    rules: [
+      "The mark loads over the network, so a custom src needs to be reachable from the browser and allowed by your img-src Content-Security-Policy.",
+      "To rebrand every loading state at once — spinner, QuackButton, QuackToast — edit DUCK_MARK_SRC in duck-spinner.tsx rather than passing src at each call site.",
     ],
   },
   {
@@ -522,7 +547,8 @@ export const components: ComponentDoc[] = [
       {
         name: "toast",
         type: "(options: ToastOptions) => void",
-        description: "From useQuackToast. Takes title, description, variant and duration.",
+        description:
+          "From useQuackToast. Takes title, description, variant, duration and markSrc — the image URL used by the quack variant's mark.",
       },
       { name: "quack", type: "() => void", description: "From useQuackToast. It quacks." },
       { name: "dismiss", type: "(id: number) => void", description: "From useQuackToast." },

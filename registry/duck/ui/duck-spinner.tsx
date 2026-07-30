@@ -3,25 +3,45 @@ import * as React from "react";
 import { cn } from "@/lib/utils";
 
 /**
- * DuckGlyph — the duck mark, built from three primitives: a circle, a
- * rounded bar and a dot. Reused by the spinner and by button loading states.
+ * The official duck/ui mark, served from the registry origin so a fresh install
+ * renders the real logo with no asset to copy. Point `src` at your own image to
+ * brand the spinner, or edit this constant once to swap it everywhere —
+ * DuckSpinner, QuackButton's loading state and QuackToast's quack variant all
+ * read it.
  */
-function DuckGlyph({ className, ...props }: React.ComponentProps<"svg">) {
+const DUCK_MARK_SRC = "https://duckui.davideghiotto.it/duck.png";
+
+type DuckGlyphProps = Omit<React.ComponentProps<"img">, "alt"> & {
+  /** Any image URL: remote, /public path or data URI. */
+  src?: string;
+  /** Leave empty for decoration; the spinner already announces itself. */
+  alt?: string;
+};
+
+/**
+ * DuckGlyph — the mark as an image. Reused by the spinner and by loading
+ * states, so one `src` covers every place the duck shows up.
+ */
+function DuckGlyph({
+  className,
+  src = DUCK_MARK_SRC,
+  alt = "",
+  ...props
+}: DuckGlyphProps) {
   return (
-    <svg
-      viewBox="0 0 40 40"
-      fill="none"
-      aria-hidden="true"
-      className={cn("size-full", className)}
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src={src}
+      alt={alt}
+      aria-hidden={alt ? undefined : true}
+      draggable={false}
+      decoding="async"
+      className={cn(
+        "size-full shrink-0 select-none object-contain",
+        className
+      )}
       {...props}
-    >
-      <path
-        d="M24 15.4 L35.4 17.3 Q39.4 18 39.4 19.9 Q39.4 21.8 35.4 22.5 L24 24.4 Z"
-        fill="oklch(0.82 0.16 62)"
-      />
-      <circle cx="16.5" cy="20" r="11.5" fill="currentColor" />
-      <circle cx="20.2" cy="15.6" r="1.9" className="fill-card" />
-    </svg>
+    />
   );
 }
 
@@ -31,16 +51,27 @@ const spinnerSizes = {
   lg: "size-12",
 } as const;
 
+const spinnerMotion = {
+  paddle: "[animation:duck-paddle_0.9s_ease-in-out_infinite]",
+  spin: "animate-spin",
+} as const;
+
 /**
  * DuckSpinner — a duck paddling on water. The rings are the wake.
  */
 function DuckSpinner({
   className,
   size = "default",
+  motion = "paddle",
+  src,
   label = "Loading",
   ...props
 }: React.ComponentProps<"span"> & {
   size?: keyof typeof spinnerSizes;
+  /** paddle rocks the mark, spin rotates it a full turn. */
+  motion?: keyof typeof spinnerMotion;
+  /** Custom mark image. Defaults to the official duck/ui logo. */
+  src?: string;
   label?: string;
 }) {
   return (
@@ -63,10 +94,10 @@ function DuckSpinner({
         aria-hidden
         className="absolute size-full rounded-full border-2 border-primary/40 [animation:duck-ripple_1.6s_ease-out_0.8s_infinite]"
       />
-      <DuckGlyph className="relative text-primary [animation:duck-paddle_0.9s_ease-in-out_infinite]" />
+      <DuckGlyph src={src} className={cn("relative", spinnerMotion[motion])} />
       <span className="sr-only">{label}</span>
     </span>
   );
 }
 
-export { DuckSpinner, DuckGlyph };
+export { DuckSpinner, DuckGlyph, DUCK_MARK_SRC };

@@ -509,7 +509,7 @@
       "name": "duck-spinner",
       "type": "registry:ui",
       "title": "Duck Spinner",
-      "description": "A duck paddling on water, with the wake as expanding rings. Also exports DuckGlyph, the mark used by loading states.",
+      "description": "The duck/ui logo paddling on water, with the wake as expanding rings. Pass src to spin any image URL instead. Also exports DuckGlyph, the mark used by loading states.",
       "registryDependencies": [
         "@duck/theme"
       ],

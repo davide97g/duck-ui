@@ -80,6 +80,8 @@ export interface QuackButtonProps
   ripple?: boolean;
   /** Drives the loading / success / error transition. */
   state?: QuackButtonState;
+  /** Mark shown while loading. Any image URL; defaults to the duck/ui logo. */
+  markSrc?: string;
   loadingLabel?: string;
   successLabel?: string;
   errorLabel?: string;
@@ -95,6 +97,7 @@ function QuackButton({
   magnetic = 0,
   ripple = true,
   state = "idle",
+  markSrc,
   loadingLabel,
   successLabel,
   errorLabel,
@@ -144,7 +147,13 @@ function QuackButton({
           className="inline-grid size-4 place-items-center [animation:duck-pop_0.4s_var(--ease-squash)]"
         >
           {busy && (
-            <DuckGlyph className="[animation:duck-paddle_0.9s_ease-in-out_infinite]" />
+            <DuckGlyph
+              src={markSrc}
+              // The mark is a photographic logo, not a flat icon: it carries a
+              // transparent halo, so it needs scaling up and a hairline shadow
+              // to stay readable at 16px on a filled button.
+              className="scale-125 drop-shadow-[0_1px_2px_oklch(0_0_0/0.45)] [animation:duck-paddle_0.9s_ease-in-out_infinite]"
+            />
           )}
           {state === "success" && <Check className="size-4" strokeWidth={3} />}
           {state === "error" && <TriangleAlert className="size-4" />}

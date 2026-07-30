@@ -52,7 +52,7 @@ All imports are `@/components/ui/<name>`, the hook is `@/hooks/use-holo-pointer`
 | `HoloAvatar` / `HoloAvatarGroup` | `src`, `alt`, `fallback`, `size: xs \| sm \| default \| lg \| xl`, `shape: circle \| sticker`, `ring: foil \| holo \| primary \| none`, `status: online \| away \| offline`; group takes `max` |
 | `HoloBadge` | `variant: holo \| primary \| outline \| muted \| success \| danger` |
 | `Announcement` | `tag`, `href`, `arrow` |
-| `DuckSpinner` | `size: sm \| default \| lg`, `label`; also exports `DuckGlyph` |
+| `DuckSpinner` | `size: sm \| default \| lg`, `motion: paddle \| spin`, `src` (any image URL, defaults to the duck/ui logo), `label`; also exports `DuckGlyph` and `DUCK_MARK_SRC` |
 | `HoloSeparator` | `label`, `orientation`, `holo` |
 | `GlowInput` / `GlowTextarea` / `GlowField` | field takes `label`, `helper`, `error`, `required` |
 | `DuckTabs` (+ `List`, `Trigger`, `Content`) | `value`, `defaultValue`, `onValueChange` |

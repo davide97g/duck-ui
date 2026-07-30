@@ -20,6 +20,8 @@ export interface ToastOptions {
   title: string;
   description?: string;
   variant?: ToastVariant;
+  /** Mark for the quack variant. Any image URL; defaults to the duck/ui logo. */
+  markSrc?: string;
   /** Milliseconds before auto-dismiss. Defaults to 4000. */
   duration?: number;
 }
@@ -51,12 +53,19 @@ const variantStyles: Record<ToastVariant, string> = {
   quack: "holo-border",
 };
 
-function VariantIcon({ variant }: { variant: ToastVariant }) {
+function VariantIcon({
+  variant,
+  markSrc,
+}: {
+  variant: ToastVariant;
+  markSrc?: string;
+}) {
   if (variant === "success")
     return <CheckCircle2 className="size-4 text-primary" />;
   if (variant === "error")
     return <TriangleAlert className="size-4 text-destructive" />;
-  if (variant === "quack") return <DuckGlyph className="size-4 text-primary" />;
+  if (variant === "quack")
+    return <DuckGlyph src={markSrc} className="size-5 -m-0.5" />;
   return <Info className="size-4 text-muted-foreground" />;
 }
 
@@ -114,7 +123,10 @@ function QuackToastProvider({
             )}
           >
             <span className="mt-0.5 shrink-0">
-              <VariantIcon variant={item.variant ?? "default"} />
+              <VariantIcon
+                variant={item.variant ?? "default"}
+                markSrc={item.markSrc}
+              />
             </span>
             <div className="flex-1">
               <p className="text-sm font-semibold">{item.title}</p>

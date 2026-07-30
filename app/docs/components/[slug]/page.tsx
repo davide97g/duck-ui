@@ -52,7 +52,12 @@ export default async function ComponentPage({
 
   const hasPreview = slug in previews;
   const importable = doc.exports.filter(
-    (name) => !name.endsWith("Variants") && name !== "DuckGlyph"
+    (name) =>
+      !name.endsWith("Variants") &&
+      name !== "DuckGlyph" &&
+      // Constants (SCREAMING_CASE) are documented in Props, not imported for
+      // the common case.
+      name !== name.toUpperCase()
   );
   const usage = `import { ${importable.join(", ")} } from "@/components/ui/${slug}"`;
 
