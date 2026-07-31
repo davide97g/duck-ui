@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { Search } from "lucide-react";
 
 import { cn } from "@/lib/utils";
-import { components, guides } from "@/lib/registry-docs";
+import { blocks, components, guides } from "@/lib/registry-docs";
 
 interface Entry {
   href: string;
@@ -23,6 +23,12 @@ const entries: Entry[] = [
     title: item.title,
     summary: item.summary,
     group: "Components",
+  })),
+  ...blocks.map((item) => ({
+    href: `/docs/blocks/${item.slug}`,
+    title: item.title,
+    summary: item.summary,
+    group: "Blocks",
   })),
 ];
 

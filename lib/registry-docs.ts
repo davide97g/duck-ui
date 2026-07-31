@@ -977,6 +977,226 @@ export function getComponent(slug: string) {
   return components.find((item) => item.slug === slug);
 }
 
+/**
+ * Blocks are whole sections rather than single controls: they compose the
+ * components above and land in components/blocks/ instead of components/ui/.
+ * They are starting points — the CLI copies them in and you cut them apart.
+ */
+export interface BlockDoc {
+  slug: string;
+  title: string;
+  summary: string;
+  /** Where the CLI writes the file. */
+  target: string;
+  dependencies?: string[];
+  registryDependencies?: string[];
+  /** duck/ui items the block renders, for the "built from" line. */
+  composes: string[];
+  exports: string[];
+  props: PropDoc[];
+  rules?: string[];
+  client?: boolean;
+}
+
+export const blocks: BlockDoc[] = [
+  {
+    slug: "duck-hero",
+    title: "Duck Hero",
+    summary:
+      "The landing section: announcement pill, display headline, two actions, and a terminal that types itself beside them.",
+    target: "components/blocks/duck-hero.tsx",
+    registryDependencies: [
+      "@duck/theme",
+      "@duck/announcement",
+      "@duck/holo-button",
+      "@duck/terminal",
+    ],
+    composes: ["announcement", "holo-button", "terminal"],
+    exports: ["DuckHero"],
+    props: [
+      {
+        name: "eyebrow",
+        type: "{ text: string; tag?: string; href?: string }",
+        description: "The pill above the headline. With an href it grows an arrow.",
+      },
+      {
+        name: "title",
+        type: "React.ReactNode",
+        description: "The headline. One line beats two — it is set at 7xl on desktop.",
+      },
+      { name: "description", type: "React.ReactNode", description: "Subhead under the headline." },
+      {
+        name: "primaryAction",
+        type: "{ label: string; href: string }",
+        description: "Rendered as the holo button. This is the page's one holo element.",
+      },
+      {
+        name: "secondaryAction",
+        type: "{ label: string; href: string }",
+        description: "Rendered as an outline button next to the primary one.",
+      },
+      {
+        name: "terminal",
+        type: "TerminalLine[]",
+        description: "Transcript for the right column. Omit it and the hero goes single-column.",
+      },
+      {
+        name: "aside",
+        type: "React.ReactNode",
+        description: "Replaces the terminal: a screenshot, an illustration, a live demo.",
+      },
+      {
+        name: "proof",
+        type: "React.ReactNode",
+        description: "Slot under the actions for stats, logos or an avatar row.",
+      },
+    ],
+    rules: [
+      "The primary action is the holo. Nothing else in the first viewport gets it.",
+      "The terminal is one idle animation. Adding a second loop beside it breaks the budget for the whole page.",
+      "Actions are plain anchors so the block stays framework-agnostic. Swap them for your router's Link once it is in your project.",
+    ],
+  },
+  {
+    slug: "duck-pricing",
+    title: "Duck Pricing",
+    summary:
+      "A tier grid with a monthly / yearly switch. One tier carries the holo ring; the rest stay quiet.",
+    target: "components/blocks/duck-pricing.tsx",
+    client: true,
+    dependencies: ["lucide-react"],
+    registryDependencies: [
+      "@duck/theme",
+      "@duck/duck-switch",
+      "@duck/holo-badge",
+      "@duck/holo-button",
+      "@duck/sticker-card",
+    ],
+    composes: ["sticker-card", "holo-button", "holo-badge", "duck-switch"],
+    exports: ["DuckPricing"],
+    props: [
+      { name: "title", type: "React.ReactNode", description: "Section heading." },
+      { name: "description", type: "React.ReactNode", description: "Line under the heading." },
+      {
+        name: "tiers",
+        type: "DuckPricingTier[]",
+        description:
+          "name, description, monthly, yearly, features, action, featured, badge. A price can be a number, formatted with the currency, or a string printed as given.",
+      },
+      { name: "currency", type: "string", default: '"$"', description: "Prefix for numeric prices." },
+      {
+        name: "billingSwitch",
+        type: "boolean",
+        default: "any tier prices a year",
+        description: "Show the monthly / yearly switch.",
+      },
+      {
+        name: "yearlyNote",
+        type: "string",
+        description: 'Small line under the switch, for example "2 months free".',
+      },
+      {
+        name: "yearly",
+        type: "boolean",
+        description: "Controlled billing period. Omit to let the block own the state.",
+      },
+      {
+        name: "onYearlyChange",
+        type: "(yearly: boolean) => void",
+        description: "Fires on every switch change, controlled or not.",
+      },
+    ],
+    rules: [
+      "Exactly one tier is featured. Two holo rings side by side cancel each other out.",
+      "The featured tier's button stays lime. An iridescent button inside an iridescent border reads as a rendering bug.",
+      "A yearly price is per month, billed yearly — that is what the label says. Pass the annual total and the row lies.",
+    ],
+  },
+  {
+    slug: "duck-dashboard",
+    title: "Duck Dashboard",
+    summary:
+      "The application shell: sidebar that becomes a drawer, sticky top bar with search and theme control, an optional stat row, and your page as children.",
+    target: "components/blocks/duck-dashboard.tsx",
+    client: true,
+    dependencies: ["lucide-react", "next-themes"],
+    registryDependencies: [
+      "@duck/theme",
+      "@duck/duck-mark",
+      "@duck/holo-avatar",
+      "@duck/holo-badge",
+      "@duck/sticker-card",
+      "@duck/sticker-kbd",
+      "@duck/sticker-progress",
+      "@duck/theme-switcher",
+    ],
+    composes: [
+      "duck-mark",
+      "holo-avatar",
+      "holo-badge",
+      "sticker-card",
+      "sticker-kbd",
+      "sticker-progress",
+      "theme-switcher",
+    ],
+    exports: ["DuckDashboard"],
+    props: [
+      {
+        name: "nav",
+        type: "DuckDashboardNavItem[]",
+        description: "label, href, icon, active, badge, onSelect. Selecting one closes the mobile drawer.",
+      },
+      {
+        name: "footerNav",
+        type: "DuckDashboardNavItem[]",
+        description: "Second group pinned to the bottom of the sidebar: settings, help, sign out.",
+      },
+      { name: "title", type: "React.ReactNode", description: "Page title in the top bar." },
+      {
+        name: "brand",
+        type: "React.ReactNode",
+        default: "duck mark + brandLabel",
+        description: "Sidebar identity.",
+      },
+      { name: "brandLabel", type: "string", default: '"duck/ui"', description: "Text next to the default mark." },
+      {
+        name: "user",
+        type: "{ name: string; src?: string; fallback?: string }",
+        description: "Avatar at the right of the top bar.",
+      },
+      {
+        name: "onSearch",
+        type: "() => void",
+        description:
+          "Renders the search control and binds the command key. Without it, no search button and no key handler.",
+      },
+      { name: "searchLabel", type: "string", default: '"Search"', description: "Label inside the search control." },
+      {
+        name: "stats",
+        type: "DuckDashboardStat[]",
+        description: "label, value, hint, progress. Rendered as a card row above the children.",
+      },
+      { name: "actions", type: "React.ReactNode", description: "Extra top-bar controls, left of the theme switcher." },
+      {
+        name: "themeSwitcher",
+        type: "boolean",
+        default: "true",
+        description: "Show the theme control. Turn it off in apps with a single theme.",
+      },
+      { name: "children", type: "React.ReactNode", description: "The page, under the stat row." },
+    ],
+    rules: [
+      "No holo in the chrome. The shell is on screen for the whole session; the one iridescent element belongs to the page inside it.",
+      "The theme switcher needs a next-themes provider above the shell. Pass themeSwitcher={false} if the app has none.",
+      "The shell measures itself, not the window: the sidebar is a drawer under 36rem of shell width and sticky above it, so an embedded shell behaves like a narrow one. Keep the nav to one screen — it does not scroll independently.",
+    ],
+  },
+];
+
+export function getBlock(slug: string) {
+  return blocks.find((item) => item.slug === slug);
+}
+
 export const componentsByCategory = categoryOrder
   .map((category) => ({
     category,

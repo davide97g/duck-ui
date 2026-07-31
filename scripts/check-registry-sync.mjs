@@ -15,24 +15,35 @@ const fail = (message) => problems.push(message);
 /* ---- the four sources ---- */
 
 const registry = JSON.parse(readFileSync("registry.json", "utf8"));
-const registryUi = registry.items
-  .filter((item) => item.type === "registry:ui")
-  .map((item) => item.name);
+const namesOfType = (type) =>
+  registry.items.filter((item) => item.type === type).map((item) => item.name);
+const registryUi = namesOfType("registry:ui");
+const registryBlocks = namesOfType("registry:block");
 
+// registry-docs.ts holds two arrays with identical shapes. Split the file so a
+// block's slug never counts as a component's.
 const docsSource = readFileSync("lib/registry-docs.ts", "utf8");
-const docSlugs = [...docsSource.matchAll(/^\s{4}slug: "([^"]+)",$/gm)].map(
-  (match) => match[1]
-);
+const blocksStart = docsSource.indexOf("export const blocks");
+if (blocksStart === -1) fail("lib/registry-docs.ts: no `export const blocks`");
+const slugsIn = (source) =>
+  [...source.matchAll(/^\s{4}slug: "([^"]+)",$/gm)].map((match) => match[1]);
+const docSlugs = slugsIn(docsSource.slice(0, blocksStart));
+const blockDocSlugs = slugsIn(docsSource.slice(blocksStart));
 
-const previewFiles = readdirSync("components/previews")
-  .filter((file) => file.endsWith(".tsx") && file !== "index.tsx")
-  .map((file) => file.replace(/\.tsx$/, ""));
+const previewsIn = (dir) =>
+  readdirSync(dir)
+    .filter((file) => file.endsWith(".tsx") && file !== "index.tsx")
+    .map((file) => file.replace(/\.tsx$/, ""));
+const previewFiles = previewsIn("components/previews");
+const blockPreviewFiles = previewsIn("components/previews/blocks");
 
 // Single-word slugs are valid identifiers, so they appear as bare keys.
-const barrelSource = readFileSync("components/previews/index.tsx", "utf8");
-const barrelKeys = [
-  ...barrelSource.matchAll(/^\s{2}"?([a-z0-9][a-z0-9-]*)"?:/gm),
-].map((match) => match[1]);
+const keysIn = (path) =>
+  [
+    ...readFileSync(path, "utf8").matchAll(/^\s{2}"?([a-z0-9][a-z0-9-]*)"?:/gm),
+  ].map((match) => match[1]);
+const barrelKeys = keysIn("components/previews/index.tsx");
+const blockBarrelKeys = keysIn("components/previews/blocks/index.tsx");
 
 /* ---- set equality, reported per direction so the fix is obvious ---- */
 
@@ -44,20 +55,29 @@ const compare = (aName, a, bName, b) => {
   }
 };
 
-const sources = [
+const componentSources = [
   ["registry.json", registryUi],
   ["lib/registry-docs.ts", docSlugs],
   ["components/previews/*.tsx", previewFiles],
   ["previews barrel", barrelKeys],
 ];
 
-for (const [aName, a] of sources) {
-  for (const [bName, b] of sources) {
-    if (aName !== bName) compare(aName, a, bName, b);
+const blockSources = [
+  ["registry.json blocks", registryBlocks],
+  ["lib/registry-docs.ts blocks", blockDocSlugs],
+  ["components/previews/blocks/*.tsx", blockPreviewFiles],
+  ["block previews barrel", blockBarrelKeys],
+];
+
+for (const sources of [componentSources, blockSources]) {
+  for (const [aName, a] of sources) {
+    for (const [bName, b] of sources) {
+      if (aName !== bName) compare(aName, a, bName, b);
+    }
   }
 }
 
-/* ---- the ordering invariant: registry.json ui items track registry-docs ---- */
+/* ---- the ordering invariant: registry.json items track registry-docs ---- */
 
 if (registryUi.length === docSlugs.length) {
   const outOfOrder = registryUi.findIndex((slug, i) => slug !== docSlugs[i]);
@@ -65,6 +85,18 @@ if (registryUi.length === docSlugs.length) {
     fail(
       `order diverges at index ${outOfOrder}: registry.json has "${registryUi[outOfOrder]}", ` +
         `lib/registry-docs.ts has "${docSlugs[outOfOrder]}". Keep both lists in the same order.`
+    );
+  }
+}
+
+if (registryBlocks.length === blockDocSlugs.length) {
+  const outOfOrder = registryBlocks.findIndex(
+    (slug, i) => slug !== blockDocSlugs[i]
+  );
+  if (outOfOrder !== -1) {
+    fail(
+      `block order diverges at index ${outOfOrder}: registry.json has "${registryBlocks[outOfOrder]}", ` +
+        `lib/registry-docs.ts has "${blockDocSlugs[outOfOrder]}". Keep both lists in the same order.`
     );
   }
 }
@@ -89,5 +121,6 @@ if (problems.length) {
 }
 
 console.log(
-  `registry in sync — ${registryUi.length} ui items, ${registry.items.length} items total.`
+  `registry in sync — ${registryUi.length} ui items, ${registryBlocks.length} blocks, ` +
+    `${registry.items.length} items total.`
 );

@@ -16,6 +16,7 @@
     "plugins": [{ "name": "next" }],
     "paths": {
       "@/components/ui/*": ["./registry/duck/ui/*"],
+      "@/components/blocks/*": ["./registry/duck/blocks/*"],
       "@/hooks/*": ["./registry/duck/hooks/*"],
       "@/*": ["./*"]
     }

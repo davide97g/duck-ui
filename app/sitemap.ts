@@ -23,6 +23,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const primary: Entry[] = [
     { path: "/docs", priority: 0.9 },
     { path: "/docs/components", priority: 0.9 },
+    { path: "/docs/blocks", priority: 0.9 },
     { path: "/create", priority: 0.9 },
   ].map(({ path, priority }) => ({
     url: `${site.url}${path}`,

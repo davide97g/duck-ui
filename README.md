@@ -55,6 +55,21 @@ skill: `skills add dacoder/duck-ui`.
 | Feedback | `quack-toast`, `sticker-skeleton`, `sticker-progress`, `empty-pond`, `duck-thinking` |
 | Foundation | `theme`, `use-holo-pointer` |
 
+## Blocks
+
+Whole sections instead of single controls. Same CLI, but the file lands in `components/blocks/` and
+pulls in every component it renders.
+
+| Block | What |
+|---|---|
+| `duck-hero` | Announcement pill, display headline, two actions, self-typing terminal |
+| `duck-pricing` | Tier grid with a monthly / yearly switch and one featured tier |
+| `duck-dashboard` | App shell: sidebar drawer, sticky top bar, stat row, your page as children |
+
+```bash
+npx shadcn@latest add @duck/duck-hero
+```
+
 duck/ui is additive. For a dialog, a dropdown or a table, use standard shadcn/ui — the theme already
 styles it.
 
@@ -100,8 +115,9 @@ origin.
 | `app/` | duckui.davideghiotto.it: landing, docs, theme editor, `llms.txt` routes |
 | `registry.json` | Registry index: shadcn schema, `@duck` namespace, dependencies |
 | `registry/duck/ui/` | The 31 components. Source of truth. |
+| `registry/duck/blocks/` | The 3 blocks: whole sections composed from the components |
 | `registry/duck/hooks/` | `use-holo-pointer` |
-| `components/previews/` | One live example per component, rendered *and* printed on its docs page |
+| `components/previews/` | One live example per component (blocks under `previews/blocks/`), rendered *and* printed on its docs page |
 | `components/site/`, `components/docs/` | The site itself — not part of the registry |
 | `lib/registry-docs.ts` | Component metadata driving docs, search, sidebar and `llms.txt` |
 | `public/r/` | Built registry JSON, served statically |

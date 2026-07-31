@@ -1,5 +1,5 @@
 import { site } from "@/lib/site";
-import { components, guides } from "@/lib/registry-docs";
+import { blocks, components, guides } from "@/lib/registry-docs";
 
 export const dynamic = "force-static";
 
@@ -26,6 +26,39 @@ ${doc.summary}
 - Import: \`import { ${doc.exports.join(", ")} } from "@/components/ui/${doc.slug}"\`
 - Category: ${doc.category}
 - Rendering: ${doc.client ? "client component" : "server safe"}
+${doc.dependencies ? `- npm dependencies: ${doc.dependencies.join(", ")}\n` : ""}${
+    doc.registryDependencies
+      ? `- registry dependencies: ${doc.registryDependencies.join(", ")}\n`
+      : ""
+  }
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+${props}
+${doc.rules?.length ? `\nRules:\n${doc.rules.map((rule) => `- ${rule}`).join("\n")}\n` : ""}`;
+}
+
+function blockSection(slug: string) {
+  const doc = blocks.find((item) => item.slug === slug);
+  if (!doc) return "";
+
+  const props = doc.props
+    .map(
+      (prop) =>
+        `| \`${prop.name}\` | \`${prop.type}\` | ${
+          prop.default ? `\`${prop.default}\`` : "-"
+        } | ${prop.description} |`
+    )
+    .join("\n");
+
+  return `### ${doc.title}
+
+${doc.summary}
+
+- Install: \`npx shadcn@latest add @duck/${doc.slug}\`
+- Import: \`import { ${doc.exports.join(", ")} } from "@/components/blocks/${doc.slug}"\`
+- Lands in: ${doc.target}
+- Rendering: ${doc.client ? "client component" : "server safe"}
+- Composes: ${doc.composes.join(", ")}
 ${doc.dependencies ? `- npm dependencies: ${doc.dependencies.join(", ")}\n` : ""}${
     doc.registryDependencies
       ? `- registry dependencies: ${doc.registryDependencies.join(", ")}\n`
@@ -98,6 +131,13 @@ ${guideList}
 ## Components
 
 ${components.map((item) => componentSection(item.slug)).join("\n")}
+## Blocks
+
+Whole sections composed from the components above. Same install path, but the
+file lands in \`components/blocks/\`. They are starting points with real
+defaults, meant to be edited down rather than configured.
+
+${blocks.map((item) => blockSection(item.slug)).join("\n")}
 ## Hook
 
 ### useHoloPointer

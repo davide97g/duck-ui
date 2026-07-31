@@ -822,6 +822,75 @@
           "type": "registry:ui"
         }
       ]
+    },
+    {
+      "name": "duck-hero",
+      "type": "registry:block",
+      "title": "Duck Hero",
+      "description": "Landing hero: announcement pill, display headline, two actions and a self-typing terminal beside them. The primary action is the viewport's one holo element.",
+      "registryDependencies": [
+        "@duck/theme",
+        "@duck/announcement",
+        "@duck/holo-button",
+        "@duck/terminal"
+      ],
+      "files": [
+        {
+          "path": "registry/duck/blocks/duck-hero.tsx",
+          "type": "registry:block",
+          "target": "components/blocks/duck-hero.tsx"
+        }
+      ]
+    },
+    {
+      "name": "duck-pricing",
+      "type": "registry:block",
+      "title": "Duck Pricing",
+      "description": "Tier grid with a monthly / yearly switch. The featured tier carries the holo ring and keeps a lime button, so the section spends its holo budget once.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@duck/theme",
+        "@duck/duck-switch",
+        "@duck/holo-badge",
+        "@duck/holo-button",
+        "@duck/sticker-card"
+      ],
+      "files": [
+        {
+          "path": "registry/duck/blocks/duck-pricing.tsx",
+          "type": "registry:block",
+          "target": "components/blocks/duck-pricing.tsx"
+        }
+      ]
+    },
+    {
+      "name": "duck-dashboard",
+      "type": "registry:block",
+      "title": "Duck Dashboard",
+      "description": "Application shell: sidebar that becomes a drawer, sticky top bar with search and theme control, an optional stat row, and your page as children. No holo in the furniture.",
+      "dependencies": [
+        "lucide-react",
+        "next-themes"
+      ],
+      "registryDependencies": [
+        "@duck/theme",
+        "@duck/duck-mark",
+        "@duck/holo-avatar",
+        "@duck/holo-badge",
+        "@duck/sticker-card",
+        "@duck/sticker-kbd",
+        "@duck/sticker-progress",
+        "@duck/theme-switcher"
+      ],
+      "files": [
+        {
+          "path": "registry/duck/blocks/duck-dashboard.tsx",
+          "type": "registry:block",
+          "target": "components/blocks/duck-dashboard.tsx"
+        }
+      ]
     }
   ]
 }

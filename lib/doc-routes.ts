@@ -1,4 +1,9 @@
-import { components, componentsByCategory, guides } from "@/lib/registry-docs";
+import {
+  blocks,
+  components,
+  componentsByCategory,
+  guides,
+} from "@/lib/registry-docs";
 import { legalNav } from "@/lib/site";
 
 export interface DocRoute {
@@ -18,6 +23,14 @@ export const sidebarGroups: { title: string; items: DocRoute[] }[] = [
       summary: item.summary,
     })),
   })),
+  {
+    title: "Blocks",
+    items: blocks.map((item) => ({
+      href: `/docs/blocks/${item.slug}`,
+      title: item.title,
+      summary: item.summary,
+    })),
+  },
 ];
 
 /** Flat order, used by the previous / next pager. */
@@ -39,6 +52,11 @@ export const allDocRoutes: DocRoute[] = [
     title: item.title,
     summary: item.summary,
   })),
+  ...blocks.map((item) => ({
+    href: `/docs/blocks/${item.slug}`,
+    title: item.title,
+    summary: item.summary,
+  })),
 ];
 
 /**
@@ -51,6 +69,7 @@ const realPaths = new Set<string>([
   "/create",
   "/docs",
   "/docs/components",
+  "/docs/blocks",
   "/legal",
   ...allDocRoutes.map((route) => route.href),
   ...legalNav.map((item) => item.href),

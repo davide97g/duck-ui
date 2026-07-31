@@ -74,6 +74,24 @@ All imports are `@/components/ui/<name>`, the hook is `@/hooks/use-holo-pointer`
 | `QuackBubble` | `from: assistant \| user`, `meta` |
 | `useHoloPointer` | `tilt`, `magnet`, `reset`, `disabled`; returns a ref |
 
+## Blocks
+
+Whole sections rather than single controls. Same CLI, but the file lands in `components/blocks/<name>.tsx` and pulls in every component it renders. They are starting points: install, then edit the file down. Do not wrap them.
+
+| Block | Import | Key props |
+|---|---|---|
+| `DuckHero` | `@/components/blocks/duck-hero` | `eyebrow: { text, tag?, href? }`, `title`, `description`, `primaryAction: { label, href }`, `secondaryAction`, `terminal: TerminalLine[]`, `aside` (replaces the terminal), `proof` |
+| `DuckPricing` | `@/components/blocks/duck-pricing` | `title`, `description`, `tiers: { name, description?, monthly, yearly?, features, action?, featured?, badge? }[]`, `currency`, `billingSwitch`, `yearlyNote`, `yearly` + `onYearlyChange` for controlled billing |
+| `DuckDashboard` | `@/components/blocks/duck-dashboard` | `nav`, `footerNav`, `title`, `brand` / `brandLabel`, `user: { name, src?, fallback? }`, `onSearch` + `searchLabel`, `stats: { label, value, hint?, progress? }[]`, `actions`, `themeSwitcher`, `children` |
+
+Rules that come with them:
+
+- `DuckHero` spends the page's holo budget on `primaryAction`. Nothing else in the first viewport is holo.
+- `DuckPricing` takes exactly one `featured` tier, and that tier's button stays lime — the holo is the card ring.
+- A yearly price is the per-month figure billed yearly, not the annual total.
+- `DuckDashboard` keeps holo out of the chrome; the page inside it spends the budget. Its theme switcher needs a next-themes provider, or pass `themeSwitcher={false}`.
+- Actions are plain `<a>` so the blocks stay framework-agnostic. Swap in the project's router link once the file is theirs.
+
 ## Tokens
 
 Full shadcn contract, plus:
@@ -92,7 +110,7 @@ Keyframes: `holo-shift`, `duck-idle`, `duck-sheen`, `duck-squash`, `duck-pop`, `
 
 ## Composition patterns
 
-**A pricing grid.** All cards plain, one card `holo`. Every CTA `variant="primary"` except the featured card, which gets `variant="holo"`. That is the single holo element, so no other holo may appear in the same viewport.
+**A pricing grid.** All cards plain, one card `holo`. Every CTA stays lime — a holo button inside a holo ring reads as a rendering bug. That ring is the single holo element, so no other holo may appear in the same viewport. `@duck/duck-pricing` ships this already built.
 
 **A form.** Always `GlowField` around `GlowInput`, never a placeholder as the label. Submit with `QuackButton` driven by `state`, resetting to `idle` when the request settles. Errors go in the field, not in a toast.
 

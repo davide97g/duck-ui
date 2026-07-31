@@ -50,6 +50,7 @@ export const legal = {
 export const mainNav = [
   { href: "/docs", label: "Docs" },
   { href: "/docs/components", label: "Components" },
+  { href: "/docs/blocks", label: "Blocks" },
   { href: "/create", label: "Theme editor" },
   { href: "/docs/ai", label: "For AI" },
 ] as const;

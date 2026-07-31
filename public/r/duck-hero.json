@@ -1,0 +1,21 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "duck-hero",
+  "title": "Duck Hero",
+  "description": "Landing hero: announcement pill, display headline, two actions and a self-typing terminal beside them. The primary action is the viewport's one holo element.",
+  "registryDependencies": [
+    "@duck/theme",
+    "@duck/announcement",
+    "@duck/holo-button",
+    "@duck/terminal"
+  ],
+  "files": [
+    {
+      "path": "registry/duck/blocks/duck-hero.tsx",
+      "content": "import * as React from \"react\";\n\nimport { cn } from \"@/lib/utils\";\nimport { Announcement } from \"@/components/ui/announcement\";\nimport { HoloButton } from \"@/components/ui/holo-button\";\nimport { Terminal, type TerminalLine } from \"@/components/ui/terminal\";\n\n/**\n * DuckHero — the landing section: announcement pill, display headline, two\n * actions and a self-typing terminal beside them.\n *\n * The holo budget of the whole viewport is spent here, on the primary action.\n * Everything below the fold gets lime. Pass `aside` to swap the terminal for\n * a screenshot, an illustration or whatever the product actually is.\n */\nexport interface DuckHeroAction {\n  label: string;\n  href: string;\n}\n\nexport interface DuckHeroProps\n  extends Omit<React.ComponentProps<\"section\">, \"title\"> {\n  /** The pill above the headline. Give it an href and it grows an arrow. */\n  eyebrow?: { text: string; tag?: string; href?: string };\n  title: React.ReactNode;\n  description?: React.ReactNode;\n  /** The one holo element on the page. */\n  primaryAction?: DuckHeroAction;\n  secondaryAction?: DuckHeroAction;\n  /** Right column. Ignored when `aside` is set. */\n  terminal?: TerminalLine[];\n  /** Replaces the terminal entirely. */\n  aside?: React.ReactNode;\n  /** Sits under the actions: stats, logos, an avatar row. */\n  proof?: React.ReactNode;\n}\n\nfunction DuckHero({\n  className,\n  eyebrow,\n  title,\n  description,\n  primaryAction,\n  secondaryAction,\n  terminal,\n  aside,\n  proof,\n  ...props\n}: DuckHeroProps) {\n  const visual =\n    aside ?? (terminal ? <Terminal lines={terminal} className=\"w-full\" /> : null);\n\n  return (\n    <section\n      data-slot=\"duck-hero\"\n      className={cn(\n        // Container queries, not viewport ones: a hero dropped inside a padded\n        // shell should respond to the space it actually got.\n        \"@container mx-auto grid w-full max-w-[1400px] items-center gap-12 px-4 pt-12 pb-20\",\n        \"sm:px-6 lg:gap-8 lg:pt-20 lg:pb-28\",\n        visual && \"@4xl:grid-cols-[1.05fr_0.95fr]\",\n        className\n      )}\n      {...props}\n    >\n      <div className=\"flex flex-col items-start gap-7\">\n        {eyebrow && (\n          <Announcement tag={eyebrow.tag} href={eyebrow.href}>\n            {eyebrow.text}\n          </Announcement>\n        )}\n\n        <h1\n          className={cn(\n            \"font-display text-5xl leading-[0.95] font-extrabold tracking-tight text-balance\",\n            \"sm:text-6xl lg:text-7xl\"\n          )}\n        >\n          {title}\n        </h1>\n\n        {description && (\n          <p className=\"max-w-md text-lg text-pretty text-muted-foreground\">\n            {description}\n          </p>\n        )}\n\n        {(primaryAction || secondaryAction) && (\n          <div className=\"flex flex-col items-stretch gap-3 sm:flex-row sm:items-center\">\n            {primaryAction && (\n              <HoloButton asChild size=\"lg\">\n                <a href={primaryAction.href}>{primaryAction.label}</a>\n              </HoloButton>\n            )}\n            {secondaryAction && (\n              <HoloButton asChild variant=\"outline\" size=\"lg\">\n                <a href={secondaryAction.href}>{secondaryAction.label}</a>\n              </HoloButton>\n            )}\n          </div>\n        )}\n\n        {proof && <div className=\"pt-1\">{proof}</div>}\n      </div>\n\n      {visual && (\n        <div className=\"flex w-full justify-center @4xl:justify-end\">{visual}</div>\n      )}\n    </section>\n  );\n}\n\nexport { DuckHero };\n",
+      "type": "registry:block",
+      "target": "components/blocks/duck-hero.tsx"
+    }
+  ],
+  "type": "registry:block"
+}

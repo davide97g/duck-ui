@@ -1,5 +1,5 @@
 import { site } from "@/lib/site";
-import { componentsByCategory, guides } from "@/lib/registry-docs";
+import { blocks, componentsByCategory, guides } from "@/lib/registry-docs";
 
 export const dynamic = "force-static";
 
@@ -21,6 +21,13 @@ function build() {
           .join("\n")
     )
     .join("\n\n");
+
+  const blockLines = blocks
+    .map(
+      (item) =>
+        `- [${item.title}](${site.url}/docs/blocks/${item.slug}): ${item.summary}`
+    )
+    .join("\n");
 
   return `# ${site.name}
 
@@ -61,6 +68,14 @@ duck-shimmer, duck-waddle).
 ## Components
 
 ${componentLines}
+
+## Blocks
+
+Whole sections composed from the components above. They install the same way and
+land in \`components/blocks/\` instead of \`components/ui/\`. Treat them as
+starting points: copy them in, then cut them apart.
+
+${blockLines}
 
 ## Rules for AI assistants
 
