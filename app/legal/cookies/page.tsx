@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 
+import { analytics } from "@/lib/analytics";
 import { legal, site } from "@/lib/site";
 import { DocSection, DocShell, Prose } from "@/components/docs/doc-shell";
 
@@ -33,11 +35,24 @@ export default function CookiesPage() {
             management platform on this site because there is nothing to consent
             to.
           </p>
-          <p>
-            The site loads no third-party scripts, no tag manager, no embedded
-            trackers, no social widgets and no external fonts at runtime — the
-            typefaces are self-hosted and served from this domain.
-          </p>
+          {analytics.enabled ? (
+            <p>
+              The site loads no tag manager, no embedded trackers, no social
+              widgets and no external fonts at runtime — the typefaces are
+              self-hosted and served from this domain. One script does load: a
+              self-hosted {analytics.vendor} tag that counts page views. It is
+              cookieless by design and writes nothing to your browser, which is
+              why it appears in the{" "}
+              <Link href="/legal/privacy">privacy notice</Link> and not in the
+              list below.
+            </p>
+          ) : (
+            <p>
+              The site loads no third-party scripts, no tag manager, no embedded
+              trackers, no social widgets and no external fonts at runtime — the
+              typefaces are self-hosted and served from this domain.
+            </p>
+          )}
         </Prose>
       </DocSection>
 
@@ -83,11 +98,20 @@ export default function CookiesPage() {
             exemption. Nothing here profiles you, follows you across sites or
             builds an audience segment.
           </p>
+          {analytics.enabled && (
+            <p>
+              The {analytics.vendor} tag is outside that question entirely: the
+              rule governs storing or reading information on your device, and it
+              does neither. No cookie, no localStorage entry, no fingerprint.
+              What it counts is derived from the request itself, which is the
+              same information the web server already logs.
+            </p>
+          )}
           <p>
-            If analytics or any third-party embed is ever added, this notice
-            gets rewritten first and a real consent mechanism ships with it —
-            blocking the script until you choose, not a banner that has already
-            loaded it.
+            If a third-party embed or any storage-based tracking is ever added,
+            this notice gets rewritten first and a real consent mechanism ships
+            with it — blocking the script until you choose, not a banner that
+            has already loaded it.
           </p>
         </Prose>
       </DocSection>

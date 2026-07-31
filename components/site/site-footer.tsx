@@ -25,6 +25,7 @@ const columns = [
     links: [
       { href: "/create", label: "Theme editor" },
       { href: "/docs/ai", label: "For AI assistants" },
+      { href: "/compare", label: "Compare registries" },
       { href: "/r/registry.json", label: "Registry index" },
       { href: "/llms.txt", label: "llms.txt" },
     ],

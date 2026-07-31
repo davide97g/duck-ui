@@ -4,6 +4,7 @@ import * as React from "react";
 import { Check, Copy } from "lucide-react";
 
 import { cn } from "@/lib/utils";
+import { track } from "@/lib/analytics";
 import { useQuackToast } from "@/components/ui/quack-toast";
 
 /**
@@ -33,6 +34,10 @@ export function InstallCommand({
     try {
       await navigator.clipboard.writeText(command);
       setCopied(true);
+      // The closest thing this site has to a conversion: someone leaving with
+      // the command. The registry JSON is static, so the install itself is only
+      // visible in server logs.
+      track("install-copy", { command });
       toast({ title: "Command copied", variant: "success", duration: 2200 });
     } catch {
       toast({

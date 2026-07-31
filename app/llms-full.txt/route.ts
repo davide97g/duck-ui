@@ -1,4 +1,5 @@
 import { site } from "@/lib/site";
+import { faq } from "@/lib/faq";
 import { blocks, components, guides } from "@/lib/registry-docs";
 
 export const dynamic = "force-static";
@@ -71,6 +72,10 @@ ${doc.rules?.length ? `\nRules:\n${doc.rules.map((rule) => `- ${rule}`).join("\n
 }
 
 function build() {
+  const faqLines = faq
+    .map((item) => `**${item.question}**\n\n${item.answer}`)
+    .join("\n\n");
+
   const guideList = guides
     .flatMap((section) => section.items)
     .map((item) => `- ${item.title}: ${item.summary} (${site.url}${item.href})`)
@@ -97,6 +102,10 @@ Source of truth: ${site.url}. Registry index: ${site.url}/r/registry.json.
 ${site.install}          # always first
 npx shadcn@latest add @duck/quack-button
 \`\`\`
+
+## FAQ
+
+${faqLines}
 
 ## Design rules
 

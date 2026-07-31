@@ -1,21 +1,24 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import { analytics } from "@/lib/analytics";
 import { legal, legalNav, site } from "@/lib/site";
 import { DocShell, Prose } from "@/components/docs/doc-shell";
 
 export const metadata: Metadata = {
   title: "Legal",
-  description:
-    "Terms of use, privacy notice and cookie notice for duck/ui. No analytics, no cookies, MIT-licensed code.",
+  description: analytics.enabled
+    ? "Terms of use, privacy notice and cookie notice for duck/ui. No cookies, no accounts, self-hosted cookieless analytics, MIT-licensed code."
+    : "Terms of use, privacy notice and cookie notice for duck/ui. No analytics, no cookies, MIT-licensed code.",
   alternates: { canonical: "/legal" },
 };
 
 const summaries: Record<string, string> = {
   "/legal/terms":
     "MIT licence on all component code, commercial use included. No warranty, no uptime commitment, and what fair use of the public registry means.",
-  "/legal/privacy":
-    "No analytics and no accounts. Covers the only processing that happens: server access logs, and the requests your tooling makes to the registry.",
+  "/legal/privacy": analytics.enabled
+    ? "No accounts, no third-party trackers. Covers everything processed: server access logs, aggregate page views from a self-hosted counter, and the requests your tooling makes to the registry."
+    : "No analytics and no accounts. Covers the only processing that happens: server access logs, and the requests your tooling makes to the registry.",
   "/legal/cookies":
     "This site sets no cookies. The two functional browser-storage keys that exist instead, and why no consent banner is required.",
 };
@@ -24,7 +27,11 @@ export default function LegalIndexPage() {
   return (
     <DocShell
       title="Legal"
-      description="Three short documents. The summary is that the code is yours under the MIT licence and nothing here tracks you."
+      description={
+        analytics.enabled
+          ? "Three short documents. The summary is that the code is yours under the MIT licence, and the only thing counted here is how many people read a page."
+          : "Three short documents. The summary is that the code is yours under the MIT licence and nothing here tracks you."
+      }
       pathname="/legal"
       docType="WebPage"
     >

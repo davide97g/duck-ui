@@ -4,6 +4,36 @@ import { site } from "@/lib/site";
 import { CodeBlock } from "@/components/docs/code-block";
 import { DocSection, DocShell, Prose } from "@/components/docs/doc-shell";
 import { InstallTabs } from "@/components/docs/install-tabs";
+import { JsonLd, howToSchema } from "@/components/seo/structured-data";
+
+/**
+ * The same four steps the page renders, restated as a procedure. Only the steps
+ * that are actually required are listed — fonts and the manual fallback are on
+ * the page but are not part of the path, and a HowTo that includes optional
+ * detours describes a longer job than this one is.
+ */
+const installSteps = [
+  {
+    anchor: "requirements",
+    name: "Check the requirements",
+    text: "Use React 19 with Tailwind CSS v4 in a project already initialised with shadcn, so components.json and lib/utils.ts exist. Wire dark mode to a .dark class on the html element.",
+  },
+  {
+    anchor: "registry",
+    name: "Add the registry",
+    text: `Add "@duck": "${site.registryUrl}" to the registries block of components.json. That one key teaches the shadcn CLI the @duck namespace.`,
+  },
+  {
+    anchor: "theme",
+    name: "Install the theme",
+    text: `Run ${site.install} before adding any component. It writes the light and dark token sets, the duck extras, the utility classes and the keyframes into globals.css, and existing shadcn components change appearance immediately.`,
+  },
+  {
+    anchor: "components",
+    name: "Add components",
+    text: "Run npx shadcn add @duck/quack-button, or any other item, to copy a single file into components/ui/. Registry dependencies resolve on their own.",
+  },
+] as const;
 
 export const metadata: Metadata = {
   title: "Installation",
@@ -60,6 +90,16 @@ export default function InstallationPage() {
         { id: "manual", label: "Manual install" },
       ]}
     >
+      <JsonLd
+        data={howToSchema({
+          name: `Install ${site.name} in a shadcn project`,
+          description:
+            "Point the shadcn CLI at the @duck registry, install the theme, then add components.",
+          path: "/docs/installation",
+          steps: installSteps,
+        })}
+      />
+
       <DocSection id="requirements" title="Requirements">
         <Prose>
           <ul>

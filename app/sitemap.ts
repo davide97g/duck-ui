@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 
 import { legal, legalNav, site } from "@/lib/site";
 import { allDocRoutes } from "@/lib/doc-routes";
+import { comparisons } from "@/lib/comparisons";
 
 /**
  * Stamped once when the static build runs, so every page reports the same
@@ -40,6 +41,23 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: route.href === "/docs/ai" ? 0.8 : 0.7,
   }));
 
+  /**
+   * Comparison pages are the entry point for people searching a competitor's
+   * name, so they sit above the per-component docs but below the guides.
+   */
+  const compare: Entry[] = [
+    { path: "/compare", priority: 0.8 },
+    ...comparisons.map((item) => ({
+      path: `/compare/${item.slug}`,
+      priority: 0.7,
+    })),
+  ].map(({ path, priority }) => ({
+    url: `${site.url}${path}`,
+    lastModified: buildDate,
+    changeFrequency: "monthly" as const,
+    priority,
+  }));
+
   const legalPages: Entry[] = ["/legal", ...legalNav.map((i) => i.href)].map(
     (href) => ({
       url: `${site.url}${href}`,
@@ -49,5 +67,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
     })
   );
 
-  return [landing, ...primary, ...docs, ...legalPages];
+  return [landing, ...primary, ...compare, ...docs, ...legalPages];
 }

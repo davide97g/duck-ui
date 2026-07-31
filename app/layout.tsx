@@ -3,6 +3,7 @@ import { Bricolage_Grotesque } from "next/font/google";
 import { GeistMono } from "geist/font/mono";
 import { GeistSans } from "geist/font/sans";
 
+import { Analytics } from "@/components/site/analytics";
 import { Providers } from "@/components/providers";
 import { SiteFooter } from "@/components/site/site-footer";
 import { SiteHeader } from "@/components/site/site-header";
@@ -103,6 +104,7 @@ export default function RootLayout({
     >
       <body className="min-h-dvh bg-background font-sans antialiased">
         <JsonLd data={siteGraph()} />
+        <Analytics />
         <Providers>
           <a
             href="#content"

@@ -10,3 +10,9 @@ build/
 next-env.d.ts
 .turbo/
 *.tsbuildinfo
+
+# Vendored marketing skills, installed by `npx skills add`. skills-lock.json is
+# committed instead, so the set is reproducible without carrying 40 files that
+# nobody edits here. .agents/product-marketing.md is ours and stays tracked.
+.agents/skills/
+.claude/skills/

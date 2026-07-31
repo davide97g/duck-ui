@@ -3,6 +3,7 @@ import Link from "next/link";
 
 import { components, componentsByCategory } from "@/lib/registry-docs";
 import { DocSection, DocShell, Prose } from "@/components/docs/doc-shell";
+import { JsonLd, itemListSchema } from "@/components/seo/structured-data";
 import { HoloBadge } from "@/components/ui/holo-badge";
 
 export const metadata: Metadata = {
@@ -22,6 +23,19 @@ export default function ComponentsIndexPage() {
         label: group.category,
       }))}
     >
+      <JsonLd
+        data={itemListSchema({
+          name: "duck/ui components",
+          description: `All ${components.length} duck/ui components, each installable through the shadcn CLI under the @duck namespace.`,
+          path: "/docs/components",
+          items: components.map((item) => ({
+            name: item.title,
+            description: item.summary,
+            path: `/docs/components/${item.slug}`,
+          })),
+        })}
+      />
+
       <Prose>
         <p>
           Install the theme first — every component assumes its tokens exist —

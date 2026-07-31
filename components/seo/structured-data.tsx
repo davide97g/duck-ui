@@ -112,6 +112,107 @@ export function breadcrumbSchema(
 }
 
 /**
+ * Question / answer pairs. Every entry here must also be rendered as visible
+ * text on the page that emits it — schema describing content a human cannot
+ * see is spam, and an answer engine that quotes it has quoted a ghost.
+ */
+export function faqSchema(
+  items: readonly { question: string; answer: string }[],
+  path: string
+): Json {
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "@id": `${site.url}${path}#faq`,
+    isPartOf: { "@id": websiteId },
+    mainEntity: items.map((item) => ({
+      "@type": "Question",
+      name: item.question,
+      acceptedAnswer: { "@type": "Answer", text: item.answer },
+    })),
+  };
+}
+
+/**
+ * An ordered procedure. Worth emitting for installation specifically: it is the
+ * one page an assistant reads before acting, and HowTo is the only type that
+ * states the steps are sequential rather than a list of related things.
+ */
+export function howToSchema({
+  name,
+  description,
+  path,
+  steps,
+}: {
+  name: string;
+  description: string;
+  path: string;
+  steps: readonly { name: string; text: string; anchor: string }[];
+}): Json {
+  return {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "@id": `${site.url}${path}#howto`,
+    name,
+    description,
+    inLanguage: "en",
+    author: { "@id": authorId },
+    isPartOf: { "@id": websiteId },
+    tool: [{ "@type": "HowToTool", name: "shadcn CLI" }],
+    step: steps.map((step, index) => ({
+      "@type": "HowToStep",
+      position: index + 1,
+      name: step.name,
+      text: step.text,
+      url: `${site.url}${path}#${step.anchor}`,
+    })),
+  };
+}
+
+/**
+ * The component index as a set rather than 31 unrelated links. Without this a
+ * crawler sees a page of anchors; with it, the registry has a stated size and
+ * every member carries its own name and summary.
+ */
+export function itemListSchema({
+  name,
+  description,
+  path,
+  items,
+}: {
+  name: string;
+  description: string;
+  path: string;
+  items: readonly { name: string; description: string; path: string }[];
+}): Json {
+  return {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "@id": `${site.url}${path}#list`,
+    name,
+    description,
+    numberOfItems: items.length,
+    itemListOrder: "https://schema.org/ItemListUnordered",
+    isPartOf: { "@id": websiteId },
+    itemListElement: items.map((item, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      url: `${site.url}${item.path}`,
+      item: {
+        "@type": "SoftwareSourceCode",
+        name: item.name,
+        description: item.description,
+        url: `${site.url}${item.path}`,
+        programmingLanguage: "TypeScript",
+        runtimePlatform: "React",
+        isPartOf: { "@id": softwareId },
+        license: "https://opensource.org/licenses/MIT",
+      },
+    })),
+  };
+}
+
+/**
  * A single page. TechArticle for documentation, WebPage for legal and policy
  * pages — calling a privacy notice technical documentation would be a lie to
  * the crawler, and the distinction is free to make.

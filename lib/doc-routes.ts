@@ -4,6 +4,7 @@ import {
   componentsByCategory,
   guides,
 } from "@/lib/registry-docs";
+import { comparisons } from "@/lib/comparisons";
 import { legalNav } from "@/lib/site";
 
 export interface DocRoute {
@@ -70,7 +71,9 @@ const realPaths = new Set<string>([
   "/docs",
   "/docs/components",
   "/docs/blocks",
+  "/compare",
   "/legal",
+  ...comparisons.map((item) => `/compare/${item.slug}`),
   ...allDocRoutes.map((route) => route.href),
   ...legalNav.map((item) => item.href),
 ]);

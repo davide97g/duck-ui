@@ -1,9 +1,28 @@
 import { site } from "@/lib/site";
+import { comparisons } from "@/lib/comparisons";
+import { faq } from "@/lib/faq";
 import { blocks, componentsByCategory, guides } from "@/lib/registry-docs";
 
 export const dynamic = "force-static";
 
 function build() {
+  /** Same array the landing page renders and the FAQPage JSON-LD emits. */
+  const faqLines = faq
+    .map((item) => `**${item.question}**\n\n${item.answer}`)
+    .join("\n\n");
+
+  /**
+   * The comparisons state where duck/ui is the wrong answer as plainly as
+   * where it is the right one, which is the part an assistant needs when it is
+   * asked to choose a registry rather than install this one.
+   */
+  const comparisonLines = comparisons
+    .map(
+      (item) =>
+        `- [duck/ui vs ${item.name}](${site.url}/compare/${item.slug}): ${item.shortAnswer}`
+    )
+    .join("\n");
+
   const docLines = guides
     .flatMap((section) => section.items)
     .map((item) => `- [${item.title}](${site.url}${item.href}): ${item.summary}`)
@@ -86,6 +105,16 @@ ${blockLines}
 - Dark mode is the default (\`<html class="dark">\`). Light mode is the variant.
 - For anything duck/ui does not ship (dialog, dropdown, table, and so on) use standard shadcn/ui. The theme already styles it.
 - Components are copied into the project. Edit them in place rather than wrapping them.
+
+## FAQ
+
+${faqLines}
+
+## Compared to other shadcn registries
+
+Most of these are complements, not substitutes. Full pages at ${site.url}/compare.
+
+${comparisonLines}
 
 ## License
 

@@ -3,6 +3,7 @@
 import * as React from "react";
 
 import { cn } from "@/lib/utils";
+import { track } from "@/lib/analytics";
 import { CopyButton } from "@/components/ui/copy-button";
 import { HoloAvatar, HoloAvatarGroup } from "@/components/ui/holo-avatar";
 import { HoloBadge } from "@/components/ui/holo-badge";
@@ -177,7 +178,12 @@ export function ThemeEditor() {
             >
               Reset
             </QuackButton>
-            <CopyButton value={shareUrl} label="Copy share link" />
+            {/* CopyButton ships in the registry, so the counter is wrapped
+                around it rather than added to it — nothing a consumer installs
+                should carry this site's analytics. */}
+            <span onClickCapture={() => track("theme-share-copy")}>
+              <CopyButton value={shareUrl} label="Copy share link" />
+            </span>
           </div>
         </div>
 
@@ -186,7 +192,9 @@ export function ThemeEditor() {
             <span className="font-mono text-xs text-muted-foreground">
               globals.css
             </span>
-            <CopyButton value={css} className="size-7 border-transparent bg-transparent" />
+            <span onClickCapture={() => track("theme-css-copy")}>
+              <CopyButton value={css} className="size-7 border-transparent bg-transparent" />
+            </span>
           </div>
           <pre className="overflow-x-auto p-4 font-mono text-[11px] leading-relaxed text-muted-foreground">
             {css}

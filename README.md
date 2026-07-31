@@ -97,15 +97,21 @@ if you want the change visible in `pnpm dev`.
 
 ### Environment
 
-Copy `.env.example` to `.env.local`. There is one variable that matters:
+Copy `.env.example` to `.env.local`. Three variables matter:
 
 | Variable | Default | Why |
 |---|---|---|
 | `NEXT_PUBLIC_SITE_URL` | `https://duckui.davideghiotto.it` | Absolute origin, no trailing slash. Drives `metadataBase`, canonical tags, `sitemap.xml`, `robots.txt`, `llms.txt` and the `@duck` registry URL shown throughout the docs. |
+| `NEXT_PUBLIC_UMAMI_URL` | empty | Full URL of `script.js` on a self-hosted Umami instance. Empty means no analytics script is served. |
+| `NEXT_PUBLIC_UMAMI_WEBSITE_ID` | empty | Website id from the Umami dashboard. Both are required before anything is loaded. |
 
-It is read at **build** time, not runtime — `NEXT_PUBLIC_*` is inlined into the client bundle and the
-prerendered HTML. Changing it means rebuilding, which is why the Dockerfile takes it as a build arg.
-Moving the site to another domain is that one variable plus a rebuild; nothing else hardcodes an
+The analytics pair also drives the wording of the privacy and cookie notices, so a build either runs
+analytics and says so on `/legal`, or does neither. Setup lives in
+[`docs/marketing/analytics.md`](docs/marketing/analytics.md).
+
+They are read at **build** time, not runtime — `NEXT_PUBLIC_*` is inlined into the client bundle and the
+prerendered HTML. Changing one means rebuilding, which is why the Dockerfile takes all three as build
+args. Moving the site to another domain is one variable plus a rebuild; nothing else hardcodes an
 origin.
 
 ## Layout
@@ -123,11 +129,16 @@ origin.
 | `public/r/` | Built registry JSON, served statically |
 | `public/duck.png`, `app/icon.png` | The mark, and the favicon derived from it |
 | `skill/duck-ui/SKILL.md` | Skill for skills.sh (`skills add dacoder/duck-ui`) |
-| `app/legal/` | Terms, privacy and cookie notices, driven by `lib/site.ts` |
-| `components/seo/structured-data.tsx` | JSON-LD emitters: site graph, breadcrumbs, per-page schema |
+| `app/legal/` | Terms, privacy and cookie notices, driven by `lib/site.ts` and `lib/analytics.ts` |
+| `app/compare/` | duck/ui against the other shadcn registries, one page per entry in `lib/comparisons.ts` |
+| `lib/faq.ts` | The FAQ, rendered on the landing page and emitted as `FAQPage` JSON-LD and into `llms.txt` |
+| `components/seo/structured-data.tsx` | JSON-LD emitters: site graph, breadcrumbs, FAQ, HowTo, ItemList, per-page schema |
+| `lib/analytics.ts` | Umami, or nothing. Both states are reflected in the privacy and cookie notices |
 | `scripts/sync-registry-homepage.mjs` | Keeps `registry.json`'s `homepage` on `NEXT_PUBLIC_SITE_URL` |
 | `Dockerfile` | Multi-stage standalone build used by Dokploy |
 | `docs/PLAN.md` | Product plan and roadmap |
+| `docs/marketing/` | Distribution plan and the analytics setup |
+| `.agents/product-marketing.md` | Positioning and audience context the marketing skills read |
 
 ## How it fits together
 

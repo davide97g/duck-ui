@@ -28,6 +28,14 @@ COPY . .
 ARG NEXT_PUBLIC_SITE_URL=https://duckui.davideghiotto.it
 ENV NEXT_PUBLIC_SITE_URL=$NEXT_PUBLIC_SITE_URL
 
+# Same reasoning for the analytics pair, with one extra consequence: the privacy
+# and cookie notices are rendered from these at build time. Passing them at
+# runtime would ship a page that says no analytics runs while the script loads.
+ARG NEXT_PUBLIC_UMAMI_URL=
+ARG NEXT_PUBLIC_UMAMI_WEBSITE_ID=
+ENV NEXT_PUBLIC_UMAMI_URL=$NEXT_PUBLIC_UMAMI_URL \
+    NEXT_PUBLIC_UMAMI_WEBSITE_ID=$NEXT_PUBLIC_UMAMI_WEBSITE_ID
+
 RUN pnpm build
 
 # ---- runtime ----------------------------------------------------------------

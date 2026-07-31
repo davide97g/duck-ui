@@ -2,6 +2,8 @@ import Link from "next/link";
 
 import { highlight } from "@/lib/highlight";
 import { site } from "@/lib/site";
+import { components } from "@/lib/registry-docs";
+import { FaqSection } from "@/components/site/faq-section";
 import { HoloSticker } from "@/components/site/holo-sticker";
 import { InstallCommand } from "@/components/site/install-command";
 import { Reveal } from "@/components/site/reveal";
@@ -122,8 +124,9 @@ export default async function Home() {
                 Everything comes on one sheet.
               </h2>
               <p className="mt-4 text-muted-foreground">
-                Seventeen components ship today. Eight of them are running in this
-                sheet. Peel off the ones you need and leave the rest.
+                {components.length} components ship today. Eight of them are
+                running in this sheet. Peel off the ones you need and leave the
+                rest.
               </p>
             </div>
             <HoloButton asChild variant="outline">
@@ -282,6 +285,9 @@ export default async function Home() {
           </div>
         </div>
       </section>
+
+      {/* FAQ */}
+      <FaqSection />
 
       {/* Install */}
       <section className="border-t border-border">
