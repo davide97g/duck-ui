@@ -404,6 +404,29 @@
       ]
     },
     {
+      "name": "code-snippet",
+      "type": "registry:ui",
+      "title": "Code Snippet",
+      "description": "Self-highlighting code block with six color schemes, line numbers, line highlighting, collapsing, wrapping and PNG export. The highlighter is local, so there is no async theme load and no flash of unstyled code.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@duck/theme",
+        "@duck/copy-button"
+      ],
+      "files": [
+        {
+          "path": "registry/duck/ui/code-snippet.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "registry/duck/ui/code-highlight.ts",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "terminal",
       "type": "registry:ui",
       "title": "Terminal",

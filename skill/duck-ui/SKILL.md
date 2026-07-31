@@ -46,6 +46,7 @@ All imports are `@/components/ui/<name>`, the hook is `@/hooks/use-holo-pointer`
 | `CopyButton` | `value`, `label`, `copiedLabel`, `onCopied` |
 | `StickerCard` (+ `Header`, `Title`, `Description`, `Content`, `Footer`) | `holo`, `tilt`, `peel` |
 | `CodeWindow` | `title`, `html`, `copyValue`, `lineNumbers`, `holo` |
+| `CodeSnippet` | `code`, `lang: auto \| tsx \| ts \| jsx \| js \| json \| jsonc \| css \| html \| bash \| python \| sql \| yaml \| diff \| text`, `title`, `scheme: duck \| pond \| sunset \| neon \| paper \| mono`, `frame: sticker \| holo \| plain`, `chrome: dots \| plain \| none`, `lineNumbers`, `startLine`, `highlight: "3,7-9" \| number[]`, `wrap`, `maxLines`, `copyable`, `exportable`, `schemePicker`, `wrapToggle`, `exportScale`, `exportBackdrop: holo \| scheme \| none`, `watermark`, `fileName`. Highlights itself and exports a PNG — no Shiki, no async theme load |
 | `Terminal` | `lines: { prompt?, text, output? }[]`, `title`, `prompt`, `speed`, `loop`, `holo` |
 | `StickerSheet` / `StickerSheetCell` | `label`; cell also takes `span: 1 \| 2 \| 3` |
 | `VideoCard` | `videoId`, `title`, `channel`, `duration`, `thumbnail`, `holo` |

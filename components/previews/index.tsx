@@ -1,4 +1,5 @@
 import AnnouncementDemo from "./announcement";
+import CodeSnippetDemo from "./code-snippet";
 import CodeWindowDemo from "./code-window";
 import CopyButtonDemo from "./copy-button";
 import DuckMarkDemo from "./duck-mark";
@@ -34,6 +35,7 @@ import VideoCardDemo from "./video-card";
 export const previews = {
   announcement: AnnouncementDemo,
   "code-window": CodeWindowDemo,
+  "code-snippet": CodeSnippetDemo,
   "copy-button": CopyButtonDemo,
   "duck-mark": DuckMarkDemo,
   "duck-slider": DuckSliderDemo,

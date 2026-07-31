@@ -265,6 +265,136 @@ export const components: ComponentDoc[] = [
     ],
   },
   {
+    slug: "code-snippet",
+    title: "Code Snippet",
+    summary:
+      "A code block that highlights itself, wears one of six color schemes and exports itself as a PNG. Local highlighter, so there is no async theme load and no flash of unstyled code.",
+    category: "Surfaces",
+    client: true,
+    dependencies: ["lucide-react"],
+    registryDependencies: ["@duck/theme", "@duck/copy-button"],
+    exports: ["CodeSnippet", "codeSnippetSchemes"],
+    props: [
+      { name: "code", type: "string", description: "The source to render. Required." },
+      {
+        name: "lang",
+        type: '"auto" | "tsx" | "ts" | "jsx" | "js" | "json" | "jsonc" | "css" | "html" | "bash" | "python" | "sql" | "yaml" | "diff" | "text"',
+        default: '"auto"',
+        description:
+          "Grammar to color with. Auto reads the extension in title first, the shape of the code second.",
+      },
+      {
+        name: "title",
+        type: "string",
+        description: "Filename in the header bar. Also names the exported PNG.",
+      },
+      {
+        name: "scheme",
+        type: '"duck" | "pond" | "sunset" | "neon" | "paper" | "mono"',
+        default: '"duck"',
+        description:
+          "Syntax palette. Each one carries a light and a dark set, picked by the page theme.",
+      },
+      {
+        name: "frame",
+        type: '"sticker" | "holo" | "plain"',
+        default: '"sticker"',
+        description: "Border treatment: 3px sticker edge, iridescent, or a hairline.",
+      },
+      {
+        name: "chrome",
+        type: '"dots" | "plain" | "none"',
+        default: '"dots"',
+        description:
+          "Header bar: traffic lights, bar without them, or no bar — where the controls float in on hover instead.",
+      },
+      { name: "lineNumbers", type: "boolean", default: "true", description: "Number the gutter." },
+      {
+        name: "startLine",
+        type: "number",
+        default: "1",
+        description: "First line number, for excerpts that begin mid-file.",
+      },
+      {
+        name: "highlight",
+        type: "string | number[]",
+        description: 'Lines washed with the accent color: "3,7-9" or [3, 7, 8, 9].',
+      },
+      {
+        name: "wrap",
+        type: "boolean",
+        default: "false",
+        description: "Wrap long lines instead of scrolling them.",
+      },
+      {
+        name: "maxLines",
+        type: "number",
+        description: "Collapse to this many lines behind a show-all control.",
+      },
+      {
+        name: "languageBadge",
+        type: "boolean",
+        default: "true",
+        description: "Show the language in the header bar.",
+      },
+      {
+        name: "copyable",
+        type: "boolean",
+        default: "true",
+        description: "Copy control for the code itself.",
+      },
+      {
+        name: "exportable",
+        type: "boolean",
+        default: "true",
+        description:
+          "PNG controls: download, plus copy-to-clipboard where the browser allows an image write.",
+      },
+      {
+        name: "schemePicker",
+        type: "boolean",
+        default: "false",
+        description: "Let the reader switch scheme. The scheme prop stays the starting point.",
+      },
+      {
+        name: "wrapToggle",
+        type: "boolean",
+        default: "false",
+        description: "Let the reader turn wrapping on and off.",
+      },
+      {
+        name: "exportScale",
+        type: "number",
+        default: "2",
+        description: "Pixel density of the PNG, clamped to 1–4.",
+      },
+      {
+        name: "exportBackdrop",
+        type: '"holo" | "scheme" | "none"',
+        default: '"holo"',
+        description:
+          "What sits behind the card in the PNG: a gradient cut from the scheme, a flat wash, or nothing.",
+      },
+      {
+        name: "watermark",
+        type: "string",
+        description: "Small credit painted into the PNG only, never on screen.",
+      },
+      {
+        name: "fileName",
+        type: "string",
+        description: "Override the download name. Defaults to a slug of title.",
+      },
+    ],
+    rules: [
+      "The PNG is always the whole snippet at full width. Collapsing and wrapping are reading aids on screen, not part of the export.",
+      "Syntax colors are the one place duck/ui uses raw values instead of semantic tokens — a syntax palette is data, the same way a Shiki theme is. Everything around the code stays on the theme.",
+      "The highlighter is a scanner, not a parser. It covers the languages listed under lang convincingly; for an MDX pipeline or an exotic grammar, highlight with Shiki on the server and hand the markup to code-window instead.",
+      "One holo element per viewport still applies: frame=\"holo\" competes with every other iridescent thing on the page.",
+      "The clipboard image control only appears where the browser can write an image (not Firefox). Download works everywhere.",
+    ],
+  },
+  {
     slug: "terminal",
     title: "Terminal",
     summary:

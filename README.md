@@ -20,7 +20,7 @@
 
 **Open code. AI ready. Quack.**
 
-31 components, one theme and one hook, all installed by the standard shadcn CLI under the `@duck`
+32 components, one theme and one hook, all installed by the standard shadcn CLI under the `@duck`
 namespace. Nothing is wrapped, nothing is hidden behind a package — the files land in your repo and
 they are yours to edit.
 
@@ -48,7 +48,7 @@ skill: `skills add dacoder/duck-ui`.
 | Group | Components |
 |---|---|
 | Actions | `quack-button`, `holo-button`, `copy-button` |
-| Surfaces | `sticker-card`, `code-window`, `terminal`, `sticker-sheet`, `video-card`, `quack-bubble` |
+| Surfaces | `sticker-card`, `code-window`, `code-snippet`, `terminal`, `sticker-sheet`, `video-card`, `quack-bubble` |
 | Display | `holo-avatar`, `holo-badge`, `announcement`, `duck-spinner`, `holo-separator`, `duck-mark`, `sticker-kbd`, `stream-text` |
 | Inputs | `glow-input`, `duck-switch`, `sticker-checkbox`, `sticker-radio-group`, `duck-slider`, `sticker-otp`, `sticker-drop` |
 | Navigation | `duck-tabs`, `theme-switcher` |
@@ -120,7 +120,7 @@ origin.
 |---|---|
 | `app/` | duckui.davideghiotto.it: landing, docs, theme editor, `llms.txt` routes |
 | `registry.json` | Registry index: shadcn schema, `@duck` namespace, dependencies |
-| `registry/duck/ui/` | The 31 components. Source of truth. |
+| `registry/duck/ui/` | The 32 components. Source of truth. |
 | `registry/duck/blocks/` | The 3 blocks: whole sections composed from the components |
 | `registry/duck/hooks/` | `use-holo-pointer` |
 | `components/previews/` | One live example per component (blocks under `previews/blocks/`), rendered *and* printed on its docs page |
