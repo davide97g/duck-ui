@@ -70,8 +70,10 @@ pulls in every component it renders.
 npx shadcn@latest add @duck/duck-hero
 ```
 
-duck/ui is additive. For a dialog, a dropdown or a table, use standard shadcn/ui — the theme already
-styles it.
+duck/ui is additive. For a dialog, a dropdown, a table or a tooltip, use standard shadcn/ui — the
+theme already styles it. Tooltips are deliberately not here: a hover-only hint is invisible on touch
+and to the keyboard, so for shortcuts print the key inline with `sticker-kbd` and reach for shadcn's
+`tooltip` only when the label genuinely has nowhere else to live.
 
 ## Design rules
 

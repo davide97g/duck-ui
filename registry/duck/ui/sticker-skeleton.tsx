@@ -19,6 +19,11 @@ const shapes = {
   title: "h-6 w-2/3 rounded-md",
   circle: "size-10 rounded-full",
   card: "h-32 w-full rounded-2xl",
+  // Artwork placeholders take their height from the ratio, so a grid of them
+  // does not need a height at every call site — and does not need the call site
+  // to remember to cancel one either.
+  poster: "aspect-[2/3] w-full rounded-2xl",
+  video: "aspect-video w-full rounded-2xl",
 } as const;
 
 export interface StickerSkeletonProps extends React.ComponentProps<"div"> {

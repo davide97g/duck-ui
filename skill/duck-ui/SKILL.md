@@ -45,6 +45,8 @@ All imports are `@/components/ui/<name>`, the hook is `@/hooks/use-holo-pointer`
 | `HoloButton` | `variant: holo \| primary \| outline \| ghost`, `size`, `asChild` |
 | `CopyButton` | `value`, `label`, `copiedLabel`, `onCopied` |
 | `StickerCard` (+ `Header`, `Title`, `Description`, `Content`, `Footer`) | `holo`, `tilt`, `peel` |
+| `StickerMediaCard` | `src`, `alt`, `fallback`, `aspect: 2/3 \| 16/9 \| 1/1 \| number`, `title`, `subtitle`, `href` or `asChild`, `overlay`, `progress`. Artwork-first tile: image edge to edge, caption outside the frame, the whole tile one focusable link, and the progress bar `aria-hidden` so its value stays out of the link name |
+| `StickerCarousel` | `title`, `description`, `actions`, `label`, `controls: edge \| header \| none`, `gap: sm \| default \| lg`, `peek`, `page`, `fade`. Scroll-snap strip; arrows disable at each end and vanish when the content fits |
 | `CodeWindow` | `title`, `html`, `copyValue`, `lineNumbers`, `holo` |
 | `CodeSnippet` | `code`, `lang: auto \| tsx \| ts \| jsx \| js \| json \| jsonc \| css \| html \| bash \| python \| sql \| yaml \| diff \| text`, `title`, `scheme: duck \| pond \| sunset \| neon \| paper \| mono`, `frame: sticker \| holo \| plain`, `chrome: dots \| plain \| none`, `lineNumbers`, `startLine`, `highlight: "3,7-9" \| number[]`, `wrap`, `maxLines`, `copyable`, `exportable`, `schemePicker`, `wrapToggle`, `exportScale`, `exportBackdrop: holo \| scheme \| none`, `watermark`, `fileName`. Highlights itself and exports a PNG — no Shiki, no async theme load |
 | `Terminal` | `lines: { prompt?, text, output? }[]`, `title`, `prompt`, `speed`, `loop`, `holo` |
@@ -53,18 +55,21 @@ All imports are `@/components/ui/<name>`, the hook is `@/hooks/use-holo-pointer`
 | `HoloAvatar` / `HoloAvatarGroup` | `src`, `alt`, `fallback`, `size: xs \| sm \| default \| lg \| xl`, `shape: circle \| sticker`, `ring: foil \| holo \| primary \| none`, `status: online \| away \| offline`; group takes `max` |
 | `HoloBadge` | `variant: holo \| primary \| outline \| muted \| success \| danger` |
 | `Announcement` | `tag`, `href`, `arrow` |
-| `DuckSpinner` | `size: sm \| default \| lg`, `motion: paddle \| spin`, `src` (any image URL, defaults to the duck/ui logo), `label`; also exports `DuckGlyph` and `DUCK_MARK_SRC` |
+| `DuckSpinner` | `size: sm \| default \| lg`, `motion: paddle \| spin`, `src` (any image URL, defaults to `/duck.svg`, which the item ships into your project-root `public/`), `label`; also exports `DuckGlyph` and `DUCK_MARK_SRC` |
 | `HoloSeparator` | `label`, `orientation`, `holo` |
 | `DuckMark` | `pose: rest \| swim`. Flat vector, inherits currentColor. Use above ~48px; below that use `DuckGlyph` |
 | `StickerKbd` | `watch` (a KeyboardEvent.key), `meta` |
-| `StickerSkeleton` / `StickerSkeletonText` | `shape: line \| title \| circle \| card`, `delay`; text takes `lines` |
-| `StickerProgress` | `value` (omit for indeterminate), `max`, `label`, `showValue` |
-| `EmptyPond` | `title`, `hint`, `action`, `compact` |
-| `GlowInput` / `GlowTextarea` / `GlowField` / `GlowFieldset` | `GlowField` takes `label`, `helper`, `error`, `required` and wraps one control; `GlowFieldset` takes `legend` instead of `label` and wraps a group |
+| `StickerSkeleton` / `StickerSkeletonText` | `shape: line \| title \| circle \| card \| poster \| video`, `delay`; text takes `lines`. `poster` and `video` carry their own ratio, so artwork needs no geometry at the call site |
+| `StickerProgress` / `StickerProgressTrack` | `value` (omit for indeterminate), `max`, `label`, `showValue`, `size: sm \| default`. `StickerProgressTrack` is the bar alone — no wrapper, no label row — for laying along the bottom edge of artwork. Nested inside a link or button, pass `aria-hidden`: a live progressbar there gets its `aria-valuenow` read into that element's accessible name |
+| `EmptyPond` | `title`, `hint`, `action`, `art`, `compact` |
+| `GlowInput` / `GlowTextarea` / `GlowField` / `GlowFieldset` | `GlowField` takes `label`, `helper`, `error`, `required` and wraps one control; `GlowFieldset` takes `legend` instead of `label` and wraps a group, because `GlowField` clones a single child to inject the id and a pair has nothing to clone |
 | `DuckSwitch` | `size: sm \| default`, `children` as the label, plus native `checked` / `defaultChecked` / `onChange` |
 | `StickerCheckbox` | `indeterminate`, `children` as the label, plus native checkbox props |
 | `StickerRadioGroup` / `StickerRadio` | group takes `name`, `value`, `defaultValue`, `onValueChange`; radio takes `value` (required) and `description` |
+| `StickerToggleGroup` / `StickerToggleGroupItem` | group takes `type: single \| multiple`, `value`, `defaultValue`, `onValueChange`, `size: sm \| default`, `disabled`; item takes `value` (required). Single select is a radiogroup, multiple is a toolbar of `aria-pressed` buttons; one tab stop, arrow keys inside |
 | `DuckSlider` | `value`, `defaultValue`, `min`, `max`, `step`, `formatValue`, `showValue`. Single value, no range |
+| `DuckMediaSlider` | `value`, `defaultValue`, `buffered` (0–1 fraction of the track), `preview: (value) => ReactNode`, `dense`, `onScrub` (live), `onSeek` (commit), `formatValue`. Seek bar: holds the value while dragging so `timeupdate` cannot fight the thumb; also exports `formatTimecode` |
+| `DuckVolume` | `volume`, `defaultVolume`, `muted`, `defaultMuted`, `onVolumeChange`, `onMutedChange`, `collapsible`. Mute toggle plus a slider that collapses when idle; volume 0 reads as silence without flipping `muted` |
 | `StickerOtp` | `length`, `value`, `defaultValue`, `onValueChange`, `onComplete` |
 | `StickerDrop` | `accept`, `multiple`, `maxSize`, `onFilesChange`, `label`, `hint` |
 | `DuckTabs` (+ `List`, `Trigger`, `Content`) | `value`, `defaultValue`, `onValueChange` |

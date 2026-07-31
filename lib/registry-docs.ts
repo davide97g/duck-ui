@@ -99,7 +99,7 @@ export const components: ComponentDoc[] = [
         type: "string",
         default: "DUCK_MARK_SRC",
         description:
-          "Image URL for the mark shown while loading. Defaults to the official duck/ui logo.",
+          "Image URL for the mark shown while loading. Defaults to /duck.svg, the mark duck-spinner brings with it.",
       },
       {
         name: "loadingLabel",
@@ -120,13 +120,15 @@ export const components: ComponentDoc[] = [
         name: "asChild",
         type: "boolean",
         default: "false",
-        description: "Render the child element instead of a button, for links.",
+        description:
+          "Render the child element instead of a button, for router links. Slot gets the child on its own, so the state icon, the pulse ring and the label swap do not apply.",
       },
     ],
     rules: [
       "One idle animation per screen. Two competing loops read as a broken page.",
       "Keep the label stable between idle and loading unless the wait is long enough to explain.",
       "State is controlled. Reset it to idle yourself once the work finishes.",
+      "asChild is for navigation. It renders the child alone — no state icon, no pulse ring, no label swap — so keep state on a real button.",
     ],
   },
   {
@@ -227,6 +229,137 @@ export const components: ComponentDoc[] = [
     rules: [
       "Peel and tilt together is a lot. Pick one per card.",
       "In a grid of cards, at most one carries holo.",
+    ],
+  },
+  {
+    slug: "sticker-media-card",
+    title: "Sticker Media Card",
+    summary:
+      "The poster, not the sleeve. Artwork fills the die-cut frame edge to edge, the caption sits outside it on the backing, and the whole tile is one focusable link.",
+    category: "Surfaces",
+    client: true,
+    dependencies: ["@radix-ui/react-slot"],
+    registryDependencies: ["@duck/theme", "@duck/sticker-progress"],
+    exports: ["StickerMediaCard"],
+    props: [
+      { name: "src", type: "string", description: "Artwork URL. Loads lazily." },
+      {
+        name: "alt",
+        type: "string",
+        default: '""',
+        description:
+          "Alternative text. Used as the link name only when there is no title, since the caption would otherwise say it twice.",
+      },
+      {
+        name: "aspect",
+        type: '"2/3" | "16/9" | "1/1" | number',
+        default: '"2/3"',
+        description: "Frame ratio. A number is width / height.",
+      },
+      { name: "title", type: "React.ReactNode", description: "First line of the caption, below the frame." },
+      {
+        name: "subtitle",
+        type: "React.ReactNode",
+        description: 'Second caption line, for a year and a runtime: "2016 · 1h 35m".',
+      },
+      { name: "href", type: "string", description: "Where the tile goes. Inherited from the anchor." },
+      {
+        name: "asChild",
+        type: "boolean",
+        default: "false",
+        description:
+          "Render a router Link as the tile. Pass exactly one element child and no children of its own.",
+      },
+      {
+        name: "overlay",
+        type: "React.ReactNode",
+        description:
+          "Centred decoration that fades in with a scrim on hover and focus — a play badge. Takes no pointer events.",
+      },
+      {
+        name: "progress",
+        type: "number",
+        description:
+          "0 to 100. Draws StickerProgressTrack at size=\"sm\" along the bottom edge of the artwork, aria-hidden so its value stays out of the link's name.",
+      },
+      {
+        name: "fallback",
+        type: "string",
+        description:
+          "Text drawn on a gradient when src is missing or the image fails. Defaults to alt.",
+      },
+    ],
+    rules: [
+      "The tile is one link, so nothing inside it may be interactive. A play button in the frame doubles every tab stop in the grid and hides the real target.",
+      "progress is a readout, not a scrubber. Seeking belongs to the player, not the poster. It is also aria-hidden — how far in belongs in the tile's own name, not in a nested progressbar.",
+      "One aspect per shelf. Mixed ratios in the same row break the grid before they add anything.",
+      "Give it href or asChild — a tile with neither is a box nobody can reach.",
+    ],
+  },
+  {
+    slug: "sticker-carousel",
+    title: "Sticker Carousel",
+    summary:
+      "A strip of stickers peeled off the roll sideways. Native scroll-snap does the scrolling; the arrows grey out at each end, the fade paints only the side that is hiding something, and neither appears while the strip fits.",
+    category: "Navigation",
+    client: true,
+    dependencies: ["lucide-react"],
+    registryDependencies: ["@duck/theme"],
+    exports: ["StickerCarousel"],
+    props: [
+      { name: "title", type: "React.ReactNode", description: "Heading above the track." },
+      { name: "description", type: "React.ReactNode", description: "Line under the heading." },
+      {
+        name: "actions",
+        type: "React.ReactNode",
+        description: 'Extra content in the heading row, for example a "See all" link.',
+      },
+      {
+        name: "label",
+        type: "string",
+        description:
+          "Accessible name for the track. Falls back to title when that is a string.",
+      },
+      {
+        name: "controls",
+        type: '"edge" | "header" | "none"',
+        default: '"edge"',
+        description:
+          "Arrows floating over the track edges, in the heading row, or not at all.",
+      },
+      {
+        name: "gap",
+        type: '"sm" | "default" | "lg"',
+        default: '"default"',
+        description: "Space between slides, 8px through 24px.",
+      },
+      {
+        name: "peek",
+        type: "boolean",
+        default: "false",
+        description:
+          "Pad the track so slides peek in from the edge instead of touching it. Scroll padding moves with it, so snapping still lands flush.",
+      },
+      {
+        name: "page",
+        type: "number",
+        default: "0.85",
+        description:
+          "Share of the visible width one arrow press or key travels. Under 1 so a partly seen slide stays on screen as the anchor.",
+      },
+      {
+        name: "fade",
+        type: "boolean",
+        default: "true",
+        description: "Fade the edge that still has content behind it.",
+      },
+    ],
+    rules: [
+      "Direct children are the slides. The track pins them to shrink-0 and snap-start, so all a slide has to bring is a width.",
+      "Arrow state comes from the scroll position, not from a slide index: a scroll listener plus a ResizeObserver on the track and every slide, so late-loading artwork cannot leave a dead arrow behind.",
+      "Nothing here is arrow-only. The track is focusable, arrows and PageUp/PageDown page it, Home and End go to the ends — which is also why tabIndex has to stay on it.",
+      "The fade is a mask on the track, so it works on any surface. It would also eat the track's own focus ring, so the ring is drawn on the viewport around it.",
+      "RTL is read from the computed direction and scrollLeft is treated as negative-going, per the current spec. Legacy WebKit, where RTL started at scrollWidth, is not handled.",
     ],
   },
   {
@@ -554,7 +687,7 @@ export const components: ComponentDoc[] = [
     slug: "duck-spinner",
     title: "Duck Spinner",
     summary:
-      "The duck/ui logo paddling on water, with the wake as expanding rings. Point src at any image URL to spin your own mark instead.",
+      "The duck/ui logo paddling on water, with the wake as expanding rings. The mark is served from your own public folder; point src at any image URL to spin something else.",
     category: "Display",
     registryDependencies: ["@duck/theme"],
     exports: ["DuckSpinner", "DuckGlyph", "DUCK_MARK_SRC"],
@@ -565,7 +698,7 @@ export const components: ComponentDoc[] = [
         type: "string",
         default: "DUCK_MARK_SRC",
         description:
-          "Mark image. Any remote URL, /public path or data URI. Defaults to the official duck/ui logo, served from the registry origin.",
+          "Mark image. Any remote URL, /public path or data URI. Defaults to /duck.svg — the duck/ui mark the item ships into your own public folder.",
       },
       {
         name: "motion",
@@ -581,7 +714,7 @@ export const components: ComponentDoc[] = [
       },
     ],
     rules: [
-      "The mark loads over the network, so a custom src needs to be reachable from the browser and allowed by your img-src Content-Security-Policy.",
+      "The default mark is same-origin, so the loading path survives offline use and an img-src 'self' policy. A custom src has to be reachable from the browser and allowed by your CSP.",
       "To rebrand every loading state at once — spinner, QuackButton, QuackToast — edit DUCK_MARK_SRC in duck-spinner.tsx rather than passing src at each call site.",
     ],
   },
@@ -635,6 +768,7 @@ export const components: ComponentDoc[] = [
     rules: [
       "Never use the placeholder as the label. GlowField exists so you do not have to.",
       "GlowField wraps one control. For anything plural — a radio group, a range, an OTP strip, a dropzone — use GlowFieldset, which emits a real fieldset and legend.",
+      "The reason is mechanical: GlowField clones its single child to inject the id, so the child has to be one element that accepts one. A label beside a slider, or any pair, gives <label htmlFor> nothing to point at — that is GlowFieldset's legend.",
     ],
   },
   {
@@ -796,6 +930,55 @@ export const components: ComponentDoc[] = [
     ],
   },
   {
+    slug: "sticker-toggle-group",
+    title: "Sticker Toggle Group",
+    summary:
+      "A segmented control cut from one strip of vinyl: the border belongs to the whole set and only the chosen panel takes the lime fill.",
+    category: "Inputs",
+    client: true,
+    registryDependencies: ["@duck/theme"],
+    exports: ["StickerToggleGroup", "StickerToggleGroupItem"],
+    props: [
+      {
+        name: "type",
+        type: '"single" | "multiple"',
+        default: '"single"',
+        description:
+          "Single is a choice among options and renders a radiogroup of radios, so the reader announces \"2 of 4\". Multiple is a set of independent switches and renders a toolbar of aria-pressed buttons.",
+      },
+      {
+        name: "value / defaultValue / onValueChange",
+        type: "string | string[]",
+        description:
+          "Controlled or uncontrolled. A string in single mode, an array in multiple — the props are typed per mode, so onValueChange={setSort} still infers.",
+      },
+      {
+        name: "size",
+        type: '"sm" | "default"',
+        default: '"default"',
+        description: "Panel height and text size. sm is for a control bar above a grid.",
+      },
+      {
+        name: "disabled",
+        type: "boolean",
+        default: "false",
+        description:
+          "On the group: disables every panel. Items take their own disabled too, and arrow keys skip both.",
+      },
+      {
+        name: "value",
+        type: "string",
+        description: "On StickerToggleGroupItem: the panel's value. Required.",
+      },
+    ],
+    rules: [
+      "Give the group an aria-label. A radiogroup or a toolbar with no name is announced as an unnamed container, and the panels alone do not say what they sort.",
+      "Single select never empties: clicking the chosen panel keeps it, exactly as a radio does. If \"none\" is a real answer, give it a panel.",
+      "One tab stop for the whole set — arrows move inside it, Home and End jump to the ends, and both wrap. A toolbar of four costs one Tab, not four.",
+      "Not a replacement for DuckTabs. Use this when the choice reorders or filters what is already on screen, tabs when it swaps the panel underneath.",
+    ],
+  },
+  {
     slug: "duck-slider",
     title: "Duck Slider",
     summary:
@@ -828,6 +1011,131 @@ export const components: ComponentDoc[] = [
       "No holo variant, on purpose. Settings pages have six sliders and the viewport has one holo budget.",
       "Single value. A two-thumb range is a different control — do not fake it with two of these.",
       "Pass formatValue whenever the number is not self-explanatory.",
+    ],
+  },
+  {
+    slug: "duck-media-slider",
+    title: "Duck Media Slider",
+    summary:
+      "The waterline along the edge of a film: a dimmer fill for what has loaded, a readout that runs ahead of the thumb, and a 4px dense line that only grows a duck when you reach for it.",
+    category: "Inputs",
+    client: true,
+    registryDependencies: ["@duck/theme"],
+    exports: ["DuckMediaSlider", "formatTimecode"],
+    props: [
+      {
+        name: "value / defaultValue",
+        type: "number",
+        default: "0",
+        description:
+          "Playhead, in the same unit as min and max — seconds, normally. Ignored while a drag is in flight.",
+      },
+      {
+        name: "buffered",
+        type: "number",
+        default: "0",
+        description:
+          "How much has loaded, as a fraction of the whole track from 0 to 1 — not a value in min..max, so buffered.end(buffered.length - 1) / duration drops straight in.",
+      },
+      {
+        name: "preview",
+        type: "(value: number) => ReactNode",
+        description:
+          "Readout that follows the pointer, and the keyboard, before commit. It returns a node, so a thumbnail fits where a timecode would go.",
+      },
+      {
+        name: "dense",
+        type: "boolean",
+        default: "false",
+        description:
+          "4px track with the thumb on hover and focus only, for the bottom edge of a video. The default stays settings-panel sized.",
+      },
+      {
+        name: "onScrub",
+        type: "(value: number) => void",
+        description:
+          "Every step of a drag or key repeat, while the drag is still in flight. For a timecode readout, not for seeking.",
+      },
+      {
+        name: "onSeek",
+        type: "(value: number) => void",
+        description:
+          "Once, on pointer-up, key-up or blur. This is the one that moves the playhead.",
+      },
+      {
+        name: "formatValue",
+        type: "(value: number) => string",
+        default: "formatTimecode",
+        description:
+          "Feeds aria-valuetext. Defaults to m:ss, because a bare number of seconds tells a listener nothing.",
+      },
+      {
+        name: "min / max / step / disabled",
+        type: "native",
+        description:
+          "It is an <input type=\"range\">, so arrows, Home/End, PageUp/PageDown, touch dragging and RTL are the browser's job.",
+      },
+    ],
+    rules: [
+      "While a drag is in flight the component owns the value and ignores the value prop. That is the point: a <video> fires timeupdate four times a second and would drag the thumb back under your finger.",
+      "Wire onSeek to video.currentTime and onScrub to your readout. Seeking on every scrub step stalls the element.",
+      "buffered is a 0–1 fraction of the track, never a time. Media with holes in it: pass the range holding the playhead.",
+      "Dense is for an overlay on a picture. In a settings panel use the default size, where the thumb is always visible.",
+    ],
+  },
+  {
+    slug: "duck-volume",
+    title: "Duck Volume",
+    summary:
+      "The tap: a mute toggle with the water hidden behind it, opening sideways when the pointer or the focus ring arrives.",
+    category: "Inputs",
+    client: true,
+    dependencies: ["lucide-react"],
+    registryDependencies: [
+      "@duck/theme",
+      "@duck/duck-media-slider",
+      "@duck/quack-button",
+    ],
+    exports: ["DuckVolume"],
+    props: [
+      {
+        name: "volume / defaultVolume",
+        type: "number",
+        default: "0.7",
+        description: "0 to 1, matching video.volume. Controlled or uncontrolled.",
+      },
+      {
+        name: "muted / defaultMuted",
+        type: "boolean",
+        default: "false",
+        description:
+          "Matching video.muted, and independent of volume on purpose — either one alone makes silence.",
+      },
+      {
+        name: "onVolumeChange",
+        type: "(volume: number) => void",
+        description:
+          "Fires live as the slider moves. Volume has no timeupdate to fight, so there is nothing to defer.",
+      },
+      {
+        name: "onMutedChange",
+        type: "(muted: boolean) => void",
+        description:
+          "Fires from the toggle, and from dragging the level back up out of silence.",
+      },
+      {
+        name: "collapsible",
+        type: "boolean",
+        default: "true",
+        description:
+          "Off, the slider stays open. For a settings panel, where nothing is tight.",
+      },
+    ],
+    rules: [
+      "Silence is muted || volume === 0. Read one of the two and you get a speaker icon over a silent film.",
+      "Unmuting a slider that sits at 0 restores the last audible level, otherwise the icon changes and nothing else does.",
+      "Dragging to 0 does not flip video.muted. It is already silent, and inventing that state confuses the element you are driving.",
+      "Collapsed is zero width, never hidden: the slider stays in the tab order and focus-within is what opens it.",
     ],
   },
   {
@@ -918,9 +1226,10 @@ export const components: ComponentDoc[] = [
     props: [
       {
         name: "shape",
-        type: "line | title | circle | card",
+        type: "line | title | circle | card | poster | video",
         default: "line",
-        description: "The cut. Override the size with a className when none of them fit.",
+        description:
+          "The cut. poster and video take their height from the ratio, so artwork needs no geometry at the call site; override the size with a className when none of them fit.",
       },
       {
         name: "delay",
@@ -938,6 +1247,7 @@ export const components: ComponentDoc[] = [
     rules: [
       "Stagger the delays. Twelve skeletons each running their own shimmer reads as twelve things loading, not one page arriving.",
       "Show a skeleton once a wait passes about 300ms. Below that it is a flash, not feedback.",
+      "Use poster and video for artwork rather than card plus an aspect override — the shape carries the ratio and no height, so there is nothing to cancel.",
     ],
   },
   {
@@ -947,7 +1257,7 @@ export const components: ComponentDoc[] = [
       "The peel: solid vinyl behind the edge, cut-line dashes ahead of it.",
     category: "Feedback",
     registryDependencies: ["@duck/theme"],
-    exports: ["StickerProgress"],
+    exports: ["StickerProgress", "StickerProgressTrack"],
     props: [
       {
         name: "value",
@@ -955,6 +1265,19 @@ export const components: ComponentDoc[] = [
         description: "0 to max. Omit it entirely for the indeterminate sweep.",
       },
       { name: "max", type: "number", default: "100", description: "Upper bound." },
+      {
+        name: "size",
+        type: "sm | default",
+        default: "default",
+        description:
+          "sm is the 4px overlay track — no dashes, nothing to put a label row on. default is the 12px cut-line bar.",
+      },
+      {
+        name: "className",
+        type: "string",
+        description:
+          "On StickerProgressTrack: reaches the bar itself, so the radius and the height are yours to overwrite.",
+      },
       { name: "label", type: "string", description: "Also becomes the accessible name." },
       {
         name: "showValue",
@@ -966,13 +1289,16 @@ export const components: ComponentDoc[] = [
     rules: [
       "No holo variant. A progress bar is on screen for the whole wait, so it is the worst place to spend the viewport's one holo element.",
       "Give it a real value as soon as you have one. Indeterminate is for genuinely unknown length, not for laziness.",
+      "StickerProgressTrack is the bar alone — no flex wrapper, no label row, the full ARIA set — for laying along the bottom edge of artwork. Composite components use it instead of redrawing the peel.",
+      "Inside a link or a button, pass aria-hidden. The default aria-label=\"Progress\" is right standalone and wrong nested: a live progressbar inside an interactive element gets its aria-valuenow read into that element's accessible name.",
+      "At sm the cut line goes. A 1.5px dash top and bottom leaves 1px of a 4px track, so the dashes become a smudge and a dim solid backing is the honest reading.",
     ],
   },
   {
     slug: "empty-pond",
     title: "Empty Pond",
     summary:
-      "Still water: one duck at rest and ripples that are the emptiness rather than decoration on it.",
+      "Still water: one duck at rest — or any drawing you pass — and ripples that are the emptiness rather than decoration on it.",
     category: "Feedback",
     registryDependencies: ["@duck/theme", "@duck/duck-mark"],
     exports: ["EmptyPond"],
@@ -980,6 +1306,13 @@ export const components: ComponentDoc[] = [
       { name: "title", type: "string", description: "What is not here. Required." },
       { name: "hint", type: "string", description: "One line on what to do about it." },
       { name: "action", type: "ReactNode", description: "The way out — usually a button." },
+      {
+        name: "art",
+        type: "ReactNode",
+        default: '<DuckMark pose="swim" />',
+        description:
+          "The drawing inside the ripples. Rendered as given, in a 6rem frame that is already aria-hidden, so a replacement sizes itself — the mascot is 4rem — and opts into the float if it wants it.",
+      },
       {
         name: "compact",
         type: "boolean",
@@ -991,6 +1324,7 @@ export const components: ComponentDoc[] = [
       "An empty screen is an invitation. Give it an action, or say why there is nothing to do.",
       "The float is the viewport's one idle animation while this is on screen. Do not put a second one beside it.",
       "This is the only place the mascot goes large. Everywhere else it is a 16px glyph.",
+      "The duck is the default drawing, not a requirement. Pass art when a duck is off-domain — a film library, a bank — and keep the frame, the ripples and the copy hierarchy.",
     ],
   },
   {

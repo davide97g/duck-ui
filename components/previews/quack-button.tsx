@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import Link from "next/link";
 import { Rocket } from "lucide-react";
 
 import {
@@ -32,6 +33,9 @@ export default function QuackButtonDemo() {
       <QuackButton variant="primary" idle="sheen" magnetic={14}>
         <Rocket />
         Follow the pointer
+      </QuackButton>
+      <QuackButton asChild variant="outline">
+        <Link href="/docs/components">Browse components</Link>
       </QuackButton>
     </div>
   );

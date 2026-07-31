@@ -3,13 +3,16 @@ import * as React from "react";
 import { cn } from "@/lib/utils";
 
 /**
- * The official duck/ui mark, served from the registry origin so a fresh install
- * renders the real logo with no asset to copy. Point `src` at your own image to
- * brand the spinner, or edit this constant once to swap it everywhere —
+ * The official duck/ui mark. The registry ships the SVG into your `public/`,
+ * so it is a same-origin request: the loading path still works offline and
+ * under an `img-src 'self'` policy, which is exactly when a spinner matters.
+ * (SVG rather than the site's PNG because the CLI inlines registry files as
+ * text — a raster asset would arrive corrupt.) Point `src` at your own image
+ * to brand the spinner, or edit this constant once to swap it everywhere —
  * DuckSpinner, QuackButton's loading state and QuackToast's quack variant all
  * read it.
  */
-const DUCK_MARK_SRC = "https://duckui.davideghiotto.it/duck.png";
+const DUCK_MARK_SRC = "/duck.svg";
 
 type DuckGlyphProps = Omit<React.ComponentProps<"img">, "alt"> & {
   /** Any image URL: remote, /public path or data URI. */
@@ -70,7 +73,7 @@ function DuckSpinner({
   size?: keyof typeof spinnerSizes;
   /** paddle rocks the mark, spin rotates it a full turn. */
   motion?: keyof typeof spinnerMotion;
-  /** Custom mark image. Defaults to the official duck/ui logo. */
+  /** Custom mark image. Defaults to the duck/ui logo in your public folder. */
   src?: string;
   label?: string;
 }) {

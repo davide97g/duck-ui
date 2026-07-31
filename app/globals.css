@@ -215,14 +215,6 @@
     animation: holo-shift 6s ease-in-out infinite;
   }
 
-  /* Soft outer glow instead of hard shadows */
-  .duck-glow {
-    box-shadow: var(--glow);
-  }
-  .duck-glow-primary {
-    box-shadow: var(--glow-primary);
-  }
-
   /* Sticker look: thick border */
   .sticker {
     border-width: var(--sticker-border);
@@ -355,6 +347,21 @@
     --input: oklch(1 0 0 / 15%);
     --ring: oklch(0.556 0 0);
   }
+}
+
+/*
+ * Soft outer glow instead of hard shadows. `@utility`, not a rule inside
+ * `@layer utilities`: Tailwind v4 only generates variants for utilities it
+ * knows about, so a hand-written `.duck-glow-primary` gives you the bare class
+ * and nothing else — `hover:duck-glow-primary` compiles to no CSS at all.
+ * Every duck surface that lights up on hover depends on this.
+ */
+@utility duck-glow {
+  box-shadow: var(--glow);
+}
+
+@utility duck-glow-primary {
+  box-shadow: var(--glow-primary);
 }
 
 /* Shiki emits both themes at once; CSS picks the one in play. */

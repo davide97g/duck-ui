@@ -115,6 +115,14 @@ export default function InstallationPage() {
               Dark mode wired to a <code>.dark</code> class on{" "}
               <code>&lt;html&gt;</code>. next-themes is the usual way.
             </li>
+            <li>
+              A root <code>tsconfig.json</code> that actually declares{" "}
+              <code>compilerOptions.paths</code> for <code>@/*</code>. Vite&apos;s
+              React template ships a root config holding only{" "}
+              <code>references</code>, and the CLI reads no <code>paths</code>{" "}
+              from it — so <code>add</code> writes into a literal{" "}
+              <code>./@/components/ui/</code> directory instead of yours.
+            </li>
           </ul>
         </Prose>
       </DocSection>
@@ -155,7 +163,21 @@ export default function InstallationPage() {
           <p>
             Files land in <code>components/ui/</code> and hooks in{" "}
             <code>hooks/</code>, following the aliases in your{" "}
-            <code>components.json</code>.
+            <code>components.json</code>. One item also brings an asset:{" "}
+            <code>@duck/duck-spinner</code> writes{" "}
+            <code>public/duck.svg</code> to your project root, so the loading
+            mark is same-origin and survives an <code>img-src &apos;self&apos;</code>{" "}
+            policy. If an older install left it at{" "}
+            <code>src/public/duck.svg</code>, move it up — no dev server serves
+            it from there, and the spinner renders as two empty rings.
+          </p>
+          <p>
+            duck/ui is additive, so there is no dialog, dropdown, table or
+            tooltip here — add the standard shadcn/ui ones and the theme styles
+            them on sight. Tooltips stay out on purpose: a hover-only hint reaches
+            neither touch nor the keyboard, so advertise shortcuts inline with{" "}
+            <code>@duck/sticker-kbd</code> and keep shadcn&apos;s{" "}
+            <code>tooltip</code> for labels with nowhere else to go.
           </p>
         </Prose>
       </DocSection>

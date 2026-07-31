@@ -6,11 +6,10 @@ import { DuckSpinner } from "@/components/ui/duck-spinner";
  * a path out of /public, or a data URI.
  */
 const marks = [
-  { src: undefined, label: "default — duck/ui logo" },
+  { src: undefined, label: "default — /duck.png" },
   { src: "https://github.com/davide97g.png", label: "github.com/davide97g.png" },
   { src: "https://github.com/shadcn.png", label: "github.com/shadcn.png" },
   { src: "https://github.com/vercel.png", label: "github.com/vercel.png" },
-  { src: "/duck.png", label: "/duck.png — local file" },
 ];
 
 export default function DuckSpinnerDemo() {

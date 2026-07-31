@@ -11,6 +11,8 @@
       "cssVars": {
         "theme": {
           "radius": "0.75rem",
+          "font-sans": "ui-sans-serif, system-ui, sans-serif",
+          "font-display": "ui-sans-serif, system-ui, sans-serif",
           "ease-duck": "cubic-bezier(0.16, 1, 0.3, 1)",
           "ease-squash": "cubic-bezier(0.34, 1.56, 0.64, 1)",
           "color-sheet": "var(--sheet)",
@@ -109,12 +111,6 @@
             "color": "transparent",
             "animation": "holo-shift 6s ease-in-out infinite"
           },
-          ".duck-glow": {
-            "box-shadow": "var(--glow)"
-          },
-          ".duck-glow-primary": {
-            "box-shadow": "var(--glow-primary)"
-          },
           ".sticker": {
             "border-width": "var(--sticker-border)"
           },
@@ -157,6 +153,12 @@
           ".cut-line": {
             "border": "1.5px dashed var(--cut)"
           }
+        },
+        "@utility duck-glow": {
+          "box-shadow": "var(--glow)"
+        },
+        "@utility duck-glow-primary": {
+          "box-shadow": "var(--glow-primary)"
         },
         "@keyframes holo-shift": {
           "0%, 100%": {
@@ -388,6 +390,43 @@
       ]
     },
     {
+      "name": "sticker-media-card",
+      "type": "registry:ui",
+      "title": "Sticker Media Card",
+      "description": "An artwork-first tile: the poster fills the die-cut frame edge to edge, the caption sits outside it, and the whole thing is one focusable link. Optional centred overlay and a thin progress bar along the bottom of the art.",
+      "dependencies": [
+        "@radix-ui/react-slot"
+      ],
+      "registryDependencies": [
+        "@duck/theme",
+        "@duck/sticker-progress"
+      ],
+      "files": [
+        {
+          "path": "registry/duck/ui/sticker-media-card.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "sticker-carousel",
+      "type": "registry:ui",
+      "title": "Sticker Carousel",
+      "description": "A strip of stickers peeled off the roll sideways: a native scroll-snap track with arrows that grey out at each end, edge fades on whichever side is hiding content, keyboard paging, and no controls at all when the strip already fits.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@duck/theme"
+      ],
+      "files": [
+        {
+          "path": "registry/duck/ui/sticker-carousel.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "code-window",
       "type": "registry:ui",
       "title": "Code Window",
@@ -533,7 +572,7 @@
       "name": "duck-spinner",
       "type": "registry:ui",
       "title": "Duck Spinner",
-      "description": "The duck/ui logo paddling on water, with the wake as expanding rings. Pass src to spin any image URL instead. Also exports DuckGlyph, the mark used by loading states.",
+      "description": "The duck/ui logo paddling on water, with the wake as expanding rings. Ships the mark into your public folder so the loading path is same-origin. Pass src to spin any image URL instead. Also exports DuckGlyph, the mark used by loading states.",
       "registryDependencies": [
         "@duck/theme"
       ],
@@ -541,6 +580,11 @@
         {
           "path": "registry/duck/ui/duck-spinner.tsx",
           "type": "registry:ui"
+        },
+        {
+          "path": "public/duck.svg",
+          "target": "~/public/duck.svg",
+          "type": "registry:file"
         }
       ]
     },
@@ -676,6 +720,21 @@
       ]
     },
     {
+      "name": "sticker-toggle-group",
+      "type": "registry:ui",
+      "title": "Sticker Toggle Group",
+      "description": "A segmented control cut from one strip of vinyl: the sticker border belongs to the whole set and only the chosen panel takes the lime fill. Roving tabindex and arrow keys, radio semantics for single select and aria-pressed for multiple.",
+      "registryDependencies": [
+        "@duck/theme"
+      ],
+      "files": [
+        {
+          "path": "registry/duck/ui/sticker-toggle-group.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "duck-slider",
       "type": "registry:ui",
       "title": "Duck Slider",
@@ -686,6 +745,41 @@
       "files": [
         {
           "path": "registry/duck/ui/duck-slider.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "duck-media-slider",
+      "type": "registry:ui",
+      "title": "Duck Media Slider",
+      "description": "The waterline along the edge of a film: a dimmer second fill for what has loaded, a scrub readout that runs ahead of the thumb, and a dense 4px variant that only grows a duck when you reach for it. Still a real input type=range, and it holds the value while you drag so the element's own timeupdate cannot fight the thumb.",
+      "registryDependencies": [
+        "@duck/theme"
+      ],
+      "files": [
+        {
+          "path": "registry/duck/ui/duck-media-slider.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "duck-volume",
+      "type": "registry:ui",
+      "title": "Duck Volume",
+      "description": "The tap: a mute toggle with the water hidden behind it, opening sideways on hover or focus. Keeps video.muted and video.volume in sync, treats volume 0 as silence, and hands back the last audible level when you unmute. Built on DuckMediaSlider dense.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@duck/theme",
+        "@duck/duck-media-slider",
+        "@duck/quack-button"
+      ],
+      "files": [
+        {
+          "path": "registry/duck/ui/duck-volume.tsx",
           "type": "registry:ui"
         }
       ]
@@ -709,7 +803,7 @@
       "name": "sticker-drop",
       "type": "registry:ui",
       "title": "Sticker Drop",
-      "description": "File dropzone built on the backing paper: the zone is the kiss-cut sheet, dragging lights the cut lines, and each accepted file lands as its own sticker. Wraps a clipped — not hidden — file input, so it stays keyboard operable.",
+      "description": "File dropzone built on the backing paper: the zone is the kiss-cut sheet, dragging lights the cut lines, and each accepted file lands as its own sticker. Wraps a clipped \u2014 not hidden \u2014 file input, so it stays keyboard operable.",
       "dependencies": [
         "lucide-react"
       ],

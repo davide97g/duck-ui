@@ -13,7 +13,13 @@ export default function StickerSkeletonDemo() {
           <StickerSkeleton delay={180} className="w-1/2" />
         </div>
       </div>
-      <StickerSkeleton shape="card" delay={270} />
+      <StickerSkeleton shape="video" delay={270} />
+      {/* One wave crosses the row left to right, so it reads as one arrival. */}
+      <div className="grid grid-cols-4 gap-3">
+        {[0, 1, 2, 3].map((index) => (
+          <StickerSkeleton key={index} shape="poster" delay={360 + index * 90} />
+        ))}
+      </div>
       <StickerSkeletonText lines={3} />
     </div>
   );

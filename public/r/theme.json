@@ -6,6 +6,8 @@
   "cssVars": {
     "theme": {
       "radius": "0.75rem",
+      "font-sans": "ui-sans-serif, system-ui, sans-serif",
+      "font-display": "ui-sans-serif, system-ui, sans-serif",
       "ease-duck": "cubic-bezier(0.16, 1, 0.3, 1)",
       "ease-squash": "cubic-bezier(0.34, 1.56, 0.64, 1)",
       "color-sheet": "var(--sheet)",
@@ -104,12 +106,6 @@
         "color": "transparent",
         "animation": "holo-shift 6s ease-in-out infinite"
       },
-      ".duck-glow": {
-        "box-shadow": "var(--glow)"
-      },
-      ".duck-glow-primary": {
-        "box-shadow": "var(--glow-primary)"
-      },
       ".sticker": {
         "border-width": "var(--sticker-border)"
       },
@@ -152,6 +148,12 @@
       ".cut-line": {
         "border": "1.5px dashed var(--cut)"
       }
+    },
+    "@utility duck-glow": {
+      "box-shadow": "var(--glow)"
+    },
+    "@utility duck-glow-primary": {
+      "box-shadow": "var(--glow-primary)"
     },
     "@keyframes holo-shift": {
       "0%, 100%": {

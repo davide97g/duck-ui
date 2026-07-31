@@ -65,6 +65,23 @@ const utilities = [
   { name: ".kiss-cut", role: "Sticker sheet backing paper." },
 ];
 
+const fontInstall = `npm i @fontsource-variable/bricolage-grotesque @fontsource-variable/geist`;
+
+const fontWiring = `@import "@fontsource-variable/bricolage-grotesque";
+@import "@fontsource-variable/geist";
+
+/* The @theme block the theme installed already declares both tokens with a
+   system fallback stack. Replace the two values with the real faces — spelled
+   out, not var(--font-sans): under @theme inline a token is not emitted as a
+   custom property, so a var() reference to a sibling token resolves to
+   nothing. */
+@theme inline {
+  --font-sans: "Geist Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Bricolage Grotesque Variable", "Geist Variable", sans-serif;
+}`;
+
+const darkOnly = `<html lang="en" class="dark">`;
+
 const retune = `/* Every duck lime value comes from one hue. Move it and the
    whole system follows, including glows and focus rings. */
 .dark {
@@ -108,9 +125,11 @@ export default function ThemingPage() {
         { id: "surfaces", label: "Surfaces" },
         { id: "accents", label: "Accents" },
         { id: "extras", label: "Duck extras" },
+        { id: "type", label: "Type" },
         { id: "utilities", label: "Utilities" },
         { id: "retune", label: "Retuning" },
         { id: "modes", label: "Light and dark" },
+        { id: "dark-only", label: "Dark-only apps" },
       ]}
     >
       <DocSection id="surfaces" title="Surfaces">
@@ -166,6 +185,50 @@ export default function ThemingPage() {
       </DocSection>
 
       <DocSection
+        id="type"
+        title="Type"
+        description="Two font tokens, both installed with a system fallback so nothing renders unstyled. The real pairing is one npm install away."
+      >
+        <Prose>
+          <p>
+            The theme declares <code>--font-sans</code> for body copy and{" "}
+            <code>--font-display</code> for headings. Components reach for the
+            second through the <code>font-display</code> utility —{" "}
+            <code>StickerCardTitle</code>, <code>EmptyPond</code>,{" "}
+            <code>VideoCard</code> and every block headline. In Tailwind v4 an
+            undefined{" "}
+            <code>font-*</code> token emits nothing at all, so the token has to
+            exist or those strings quietly fall back to the body face.
+          </p>
+          <p>
+            The pairing this design system was drawn with is{" "}
+            <strong>Bricolage Grotesque</strong> for display — wide, slightly
+            odd, the sticker voice — over <strong>Geist</strong> for everything
+            else. Opt in:
+          </p>
+        </Prose>
+        <CodeBlock code={fontInstall} lang="bash" />
+        <CodeBlock code={fontWiring} lang="css" filename="app/globals.css" />
+        <Prose>
+          <p>
+            On Next.js, <code>next/font</code> replaces the two imports: load
+            the faces there and point the same tokens at the CSS variables it
+            generates. That is what this site does.
+          </p>
+          <p>
+            <strong>Your override is not permanent.</strong> Both tokens belong
+            to <code>@duck/theme</code>, so any later{" "}
+            <code>shadcn add @duck/theme</code> writes the system stack back
+            over them — including when the theme comes along silently as another
+            component&rsquo;s registry dependency. It is a two-line re-fix that
+            reads like the fonts broke on their own, so leave a comment next to
+            your override saying where it came from, or keep the pair in a file
+            the CLI never writes to.
+          </p>
+        </Prose>
+      </DocSection>
+
+      <DocSection
         id="utilities"
         title="Utilities"
         description="Class names the theme installs. Components use them, and so can you."
@@ -212,6 +275,34 @@ export default function ThemingPage() {
             Both sets are checked for WCAG AA contrast on body text and on
             every interactive state. If you retune, check both. A hue that
             works on near-black often fails on white.
+          </p>
+        </Prose>
+      </DocSection>
+
+      <DocSection
+        id="dark-only"
+        title="Dark-only apps"
+        description="If the app is never light, pin the class and skip the toggle."
+      >
+        <CodeBlock code={darkOnly} lang="html" filename="app/layout.tsx" />
+        <Prose>
+          <p>
+            That is the whole recipe: no <code>next-themes</code>, no
+            hydration flash, no toggle to style.
+          </p>
+          <p>
+            Leave the <code>:root</code> block where it is. It is not a light
+            theme you are carrying for nothing — it is the base declaration, and{" "}
+            <code>.dark</code> is a diff on top of it. Only the values that
+            actually change between modes are restated there, so{" "}
+            <code>--holo</code>, <code>--foil</code>,{" "}
+            <code>--sticker-border</code>, <code>--vinyl</code> and the pointer
+            variables <code>--fx</code> / <code>--fy</code> / <code>--rx</code>{" "}
+            / <code>--ry</code> exist on <code>:root</code> alone. Delete it and
+            the foil dies, sticker borders lose their width and every tilt stops
+            moving. Keeping it also means the day someone does want a toggle,
+            light already works — and so does every stock shadcn component,
+            which reads the same two blocks.
           </p>
         </Prose>
       </DocSection>

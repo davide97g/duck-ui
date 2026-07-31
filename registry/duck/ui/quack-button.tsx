@@ -182,12 +182,22 @@ function QuackButton({
       )}
       {...props}
     >
-      {asChild ? children : body}
-      {idle === "pulse" && state === "idle" && (
-        <span
-          aria-hidden
-          className="pointer-events-none absolute inset-0 rounded-[inherit] border-2 border-current opacity-0 [animation:duck-ripple_2.4s_ease-out_infinite]"
-        />
+      {/* Slot counts children with React.Children.count, which does not filter
+          falsy ones — a second child throws even when it renders nothing. And
+          the pulse ring decorates the button's own box, so it has no meaning
+          once Slot is cloning someone else's element. */}
+      {asChild ? (
+        children
+      ) : (
+        <>
+          {body}
+          {idle === "pulse" && state === "idle" && (
+            <span
+              aria-hidden
+              className="pointer-events-none absolute inset-0 rounded-[inherit] border-2 border-current opacity-0 [animation:duck-ripple_2.4s_ease-out_infinite]"
+            />
+          )}
+        </>
       )}
     </Comp>
   );
