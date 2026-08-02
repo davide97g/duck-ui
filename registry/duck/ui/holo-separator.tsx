@@ -1,6 +1,7 @@
 import * as React from "react";
 
 import { cn } from "@/lib/utils";
+import { HudLabel } from "@/components/ui/hud-label";
 
 /**
  * HoloSeparator — a hairline that fades in from the edges. With a label it
@@ -59,9 +60,7 @@ function HoloSeparator({
       {...props}
     >
       <span className={cn("h-px flex-1", line)} />
-      <span className="font-mono text-[11px] tracking-[0.18em] text-muted-foreground uppercase">
-        {label}
-      </span>
+      <HudLabel tracking="tight">{label}</HudLabel>
       <span className={cn("h-px flex-1", line)} />
     </div>
   );

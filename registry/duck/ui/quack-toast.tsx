@@ -117,7 +117,7 @@ function QuackToastProvider({
             role="status"
             aria-live="polite"
             className={cn(
-              "pointer-events-auto flex items-start gap-3 rounded-xl border-2 bg-popover p-3 text-popover-foreground shadow-lg",
+              "sticker pointer-events-auto flex items-start gap-3 rounded-xl bg-popover p-3 text-popover-foreground shadow-lg",
               "[animation:duck-rise_0.3s_var(--ease-duck)]",
               variantStyles[item.variant ?? "default"]
             )}

@@ -3,7 +3,7 @@ import * as React from "react";
 import { cn } from "@/lib/utils";
 
 const fieldBase = [
-  "w-full min-w-0 rounded-lg border-2 border-input bg-transparent text-sm",
+  "sticker w-full min-w-0 rounded-lg border-input bg-transparent text-sm",
   "transition-[border-color,box-shadow] duration-200 ease-[var(--ease-duck)] outline-none",
   "placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground",
   "focus-visible:border-ring focus-visible:duck-glow-primary",

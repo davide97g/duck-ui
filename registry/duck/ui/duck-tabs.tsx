@@ -121,7 +121,7 @@ function DuckTabsList({
       data-slot="duck-tabs-list"
       onKeyDown={onKeyDown}
       className={cn(
-        "relative inline-flex w-fit items-center gap-1 rounded-xl border-2 border-border bg-card p-1",
+        "sticker relative inline-flex w-fit items-center gap-1 rounded-xl border-border bg-card p-1",
         className
       )}
       {...props}

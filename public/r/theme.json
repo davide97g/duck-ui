@@ -6,6 +6,11 @@
   "cssVars": {
     "theme": {
       "radius": "0.75rem",
+      "radius-sm": "calc(var(--radius) * 0.667)",
+      "radius-md": "calc(var(--radius) * 0.833)",
+      "radius-lg": "var(--radius)",
+      "radius-xl": "calc(var(--radius) * 1.333)",
+      "radius-2xl": "calc(var(--radius) * 1.833)",
       "font-sans": "ui-sans-serif, system-ui, sans-serif",
       "font-display": "ui-sans-serif, system-ui, sans-serif",
       "ease-duck": "cubic-bezier(0.16, 1, 0.3, 1)",
@@ -89,11 +94,11 @@
   "css": {
     "@layer utilities": {
       ".holo-border": {
-        "border": "2px solid transparent",
+        "border": "var(--sticker-border) solid transparent",
         "background": "linear-gradient(var(--card), var(--card)) padding-box, var(--holo) border-box"
       },
       ".holo-border-animated": {
-        "border": "2px solid transparent",
+        "border": "var(--sticker-border) solid transparent",
         "background": "linear-gradient(var(--card), var(--card)) padding-box, var(--holo) border-box",
         "background-size": "100% 100%, 300% 300%",
         "animation": "holo-shift 4s ease-in-out infinite"
@@ -279,6 +284,42 @@
       "to": {
         "opacity": "1",
         "transform": "translateY(0)"
+      }
+    },
+    "@keyframes duck-fade-in": {
+      "from": {
+        "opacity": "0"
+      },
+      "to": {
+        "opacity": "1"
+      }
+    },
+    "@keyframes duck-fade-out": {
+      "from": {
+        "opacity": "1"
+      },
+      "to": {
+        "opacity": "0"
+      }
+    },
+    "@keyframes duck-dialog-in": {
+      "from": {
+        "opacity": "0",
+        "transform": "translate(-50%, calc(-50% + 10px)) scale(0.98)"
+      },
+      "to": {
+        "opacity": "1",
+        "transform": "translate(-50%, -50%) scale(1)"
+      }
+    },
+    "@keyframes duck-dialog-out": {
+      "from": {
+        "opacity": "1",
+        "transform": "translate(-50%, -50%) scale(1)"
+      },
+      "to": {
+        "opacity": "0",
+        "transform": "translate(-50%, calc(-50% + 6px)) scale(0.98)"
       }
     },
     "@media (prefers-reduced-motion: reduce)": {

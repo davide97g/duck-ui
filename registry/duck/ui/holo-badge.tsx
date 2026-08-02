@@ -13,7 +13,7 @@ const holoBadgeVariants = cva(
       variant: {
         holo: "holo-border text-foreground",
         primary: "bg-primary text-primary-foreground",
-        outline: "border-2 border-border text-foreground",
+        outline: "sticker border-border text-foreground",
         muted: "bg-muted text-muted-foreground",
         success: "bg-primary/15 text-primary",
         danger: "bg-destructive/15 text-destructive",

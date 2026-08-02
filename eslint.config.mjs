@@ -44,6 +44,21 @@ const config = [
     files: ["registry/**/*.{ts,tsx}"],
     rules: {
       "import/no-unresolved": "off",
+      // Registry components render a plain <img>: next/image does not exist for
+      // a Vite or Remix consumer. The rule has to be silenced here rather than
+      // with an inline pragma, because an `eslint-disable-next-line
+      // @next/next/no-img-element` comment gets copied into the consumer's repo
+      // and fails there as "Definition for rule ... was not found". Their lint
+      // config is not ours to satisfy; not breaking it is the minimum.
+      "@next/next/no-img-element": "off",
+    },
+  },
+  {
+    // components/previews/ re-exports registry sources for the docs site and
+    // inherits the same constraint.
+    files: ["components/previews/**/*.tsx"],
+    rules: {
+      "@next/next/no-img-element": "off",
     },
   },
 ];

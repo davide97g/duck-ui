@@ -63,7 +63,6 @@ function VideoCard({
             aria-label={`Play ${title}`}
             className="absolute inset-0 size-full cursor-pointer"
           >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={poster}
               alt=""

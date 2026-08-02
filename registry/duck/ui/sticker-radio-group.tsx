@@ -127,7 +127,7 @@ function StickerRadio({
       <span
         aria-hidden
         className={cn(
-          "mt-0.5 grid size-4 shrink-0 place-items-center rounded-full border-2 border-border",
+          "sticker mt-0.5 grid size-4 shrink-0 place-items-center rounded-full border-border",
           // The dot is nested, so peer-* cannot reach it. The ring claims the
           // state and passes it down as a variable.
           "transition-colors duration-200 peer-checked:border-primary peer-checked:[--dot:1]"

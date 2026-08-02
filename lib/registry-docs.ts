@@ -564,7 +564,7 @@ export const components: ComponentDoc[] = [
     summary:
       "Backing paper with kiss-cut lines. Lays out a set of components the way a vinyl sheet lays out stickers.",
     category: "Surfaces",
-    registryDependencies: ["@duck/theme"],
+    registryDependencies: ["@duck/theme", "@duck/hud-label"],
     exports: ["StickerSheet", "StickerSheetCell"],
     props: [
       { name: "label", type: "string", description: "Small caption printed in the sheet margin." },
@@ -574,6 +574,54 @@ export const components: ComponentDoc[] = [
         default: "1",
         description: "On StickerSheetCell: cell width in grid columns at lg and up.",
       },
+    ],
+  },
+  {
+    slug: "sticker-dialog",
+    title: "Sticker Dialog",
+    summary:
+      "The sticker lifted off the page. Radix Dialog underneath, so the focus trap, scroll lock and aria wiring are real; duck supplies the frosted scrim and the rise into place.",
+    category: "Surfaces",
+    client: true,
+    dependencies: ["@radix-ui/react-dialog", "lucide-react"],
+    registryDependencies: ["@duck/theme"],
+    exports: [
+      "StickerDialog",
+      "StickerDialogTrigger",
+      "StickerDialogClose",
+      "StickerDialogPortal",
+      "StickerDialogOverlay",
+      "StickerDialogContent",
+      "StickerDialogHeader",
+      "StickerDialogTitle",
+      "StickerDialogDescription",
+      "StickerDialogFooter",
+    ],
+    props: [
+      {
+        name: "holo",
+        type: "boolean",
+        default: "false",
+        description: "On StickerDialogContent: iridescent ring instead of the die-cut edge.",
+      },
+      {
+        name: "hideClose",
+        type: "boolean",
+        default: "false",
+        description:
+          "Drop the built-in close button. Escape and the overlay still dismiss unless you intercept them too.",
+      },
+      {
+        name: "closeLabel",
+        type: "string",
+        default: '"Close"',
+        description: "Accessible name for the close button.",
+      },
+    ],
+    rules: [
+      "Always render a StickerDialogTitle. Radix warns without one, and a modal with no accessible name is announced as nothing.",
+      "hideClose is for a blocking decision only — a dialog the user cannot leave except through your own buttons.",
+      "No idle animation inside a dialog. It already interrupted the page; it does not also get to fidget.",
     ],
   },
   {
@@ -664,6 +712,48 @@ export const components: ComponentDoc[] = [
     ],
   },
   {
+    slug: "hud-label",
+    title: "Hud Label",
+    summary:
+      "The instrument-panel label: tiny, mono, uppercase, tracked wide enough to read as machine output rather than prose.",
+    category: "Display",
+    dependencies: ["class-variance-authority"],
+    registryDependencies: ["@duck/theme"],
+    exports: ["HudLabel", "hudLabelVariants"],
+    props: [
+      {
+        name: "tone",
+        type: '"muted" | "foreground" | "primary"',
+        default: '"muted"',
+        description: "Use primary for a live value, a section index or a status.",
+      },
+      {
+        name: "size",
+        type: '"sm" | "default"',
+        default: '"default"',
+        description: "10px or 11px. Nothing larger — past that it stops reading as chrome.",
+      },
+      {
+        name: "tracking",
+        type: '"default" | "tight"',
+        default: '"default"',
+        description:
+          "0.3em, or 0.18em for labels boxed inside a control where the width would push the layout around.",
+      },
+      {
+        name: "dot",
+        type: "boolean",
+        default: "false",
+        description:
+          "Lime status square before the text. Decorative — keep the state in the label's own words too.",
+      },
+    ],
+    rules: [
+      "Label, not sentence. Two or three words; the tracking makes anything longer unreadable.",
+      "The uppercase is a text-transform, so pass normal-case content and let the component shout.",
+    ],
+  },
+  {
     slug: "announcement",
     title: "Announcement",
     summary:
@@ -724,7 +814,7 @@ export const components: ComponentDoc[] = [
     summary:
       "A hairline that fades in from the edges. With a label it becomes a section break.",
     category: "Display",
-    registryDependencies: ["@duck/theme"],
+    registryDependencies: ["@duck/theme", "@duck/hud-label"],
     exports: ["HoloSeparator"],
     props: [
       { name: "label", type: "string", description: "Centered caption between two rules." },

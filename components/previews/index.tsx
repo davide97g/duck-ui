@@ -16,12 +16,14 @@ import HoloAvatarDemo from "./holo-avatar";
 import HoloBadgeDemo from "./holo-badge";
 import HoloButtonDemo from "./holo-button";
 import HoloSeparatorDemo from "./holo-separator";
+import HudLabelDemo from "./hud-label";
 import QuackBubbleDemo from "./quack-bubble";
 import QuackButtonDemo from "./quack-button";
 import QuackToastDemo from "./quack-toast";
 import StickerCardDemo from "./sticker-card";
 import StickerCarouselDemo from "./sticker-carousel";
 import StickerCheckboxDemo from "./sticker-checkbox";
+import StickerDialogDemo from "./sticker-dialog";
 import StickerDropDemo from "./sticker-drop";
 import StickerKbdDemo from "./sticker-kbd";
 import StickerMediaCardDemo from "./sticker-media-card";
@@ -56,12 +58,14 @@ export const previews = {
   "holo-badge": HoloBadgeDemo,
   "holo-button": HoloButtonDemo,
   "holo-separator": HoloSeparatorDemo,
+  "hud-label": HudLabelDemo,
   "quack-bubble": QuackBubbleDemo,
   "quack-button": QuackButtonDemo,
   "quack-toast": QuackToastDemo,
   "sticker-card": StickerCardDemo,
   "sticker-carousel": StickerCarouselDemo,
   "sticker-checkbox": StickerCheckboxDemo,
+  "sticker-dialog": StickerDialogDemo,
   "sticker-drop": StickerDropDemo,
   "sticker-kbd": StickerKbdDemo,
   "sticker-media-card": StickerMediaCardDemo,

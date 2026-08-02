@@ -93,7 +93,6 @@ function StickerMediaCard({
         )}
       >
         {showImage ? (
-          // eslint-disable-next-line @next/next/no-img-element
           <img
             data-slot="sticker-media-card-image"
             src={src}

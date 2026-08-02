@@ -11,6 +11,11 @@
       "cssVars": {
         "theme": {
           "radius": "0.75rem",
+          "radius-sm": "calc(var(--radius) * 0.667)",
+          "radius-md": "calc(var(--radius) * 0.833)",
+          "radius-lg": "var(--radius)",
+          "radius-xl": "calc(var(--radius) * 1.333)",
+          "radius-2xl": "calc(var(--radius) * 1.833)",
           "font-sans": "ui-sans-serif, system-ui, sans-serif",
           "font-display": "ui-sans-serif, system-ui, sans-serif",
           "ease-duck": "cubic-bezier(0.16, 1, 0.3, 1)",
@@ -94,11 +99,11 @@
       "css": {
         "@layer utilities": {
           ".holo-border": {
-            "border": "2px solid transparent",
+            "border": "var(--sticker-border) solid transparent",
             "background": "linear-gradient(var(--card), var(--card)) padding-box, var(--holo) border-box"
           },
           ".holo-border-animated": {
-            "border": "2px solid transparent",
+            "border": "var(--sticker-border) solid transparent",
             "background": "linear-gradient(var(--card), var(--card)) padding-box, var(--holo) border-box",
             "background-size": "100% 100%, 300% 300%",
             "animation": "holo-shift 4s ease-in-out infinite"
@@ -286,6 +291,42 @@
             "transform": "translateY(0)"
           }
         },
+        "@keyframes duck-fade-in": {
+          "from": {
+            "opacity": "0"
+          },
+          "to": {
+            "opacity": "1"
+          }
+        },
+        "@keyframes duck-fade-out": {
+          "from": {
+            "opacity": "1"
+          },
+          "to": {
+            "opacity": "0"
+          }
+        },
+        "@keyframes duck-dialog-in": {
+          "from": {
+            "opacity": "0",
+            "transform": "translate(-50%, calc(-50% + 10px)) scale(0.98)"
+          },
+          "to": {
+            "opacity": "1",
+            "transform": "translate(-50%, -50%) scale(1)"
+          }
+        },
+        "@keyframes duck-dialog-out": {
+          "from": {
+            "opacity": "1",
+            "transform": "translate(-50%, -50%) scale(1)"
+          },
+          "to": {
+            "opacity": "0",
+            "transform": "translate(-50%, calc(-50% + 6px)) scale(0.98)"
+          }
+        },
         "@media (prefers-reduced-motion: reduce)": {
           "*, *::before, *::after": {
             "animation-duration": "0.001ms !important",
@@ -296,6 +337,91 @@
           ".tilt": {
             "transform": "none !important"
           }
+        }
+      }
+    },
+    {
+      "name": "theme-noir",
+      "type": "registry:theme",
+      "title": "Noir Theme",
+      "description": "Terminal noir: near-black canvas, one lime accent, hairline 1px edges and square corners. Same token contract as the duck theme with the sticker vocabulary dialled to zero — iridescence flattened to lime, glow narrowed, radius collapsed. Proof that a duck/ui install can carry a completely different identity without touching component markup.",
+      "registryDependencies": [
+        "@duck/theme"
+      ],
+      "cssVars": {
+        "theme": {
+          "radius": "0.125rem",
+          "font-sans": "Inter, system-ui, sans-serif",
+          "font-display": "\"Space Grotesk\", system-ui, sans-serif",
+          "font-mono": "\"JetBrains Mono\", ui-monospace, monospace",
+          "ease-duck": "cubic-bezier(0.16, 1, 0.3, 1)",
+          "ease-squash": "cubic-bezier(0.22, 1, 0.36, 1)"
+        },
+        "light": {
+          "background": "oklch(0.144 0.003 264)",
+          "foreground": "oklch(0.963 0.003 68)",
+          "card": "oklch(0.18 0.005 253)",
+          "card-foreground": "oklch(0.963 0.003 68)",
+          "popover": "oklch(0.213 0.007 253)",
+          "popover-foreground": "oklch(0.963 0.003 68)",
+          "primary": "oklch(0.897 0.25 135)",
+          "primary-foreground": "oklch(0.144 0.003 264)",
+          "secondary": "oklch(0.235 0.008 253)",
+          "secondary-foreground": "oklch(0.863 0.008 68)",
+          "muted": "oklch(0.224 0.007 253)",
+          "muted-foreground": "oklch(0.703 0.011 68)",
+          "accent": "oklch(0.897 0.25 135)",
+          "accent-foreground": "oklch(0.144 0.003 264)",
+          "destructive": "oklch(0.641 0.218 29)",
+          "destructive-foreground": "oklch(0.963 0.003 68)",
+          "border": "oklch(0.277 0.008 253)",
+          "input": "oklch(0.277 0.008 253)",
+          "ring": "oklch(0.897 0.25 135)",
+          "chart-1": "oklch(0.897 0.25 135)",
+          "chart-2": "oklch(0.75 0.14 220)",
+          "chart-3": "oklch(0.703 0.011 68)",
+          "chart-4": "oklch(0.641 0.218 29)",
+          "chart-5": "oklch(0.863 0.008 68)",
+          "holo": "linear-gradient(135deg, oklch(0.897 0.25 135), oklch(0.897 0.25 135 / 0.3))",
+          "foil": "linear-gradient(135deg, oklch(0.897 0.25 135 / 0.16), transparent 62%)",
+          "glow": "0 0 28px oklch(0.897 0.25 135 / 0.16)",
+          "glow-primary": "0 0 0 1px oklch(0.897 0.25 135 / 0.5), 0 12px 40px -12px oklch(0.897 0.25 135 / 0.6)",
+          "sticker-border": "1px",
+          "vinyl": "oklch(0.963 0.003 68)",
+          "sheet": "oklch(0.18 0.005 253)",
+          "sheet-line": "oklch(0.277 0.008 253)",
+          "cut": "oklch(0.337 0.01 253)"
+        },
+        "dark": {
+          "background": "oklch(0.144 0.003 264)",
+          "foreground": "oklch(0.963 0.003 68)",
+          "card": "oklch(0.18 0.005 253)",
+          "card-foreground": "oklch(0.963 0.003 68)",
+          "popover": "oklch(0.213 0.007 253)",
+          "popover-foreground": "oklch(0.963 0.003 68)",
+          "primary": "oklch(0.897 0.25 135)",
+          "primary-foreground": "oklch(0.144 0.003 264)",
+          "secondary": "oklch(0.235 0.008 253)",
+          "secondary-foreground": "oklch(0.863 0.008 68)",
+          "muted": "oklch(0.224 0.007 253)",
+          "muted-foreground": "oklch(0.703 0.011 68)",
+          "accent": "oklch(0.897 0.25 135)",
+          "accent-foreground": "oklch(0.144 0.003 264)",
+          "destructive": "oklch(0.641 0.218 29)",
+          "destructive-foreground": "oklch(0.963 0.003 68)",
+          "border": "oklch(0.277 0.008 253)",
+          "input": "oklch(0.277 0.008 253)",
+          "ring": "oklch(0.897 0.25 135)",
+          "chart-1": "oklch(0.897 0.25 135)",
+          "chart-2": "oklch(0.75 0.14 220)",
+          "chart-3": "oklch(0.703 0.011 68)",
+          "chart-4": "oklch(0.641 0.218 29)",
+          "chart-5": "oklch(0.863 0.008 68)",
+          "glow": "0 0 28px oklch(0.897 0.25 135 / 0.16)",
+          "glow-primary": "0 0 0 1px oklch(0.897 0.25 135 / 0.5), 0 12px 40px -12px oklch(0.897 0.25 135 / 0.6)",
+          "sheet": "oklch(0.18 0.005 253)",
+          "sheet-line": "oklch(0.277 0.008 253)",
+          "cut": "oklch(0.337 0.01 253)"
         }
       }
     },
@@ -486,11 +612,31 @@
       "title": "Sticker Sheet",
       "description": "Backing paper with kiss-cut lines. Lays out a set of components the way a vinyl sheet lays out stickers.",
       "registryDependencies": [
-        "@duck/theme"
+        "@duck/theme",
+        "@duck/hud-label"
       ],
       "files": [
         {
           "path": "registry/duck/ui/sticker-sheet.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "sticker-dialog",
+      "type": "registry:ui",
+      "title": "Sticker Dialog",
+      "description": "Modal dialog on Radix Dialog, so the focus trap, scroll lock, escape handling and aria wiring are real. duck supplies the frosted scrim, the die-cut edge and the rise into place.",
+      "dependencies": [
+        "@radix-ui/react-dialog",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@duck/theme"
+      ],
+      "files": [
+        {
+          "path": "registry/duck/ui/sticker-dialog.tsx",
           "type": "registry:ui"
         }
       ]
@@ -551,6 +697,45 @@
       ]
     },
     {
+      "name": "hud-label",
+      "type": "registry:ui",
+      "title": "Hud Label",
+      "description": "The instrument-panel label: tiny, mono, uppercase, tracked wide enough to read as machine output rather than prose. Tones muted, foreground, primary; optional lime status square. Ships a matching .hud utility for the many places the label is an attribute of an existing element rather than an element of its own.",
+      "dependencies": [
+        "class-variance-authority"
+      ],
+      "registryDependencies": [
+        "@duck/theme"
+      ],
+      "css": {
+        "@layer utilities": {
+          ".hud": {
+            "font-family": "var(--font-mono)",
+            "font-size": "0.6875rem",
+            "font-weight": "400",
+            "letter-spacing": "0.3em",
+            "line-height": "1",
+            "text-transform": "uppercase"
+          },
+          ":where(.hud)": {
+            "color": "var(--muted-foreground)"
+          },
+          ".hud-sm": {
+            "font-size": "0.625rem"
+          },
+          ".hud-tight": {
+            "letter-spacing": "0.18em"
+          }
+        }
+      },
+      "files": [
+        {
+          "path": "registry/duck/ui/hud-label.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "announcement",
       "type": "registry:ui",
       "title": "Announcement",
@@ -594,7 +779,8 @@
       "title": "Holo Separator",
       "description": "A hairline that fades in from the edges. With a label it becomes a section break.",
       "registryDependencies": [
-        "@duck/theme"
+        "@duck/theme",
+        "@duck/hud-label"
       ],
       "files": [
         {

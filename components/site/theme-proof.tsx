@@ -30,13 +30,20 @@ const people = [
 ];
 
 /**
- * The same markup, twice. Nothing in the demo changes between the two states
- * except which CSS variables are in scope, which is exactly what installing
- * the theme does to a project.
+ * The same markup, three times. Nothing in the demo changes between the states
+ * except which CSS variables are in scope, which is exactly what installing a
+ * theme does to a project. Noir is the honest stress test: it collapses the
+ * radius scale, drops the sticker edge to a hairline and flattens the holo
+ * gradient, and every component still composes.
  */
 export function ThemeProof() {
   const [theme, setTheme] = React.useState("duck");
   const neutral = theme === "neutral";
+  // Noir is the far end of the range: same markup, no sticker language left.
+  // Both alternates are "not duck", so the demo's own decorations follow
+  // `plain` rather than `neutral`.
+  const noir = theme === "noir";
+  const plain = neutral || noir;
 
   return (
     <div className="flex flex-col gap-6">
@@ -44,13 +51,15 @@ export function ThemeProof() {
         <DuckTabsList>
           <DuckTabsTrigger value="neutral">Before</DuckTabsTrigger>
           <DuckTabsTrigger value="duck">After @duck/theme</DuckTabsTrigger>
+          <DuckTabsTrigger value="noir">@duck/theme-noir</DuckTabsTrigger>
         </DuckTabsList>
       </DuckTabs>
 
       <div
         className={cn(
-          "rounded-2xl border-2 border-border bg-background p-6 transition-colors duration-500 sm:p-8",
-          neutral && "theme-neutral"
+          "sticker rounded-2xl border-border bg-background p-6 transition-colors duration-500 sm:p-8",
+          neutral && "theme-neutral",
+          noir && "theme-noir"
         )}
       >
         <div className="grid gap-6 lg:grid-cols-[1.1fr_1fr]">
@@ -58,7 +67,7 @@ export function ThemeProof() {
             <StickerCardHeader>
               <div className="flex items-center justify-between gap-3">
                 <StickerCardTitle>Pond access</StickerCardTitle>
-                <HoloBadge variant={neutral ? "outline" : "primary"}>
+                <HoloBadge variant={plain ? "outline" : "primary"}>
                   4 seats
                 </HoloBadge>
               </div>
@@ -72,14 +81,14 @@ export function ThemeProof() {
                   <HoloAvatar
                     key={person.fallback}
                     size="sm"
-                    ring={neutral ? "none" : "primary"}
+                    ring={plain ? "none" : "primary"}
                     {...person}
                   />
                 ))}
               </HoloAvatarGroup>
             </StickerCardContent>
             <StickerCardFooter className="gap-3">
-              <QuackButton size="sm" ripple={!neutral}>
+              <QuackButton size="sm" ripple={!plain}>
                 Invite
               </QuackButton>
               <QuackButton size="sm" variant="ghost">
@@ -107,8 +116,8 @@ export function ThemeProof() {
               </GlowField>
               <QuackButton
                 className="w-full"
-                idle={neutral ? "none" : "sheen"}
-                ripple={!neutral}
+                idle={plain ? "none" : "sheen"}
+                ripple={!plain}
               >
                 Save registry
               </QuackButton>

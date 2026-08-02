@@ -33,7 +33,7 @@ function CodeWindow({
       data-slot="code-window"
       className={cn(
         "overflow-hidden rounded-xl bg-card",
-        holo ? "holo-border" : "border-2 border-border",
+        holo ? "holo-border" : "sticker border-border",
         className
       )}
       {...props}

@@ -1,6 +1,7 @@
 import * as React from "react";
 
 import { cn } from "@/lib/utils";
+import { HudLabel } from "@/components/ui/hud-label";
 
 /**
  * StickerSheet — backing paper with kiss-cut lines. Lays out a set of
@@ -20,15 +21,15 @@ function StickerSheet({
     <div
       data-slot="sticker-sheet"
       className={cn(
-        "kiss-cut relative overflow-hidden rounded-2xl border-2 border-border",
+        "kiss-cut sticker relative overflow-hidden rounded-2xl border-border",
         className
       )}
       {...props}
     >
       {label && (
-        <span className="absolute top-3 right-4 z-1 font-mono text-[10px] tracking-[0.2em] text-muted-foreground uppercase">
+        <HudLabel size="sm" tracking="tight" className="absolute top-3 right-4 z-1">
           {label}
-        </span>
+        </HudLabel>
       )}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
         {children}
@@ -66,6 +67,9 @@ function StickerSheetCell({
       <div className="flex flex-1 flex-wrap items-center justify-center gap-3">
         {children}
       </div>
+      {/* Not a HudLabel: a cell caption names the component sitting in it, and
+          those names are lowercase identifiers. Uppercasing them would print
+          QUACK-BUTTON on a sheet whose whole job is to be scanned. */}
       {label && (
         <span className="font-mono text-[11px] text-muted-foreground">
           {label}
