@@ -685,6 +685,26 @@
       ]
     },
     {
+      "name": "hud-chip",
+      "type": "registry:ui",
+      "title": "Hud Chip",
+      "description": "The interactive HUD label: nav items, row actions, a zoom cluster, retry, esc. Mono, uppercase and tracked like HudLabel, because a chip and a label in the same row must not drift apart, and a real button underneath. Variants outline, ghost, primary; active paints the current read and leaves the ARIA to the call site; asChild for a Link.",
+      "dependencies": [
+        "class-variance-authority",
+        "@radix-ui/react-slot"
+      ],
+      "registryDependencies": [
+        "@duck/theme",
+        "@duck/hud-label"
+      ],
+      "files": [
+        {
+          "path": "registry/duck/ui/hud-chip.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "sticker-card",
       "type": "registry:ui",
       "title": "Sticker Card",
@@ -985,6 +1005,24 @@
       "files": [
         {
           "path": "registry/duck/ui/hud-label.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "hud-code",
+      "type": "registry:ui",
+      "title": "Hud Code",
+      "description": "The inline citation chip: a monospace token inside a sentence, tinted with --primary so it reads as verifiable data rather than as a snippet of source. Renders a code element by default; interactive makes it a button and asChild takes a link, for the click-a-citation case. Sized and spaced so it cannot change the leading of the paragraph it sits in.",
+      "dependencies": [
+        "@radix-ui/react-slot"
+      ],
+      "registryDependencies": [
+        "@duck/theme"
+      ],
+      "files": [
+        {
+          "path": "registry/duck/ui/hud-code.tsx",
           "type": "registry:ui"
         }
       ]

@@ -25,6 +25,8 @@ import HoloAvatarDemo from "./holo-avatar";
 import HoloBadgeDemo from "./holo-badge";
 import HoloButtonDemo from "./holo-button";
 import HoloSeparatorDemo from "./holo-separator";
+import HudChipDemo from "./hud-chip";
+import HudCodeDemo from "./hud-code";
 import HudLabelDemo from "./hud-label";
 import QuackBubbleDemo from "./quack-bubble";
 import QuackButtonDemo from "./quack-button";
@@ -79,6 +81,8 @@ export const previews = {
   "holo-badge": HoloBadgeDemo,
   "holo-button": HoloButtonDemo,
   "holo-separator": HoloSeparatorDemo,
+  "hud-chip": HudChipDemo,
+  "hud-code": HudCodeDemo,
   "hud-label": HudLabelDemo,
   "quack-bubble": QuackBubbleDemo,
   "quack-button": QuackButtonDemo,

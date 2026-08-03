@@ -199,6 +199,58 @@ export const components: ComponentDoc[] = [
     ],
   },
   {
+    slug: "hud-chip",
+    title: "Hud Chip",
+    summary:
+      "The interactive HUD label: nav items, row actions, a zoom cluster, retry, esc. HudLabel's instrument typography with a real button underneath.",
+    category: "Actions",
+    dependencies: ["class-variance-authority", "@radix-ui/react-slot"],
+    registryDependencies: ["@duck/theme", "@duck/hud-label"],
+    exports: ["HudChip", "hudChipVariants"],
+    props: [
+      {
+        name: "variant",
+        type: '"outline" | "ghost" | "primary"',
+        default: '"outline"',
+        description:
+          "outline is the default chrome read. ghost is for a row dense enough that borders would be noise. primary is the one chip in a group that commits something.",
+      },
+      {
+        name: "size",
+        type: '"sm" | "default"',
+        default: '"default"',
+        description: "28px or 36px. sm drops the type to 10px and the icons to 12px with it.",
+      },
+      {
+        name: "active",
+        type: "boolean",
+        default: "false",
+        description:
+          "Paints the current read and emits data-active. Visual only — pair it with aria-current, aria-pressed or aria-selected yourself.",
+      },
+      {
+        name: "asChild",
+        type: "boolean",
+        default: "false",
+        description:
+          "Render the child element instead of a button: a next/link Link for a nav item. type and disabled are withheld, because neither applies to an anchor.",
+      },
+      {
+        name: "children",
+        type: "React.ReactNode",
+        description:
+          "Two or three words, plus any lucide icon — icons size themselves. An icon-only chip needs an aria-label.",
+      },
+    ],
+    rules: [
+      "Typography comes from the .hud utility that @duck/hud-label ships, not from classes in this file. Install that item or the chip renders as plain sans — and nothing here redeclares .hud, so the chip and a HudLabel beside it cannot drift apart.",
+      'active is a paint job. A nav chip wants aria-current="page", a filter wants aria-pressed, a chip in a tablist wants aria-selected and the roving keyboard behaviour that goes with it — the same highlight means all three, so the component does not guess. Without one of them the state is invisible to a screen reader.',
+      "It is a real button: Enter and Space fire it, disabled takes it out of the tab order. Under asChild it cannot be disabled, because an anchor cannot — remove the href instead.",
+      "Chrome, not a call to action. Machine output — zoom, retry, esc, a route name — is a chip; anything with a sentence for a label, or that is the point of the screen, is a QuackButton.",
+      "For a set of chips where exactly one is chosen, StickerToggleGroup already has the radiogroup semantics and the arrow keys. Reach for a row of HudChips when the items navigate rather than select.",
+    ],
+  },
+  {
     slug: "sticker-card",
     title: "Sticker Card",
     summary:
@@ -985,6 +1037,50 @@ export const components: ComponentDoc[] = [
       "Label, not sentence. Two or three words; the tracking makes anything longer unreadable.",
       "The uppercase is a text-transform, so pass normal-case content and let the component shout.",
       "Only primary glows. Use dotTone rather than a [&>span] selector at the call site — a child selector in application code is a missing prop.",
+    ],
+  },
+  {
+    slug: "hud-code",
+    title: "Hud Code",
+    summary:
+      "The inline citation chip: a monospace token inside a sentence, tinted with --primary so it reads as verifiable data rather than as a snippet of source.",
+    category: "Display",
+    dependencies: ["@radix-ui/react-slot"],
+    registryDependencies: ["@duck/theme"],
+    exports: ["HudCode"],
+    props: [
+      {
+        name: "interactive",
+        type: "boolean",
+        default: "false",
+        description:
+          "Render a button instead of a code element, for a citation that runs a handler. Ignored under asChild — the child is already the control.",
+      },
+      {
+        name: "asChild",
+        type: "boolean",
+        default: "false",
+        description:
+          "Render the child element: an anchor or a next/link Link, for a citation that has a URL.",
+      },
+      {
+        name: "disabled",
+        type: "boolean",
+        description: "The button form only. An anchor cannot be disabled.",
+      },
+      {
+        name: "children",
+        type: "React.ReactNode",
+        description:
+          "The token: a wikilink, a timecode, a record id. It is nowrap, so keep it short enough not to overhang the measure.",
+      },
+    ],
+    rules: [
+      "A citation and a code span are different things. DuckProse's neutral --muted chip is right for a snippet of source; this is for the token the reader is meant to be able to verify, which is why it is the primary colour and not grey.",
+      "Restyling prose internals: every DuckProse rule is wrapped in :where() and therefore has zero specificity, so one plain class on the element beats all of it with no !important anywhere. Map the tag once and render your own component — with react-markdown that is `components={{ code: ({ children }) => <HudCode>{children}</HudCode> }}`, or `<HudCode asChild><a href={hrefFor(children)}>{children}</a></HudCode>` when the citation resolves to a URL.",
+      "It cannot move the line it sits in, and that is load-bearing: 0.875em with the leading collapsed keeps its box under the paragraph's strut, and padding and border on an inline box never enter the line box at all. The hover state is fill and border only — transform does not apply to inline boxes, and going inline-block to allow one would put the padding back into the line.",
+      "Inline only. A block of source is a pre, which DuckProse already styles; a HudCode around one would tint the whole block primary.",
+      'The interactive forms drop the code element rather than nesting one inside the control: a nested code would be caught by DuckProse\'s own code rule and need three utilities to undo, and "button, tape at 12:04" is a more useful announcement than a wrapper most screen readers never mention. If the token really is source, leave it non-interactive.',
     ],
   },
   {
