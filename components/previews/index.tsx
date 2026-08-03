@@ -38,6 +38,7 @@ import StickerDropDemo from "./sticker-drop";
 import StickerKbdDemo from "./sticker-kbd";
 import StickerMediaCardDemo from "./sticker-media-card";
 import StickerOtpDemo from "./sticker-otp";
+import StickerPopoverDemo from "./sticker-popover";
 import StickerProgressDemo from "./sticker-progress";
 import StickerRadioGroupDemo from "./sticker-radio-group";
 import StickerSheetDemo from "./sticker-sheet";
@@ -91,6 +92,7 @@ export const previews = {
   "sticker-kbd": StickerKbdDemo,
   "sticker-media-card": StickerMediaCardDemo,
   "sticker-otp": StickerOtpDemo,
+  "sticker-popover": StickerPopoverDemo,
   "sticker-progress": StickerProgressDemo,
   "sticker-radio-group": StickerRadioGroupDemo,
   "sticker-sheet": StickerSheetDemo,

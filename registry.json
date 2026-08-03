@@ -878,6 +878,24 @@
       ]
     },
     {
+      "name": "sticker-popover",
+      "type": "registry:ui",
+      "title": "Sticker Popover",
+      "description": "Panel anchored to its trigger, on Radix Popover, so focus return, escape, outside click and the aria wiring are real. duck supplies the 3px die-cut edge, the glow and the arrival, and exports STICKER_SURFACE — the class recipe that makes a stock shadcn menu or select match the same edge.",
+      "dependencies": [
+        "@radix-ui/react-popover"
+      ],
+      "registryDependencies": [
+        "@duck/theme"
+      ],
+      "files": [
+        {
+          "path": "registry/duck/ui/sticker-popover.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "video-card",
       "type": "registry:ui",
       "title": "Video Card",

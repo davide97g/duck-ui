@@ -736,6 +736,82 @@ export const components: ComponentDoc[] = [
     ],
   },
   {
+    slug: "sticker-popover",
+    title: "Sticker Popover",
+    summary:
+      "A panel anchored to its trigger, on Radix Popover, with the die-cut edge and the glow. Exports STICKER_SURFACE so a stock shadcn menu can wear the same edge.",
+    category: "Surfaces",
+    client: true,
+    dependencies: ["@radix-ui/react-popover"],
+    registryDependencies: ["@duck/theme"],
+    exports: [
+      "StickerPopover",
+      "StickerPopoverRoot",
+      "StickerPopoverTrigger",
+      "StickerPopoverContent",
+      "StickerPopoverClose",
+      "StickerPopoverAnchor",
+      "STICKER_SURFACE",
+    ],
+    props: [
+      {
+        name: "content",
+        type: "React.ReactNode",
+        description:
+          "The panel. Anything too big for a tooltip that does not warrant a dialog.",
+      },
+      {
+        name: "side",
+        type: '"top" | "right" | "bottom" | "left"',
+        default: '"bottom"',
+        description: "Preferred side. Radix flips it when there is no room.",
+      },
+      {
+        name: "align",
+        type: '"start" | "center" | "end"',
+        default: '"center"',
+        description:
+          "Alignment along that side. Use start when the panel is wider than its trigger.",
+      },
+      {
+        name: "sideOffset",
+        type: "number",
+        default: "10",
+        description: "Pixels between trigger and panel. Room for the arrow.",
+      },
+      {
+        name: "arrow",
+        type: "boolean",
+        default: "true",
+        description: "Draw the pointer back at the trigger.",
+      },
+      {
+        name: "holo",
+        type: "boolean",
+        default: "false",
+        description: "Iridescent ring instead of the solid die-cut edge.",
+      },
+      {
+        name: "contentClassName",
+        type: "string",
+        description: "Sizing for the panel, which is w-72 and p-4 until told otherwise.",
+      },
+      {
+        name: "children",
+        type: "React.ReactNode",
+        description:
+          "The control that opens it. Rendered as the trigger, so it must forward props.",
+      },
+    ],
+    rules: [
+      "A popover is not a menu: no roving focus, no typeahead, no menuitem roles. Every control inside is its own tab stop. For exclusive choices use StickerToggleGroup; for a real menu use shadcn DropdownMenu.",
+      'To make a stock shadcn overlay match the edge, append the exported recipe: `className={cn(STICKER_SURFACE, "p-1")}` on DropdownMenuContent, SelectContent or PopoverContent. It carries radius, fill, the 3px border and the glow, and nothing geometric — padding and width stay with the component being restyled.',
+      "STICKER_SURFACE is what StickerPopoverContent itself wears, so the documented recipe cannot drift from the component.",
+      "The all-in-one StickerPopover is a trigger and a panel. Compose the parts when the panel needs its own close button, an anchor that is not the trigger, or a controlled open.",
+      "The panel rises into place on the top and bottom sides and only fades on the left and right; both directions end at the resting state, so reduced motion shows the panel in place rather than frozen mid-arrival.",
+    ],
+  },
+  {
     slug: "video-card",
     title: "Video Card",
     summary:
