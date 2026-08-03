@@ -778,6 +778,16 @@
   box-shadow: var(--glow-primary);
 }
 
+/*
+ * The growing bottom edge of a block of streaming text. Tokens do not come
+ * into it: `#000` in a mask is an alpha stop, not a colour, so this works on
+ * any surface in either mode. StreamText animates the arrival of characters;
+ * this softens the arrival of lines, which is the part that otherwise pops.
+ */
+@utility duck-stream-edge {
+  mask-image: linear-gradient(to bottom, #000 calc(100% - 1.4em), transparent);
+}
+
 /* Shiki emits both themes at once; CSS picks the one in play. */
 .shiki,
 .shiki span {
@@ -1007,5 +1017,131 @@
   }
   .tilt {
     transform: none !important;
+  }
+  /* A permanently faded last line is not a reduced animation, it is missing
+     text. The edge exists to soften motion, so with the motion gone it goes. */
+  .duck-stream-edge {
+    mask-image: none !important;
+  }
+}
+
+/* ================================================================
+   duck/ui — print
+   Paper is the one surface no class reaches. Dark is the default and
+   `.dark` sits on <html>, so without this a printed page is either a
+   dark canvas rendered as ink or a light palette invented by hand at
+   the call site — twelve literal hexes, one product at a time.
+   ================================================================ */
+
+@media print {
+  /*
+   * Both selectors, and in this order: `.dark` is on <html>, so re-asserting
+   * only `:root` would lose to it everywhere below. These are duck's own light
+   * values rather than new ones, so the printed page is duck light mode and
+   * cannot drift from the theme.
+   */
+  :root,
+  .dark {
+    --background: oklch(1 0 0);
+    --foreground: oklch(0.18 0.012 285);
+    --card: oklch(0.985 0.004 285);
+    --card-foreground: oklch(0.18 0.012 285);
+    --popover: oklch(1 0 0);
+    --popover-foreground: oklch(0.18 0.012 285);
+    --secondary: oklch(0.945 0.006 285);
+    --secondary-foreground: oklch(0.25 0.012 285);
+    --muted: oklch(0.955 0.005 285);
+    --muted-foreground: oklch(0.48 0.012 285);
+    --accent-foreground: oklch(0.25 0.05 220);
+    --destructive: oklch(0.58 0.22 27);
+    --border: oklch(0.895 0.006 285);
+    --input: oklch(0.895 0.006 285);
+    /* The light --ring, not the light --primary. Lime is 2.1:1 on white and
+       prints as a pale smear; this is the value already chosen for 3:1. */
+    --primary: oklch(0.62 0.14 115);
+    --primary-foreground: oklch(1 0 0);
+    --ring: oklch(0.62 0.14 115);
+
+    /* Paper emits no light. A glow prints as a grey bruise, so the halos go
+       out and the 3px sticker edge becomes a hairline — one token each, so
+       every component follows without a print rule of its own. */
+    --glow: none;
+    --glow-primary: none;
+    --sticker-border: 1px;
+    --sheet: oklch(1 0 0);
+    --sheet-line: oklch(0.895 0.006 285);
+    --cut: oklch(0.78 0.01 285);
+    --vinyl: oklch(1 0 0);
+  }
+
+  html,
+  body {
+    background: var(--background) !important;
+    color: var(--foreground) !important;
+  }
+
+  /* The holographic finishes are gradients on a surface. On paper they are a
+     muddy rectangle, and holo-text with no fill is invisible ink. */
+  .holo-border,
+  .holo-border-animated,
+  .foil,
+  .sheen {
+    background: none !important;
+    border-color: var(--border) !important;
+  }
+  .holo-text {
+    background: none !important;
+    -webkit-text-fill-color: var(--foreground) !important;
+    color: var(--foreground) !important;
+  }
+
+  /* Long-form is what people actually print. Zero specificity here too, so a
+     print-only utility at the call site still wins. */
+  :where(.duck-prose) {
+    max-width: none;
+  }
+  :where(.duck-prose) :is(pre, code, blockquote, mark) {
+    background: none;
+  }
+  :where(.duck-prose) :is(figure, blockquote, pre, table, li) {
+    break-inside: avoid;
+  }
+  :where(.duck-prose) :is(h2, h3, h4) {
+    break-after: avoid;
+  }
+
+  /*
+   * Noir is dark in both modes on purpose, and its tokens are declared after
+   * the block above — so without this, a noir install prints a black page. It
+   * keeps its hairlines and its square corners; only the ink inverts. Kept in
+   * sync with the theme-noir item in registry.json, where the same rules are
+   * scoped to :root and .dark rather than to a class.
+   */
+  .theme-noir {
+    --background: oklch(1 0 0);
+    --foreground: oklch(0.16 0.004 264);
+    --card: oklch(1 0 0);
+    --card-foreground: oklch(0.16 0.004 264);
+    --popover: oklch(1 0 0);
+    --popover-foreground: oklch(0.16 0.004 264);
+    --secondary: oklch(0.96 0.002 264);
+    --secondary-foreground: oklch(0.24 0.004 264);
+    --muted: oklch(0.965 0.002 264);
+    --muted-foreground: oklch(0.46 0.006 264);
+    /* Lime at 0.897 is 1.2:1 on paper. This is the same hue at ink weight. */
+    --primary: oklch(0.52 0.15 135);
+    --primary-foreground: oklch(1 0 0);
+    --accent: oklch(0.52 0.15 135);
+    --accent-foreground: oklch(0.16 0.004 264);
+    --border: oklch(0.86 0.004 264);
+    --input: oklch(0.86 0.004 264);
+    --ring: oklch(0.52 0.15 135);
+    --surface: oklch(1 0 0);
+    --surface-raised: oklch(0.98 0.002 264);
+    --glass: oklch(1 0 0);
+    --sheet: oklch(1 0 0);
+    --sheet-line: oklch(0.86 0.004 264);
+    --cut: oklch(0.72 0.006 264);
+    --sheen: transparent;
   }
 }

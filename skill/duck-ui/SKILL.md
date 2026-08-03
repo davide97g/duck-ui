@@ -111,7 +111,11 @@ Full shadcn contract, plus:
 - `--sheet`, `--sheet-line`, `--cut` sticker sheet backing
 - `--fx`, `--fy`, `--rx`, `--ry` pointer position, written by `useHoloPointer`
 
-Utility classes: `.holo-border`, `.holo-border-animated`, `.holo-text`, `.foil`, `.sheen`, `.tilt`, `.duck-glow`, `.duck-glow-primary`, `.sticker`, `.kiss-cut`, `.cut-line`.
+Utility classes: `.holo-border`, `.holo-border-animated`, `.holo-text`, `.foil`, `.sheen`, `.tilt`, `.duck-glow`, `.duck-glow-primary`, `.duck-stream-edge`, `.sticker`, `.kiss-cut`, `.cut-line`.
+
+`.duck-stream-edge` masks the bottom 1.4em of a block into transparency, for the growing edge of streaming text. The mask stop is an alpha value, not a colour, so it needs no token and works on any surface; it is switched off under `prefers-reduced-motion`, because a permanently faded last line is missing text rather than reduced motion.
+
+**Print.** `@duck/theme` ships an `@media print` layer that re-asserts duck's light token values on `:root, .dark` — necessary because `.dark` sits on `<html>` and would otherwise win — then turns the glows off and the 3px sticker edge into a hairline. Print styling is therefore a token question, not a per-component one: a PDF export needs no hand-written palette, and `.duck-prose` already avoids breaking figures, tables and code across pages. `@duck/theme-noir` carries its own print block, since it is dark in both modes and is declared after the base theme.
 
 Keyframes: `holo-shift`, `duck-idle`, `duck-sheen`, `duck-squash`, `duck-pop`, `duck-ripple`, `duck-paddle`, `duck-float`, `duck-caret`, `duck-rise`, `duck-marquee`, `duck-shimmer`, `duck-waddle`.
 

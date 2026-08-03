@@ -7,7 +7,7 @@
       "name": "theme",
       "type": "registry:theme",
       "title": "Duck Theme",
-      "description": "duck/ui theme: dark-first canvas, duck-lime primary, holographic accents. Installs the full shadcn CSS-variable contract plus the holo utilities, the display scale, the control-typography tokens and the motion vocabulary, so every existing shadcn component is duck-styled with no markup changes — and so a different theme can undo the duck styling without touching any.",
+      "description": "duck/ui theme: dark-first canvas, duck-lime primary, holographic accents. Installs the full shadcn CSS-variable contract plus the holo utilities, the display scale, the control-typography tokens, the motion vocabulary and a print layer that re-asserts the light palette on paper, so every existing shadcn component is duck-styled with no markup changes — and so a different theme can undo the duck styling without touching any.",
       "cssVars": {
         "theme": {
           "radius": "0.75rem",
@@ -241,6 +241,9 @@
         "@utility duck-glow-primary": {
           "box-shadow": "var(--glow-primary)"
         },
+        "@utility duck-stream-edge": {
+          "mask-image": "linear-gradient(to bottom, #000 calc(100% - 1.4em), transparent)"
+        },
         "@keyframes holo-shift": {
           "0%, 100%": {
             "background-position": "0% 0%, 0% 50%"
@@ -412,6 +415,62 @@
           },
           ".tilt": {
             "transform": "none !important"
+          },
+          ".duck-stream-edge": {
+            "mask-image": "none !important"
+          }
+        },
+        "@media print": {
+          ":root, .dark": {
+            "--background": "oklch(1 0 0)",
+            "--foreground": "oklch(0.18 0.012 285)",
+            "--card": "oklch(0.985 0.004 285)",
+            "--card-foreground": "oklch(0.18 0.012 285)",
+            "--popover": "oklch(1 0 0)",
+            "--popover-foreground": "oklch(0.18 0.012 285)",
+            "--secondary": "oklch(0.945 0.006 285)",
+            "--secondary-foreground": "oklch(0.25 0.012 285)",
+            "--muted": "oklch(0.955 0.005 285)",
+            "--muted-foreground": "oklch(0.48 0.012 285)",
+            "--accent-foreground": "oklch(0.25 0.05 220)",
+            "--destructive": "oklch(0.58 0.22 27)",
+            "--border": "oklch(0.895 0.006 285)",
+            "--input": "oklch(0.895 0.006 285)",
+            "--primary": "oklch(0.62 0.14 115)",
+            "--primary-foreground": "oklch(1 0 0)",
+            "--ring": "oklch(0.62 0.14 115)",
+            "--glow": "none",
+            "--glow-primary": "none",
+            "--sticker-border": "1px",
+            "--sheet": "oklch(1 0 0)",
+            "--sheet-line": "oklch(0.895 0.006 285)",
+            "--cut": "oklch(0.78 0.01 285)",
+            "--vinyl": "oklch(1 0 0)"
+          },
+          "html, body": {
+            "background": "var(--background) !important",
+            "color": "var(--foreground) !important"
+          },
+          ".holo-border, .holo-border-animated, .foil, .sheen": {
+            "background": "none !important",
+            "border-color": "var(--border) !important"
+          },
+          ".holo-text": {
+            "background": "none !important",
+            "-webkit-text-fill-color": "var(--foreground) !important",
+            "color": "var(--foreground) !important"
+          },
+          ":where(.duck-prose)": {
+            "max-width": "none"
+          },
+          ":where(.duck-prose) :is(pre, code, blockquote, mark)": {
+            "background": "none"
+          },
+          ":where(.duck-prose) :is(figure, blockquote, pre, table, li)": {
+            "break-inside": "avoid"
+          },
+          ":where(.duck-prose) :is(h2, h3, h4)": {
+            "break-after": "avoid"
           }
         }
       }
@@ -419,6 +478,36 @@
     {
       "name": "theme-noir",
       "type": "registry:theme",
+      "css": {
+        "@media print": {
+          ":root, .dark": {
+            "--background": "oklch(1 0 0)",
+            "--foreground": "oklch(0.16 0.004 264)",
+            "--card": "oklch(1 0 0)",
+            "--card-foreground": "oklch(0.16 0.004 264)",
+            "--popover": "oklch(1 0 0)",
+            "--popover-foreground": "oklch(0.16 0.004 264)",
+            "--secondary": "oklch(0.96 0.002 264)",
+            "--secondary-foreground": "oklch(0.24 0.004 264)",
+            "--muted": "oklch(0.965 0.002 264)",
+            "--muted-foreground": "oklch(0.46 0.006 264)",
+            "--primary": "oklch(0.52 0.15 135)",
+            "--primary-foreground": "oklch(1 0 0)",
+            "--accent": "oklch(0.52 0.15 135)",
+            "--accent-foreground": "oklch(0.16 0.004 264)",
+            "--border": "oklch(0.86 0.004 264)",
+            "--input": "oklch(0.86 0.004 264)",
+            "--ring": "oklch(0.52 0.15 135)",
+            "--surface": "oklch(1 0 0)",
+            "--surface-raised": "oklch(0.98 0.002 264)",
+            "--glass": "oklch(1 0 0)",
+            "--sheet": "oklch(1 0 0)",
+            "--sheet-line": "oklch(0.86 0.004 264)",
+            "--cut": "oklch(0.72 0.006 264)",
+            "--sheen": "transparent"
+          }
+        }
+      },
       "title": "Noir Theme",
       "description": "Terminal noir: near-black canvas, one lime accent, hairline 1px edges and square corners. Same token contract as the duck theme with the sticker vocabulary dialled to zero — iridescence flattened to lime, glow narrowed, radius collapsed. Proof that a duck/ui install can carry a completely different identity without touching component markup.",
       "registryDependencies": [
