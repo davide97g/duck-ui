@@ -26,9 +26,11 @@ green. What did not land is below.
 hand-written UI to stay; §2 is sizing and API gaps on components that otherwise fit; §3 is the theme
 layer; §4 is smaller polish.
 
-> **Status: closed.** §1 shipped as two registry items, §2 as eight prop and size additions across
-> nine components plus one theme utility, §3 as a token removal and two docs passes, §4 as one shape
-> and two docs notes. Each item below is annotated with what shipped.
+> **Status: §1–§4 closed, §5 open.** §1 shipped as two registry items, §2 as eight prop and size
+> additions across nine components plus one theme utility, §3 as a token removal and two docs passes,
+> §4 as one shape and two docs notes. Each item below is annotated with what shipped. **§5 was filed
+> afterwards**, from adopting the release in the app this report came from — one item, and the only
+> behaviour the adoption lost.
 >
 > Three departures worth reading before the detail. **`GlowSelect` is Radix, not a native
 > `<select>`** — the option list of a native select is drawn by the OS and cannot take the die-cut
@@ -390,3 +392,43 @@ eight uses needed nothing, which is the whole point of recording them.
 right that every app wants it differently — a grip on `DuckListRow` without the drop indicator, the
 edge auto-scroll and the multi-select block move would be the decorative half of the feature. It stays
 on the list for a report that needs it twice.
+
+---
+
+## 5. Filed after taking the release
+
+Everything above was written from the port. This section is from the pass *after* it — replacing each
+workaround in Thumb Studio with the thing that shipped. Adopting a component is where you find out
+what it cannot do, because a hand-rolled control gets replaced whole: the twenty lines that go away
+include the ones nobody had written down as a feature.
+
+One item, and it is the only place in that pass where the app lost behaviour it had.
+
+### 5.1 `GlowColor` cannot tell an eyedropper pick from a swatch change
+
+The hand-rolled eyedropper this app deleted did two things: it set the colour, and it wrote the picked
+hex to the clipboard. The second is a large part of why a design tool has an eyedropper at all — a
+colour lifted off a reference frame is a colour you are about to paste into a brand doc, a stylesheet
+or a message to a client. It cost one line beside the `await`.
+
+`GlowColor` reports a pick through `onValueChange`, the same channel as the swatch, and the release
+note is explicit that this is deliberate: "a picked colour has no DOM event behind it, so it reports
+through `onValueChange`". That is the right call for the *value*. But it leaves the pick itself
+unobservable — a call site sees one indistinguishable stream of hexes, and a `navigator.clipboard`
+write on every one of them would fire on each frame of a swatch drag.
+
+**Workaround:** none that keeps the component. `eyedropper={false}` plus the app's own button beside
+the swatch gets the behaviour back and gives up the twenty lines the component exists to own — and
+then the app maintains half of `GlowColor` again, which is §1.2's complaint with an extra step. Thumb
+Studio has taken the loss instead: 20 colour rows now have an eyedropper that no longer copies.
+
+**Ask:** `onPick?: (hex: string) => void`, fired *in addition to* `onValueChange` when the value came
+from the screen picker. Additive, no change to the existing signature, and it is the one signal the
+component holds that a caller cannot reconstruct. A second shape —
+`onValueChange(hex, { source: "swatch" | "eyedropper" })` — carries the same information, but it
+changes a callback that 20 call sites already pass and makes the common case read an argument it does
+not care about.
+
+The distinction earns its keep beyond the clipboard, too: a pick is the one colour change that is a
+deliberate single act rather than a drag, which makes it the natural place for an undo boundary, a
+history entry, or a "copied" confirmation.
