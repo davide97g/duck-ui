@@ -20,6 +20,10 @@ export default function HoloBadgeDemo() {
         <TriangleAlert />
         Quota reached
       </HoloBadge>
+      {/* A tag follows the radius scale; a status pill stays round. */}
+      <HoloBadge variant="outline" shape="tag">
+        typescript
+      </HoloBadge>
     </div>
   );
 }

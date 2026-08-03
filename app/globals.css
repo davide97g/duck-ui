@@ -67,6 +67,44 @@
   --glow-primary: 0 0 24px oklch(0.76 0.16 115 / 0.35);
   --sticker-border: 3px;
 
+  /* The sweep colour for .sheen. White is right on a duck surface and wrong on
+     anything with an accent of its own. */
+  --sheen: oklch(1 0 0 / 0.16);
+
+  /* Third surface step. duck has two — card and popover — but a theme layering
+     canvas over surface over raised needs a name for the middle one, and
+     aliasing it locally in every consumer is how that name drifts. Spelled out
+     rather than var(--card): a custom property is substituted where it is
+     declared, so an alias written once in :root would hand the light card to
+     .dark and to every scoped theme. */
+  --surface: oklch(1 0 0);
+  --surface-raised: oklch(0.975 0.004 285);
+
+  /* Translucent surface, for panels over a backdrop. Card at 72%. */
+  --glass: oklch(1 0 0 / 0.72);
+  --glass-blur: 12px;
+
+  /* ---- control typography ----
+     A theme's label vocabulary: family, weight, tracking, case, size. These
+     exist because the alternative is a hardcoded `text-sm font-semibold` in a
+     cva base that no stylesheet can reach — a mono uppercase HUD button then
+     needs a class on all 14 call sites, and the font-size half of it cannot be
+     overridden from CSS at all. Read by the zero-specificity rules at the end
+     of @layer base, so a single call site still wins with a plain utility. */
+  --font-button: var(--font-sans);
+  --weight-button: 600;
+  --tracking-button: normal;
+  --case-button: none;
+  --text-button-sm: 0.75rem;
+  --text-button: 0.875rem;
+  --text-button-lg: 1rem;
+
+  --font-badge: var(--font-sans);
+  --weight-badge: 600;
+  --tracking-badge: normal;
+  --case-badge: none;
+  --text-badge: 0.75rem;
+
   /* The white die-cut edge. Vinyl is white whatever it is stuck to. */
   --vinyl: oklch(0.975 0.004 285);
 
@@ -112,6 +150,10 @@
   --glow: 0 0 32px oklch(0.78 0.15 195 / 0.25);
   --glow-primary: 0 0 32px oklch(0.85 0.17 115 / 0.35);
 
+  --surface: oklch(0.185 0.007 285);
+  --surface-raised: oklch(0.225 0.008 285);
+  --glass: oklch(0.185 0.007 285 / 0.72);
+
   --sheet: oklch(0.175 0.006 285);
   --sheet-line: oklch(0.225 0.008 285);
   --cut: oklch(0.34 0.01 285);
@@ -142,6 +184,8 @@
   --color-chart-3: var(--chart-3);
   --color-chart-4: var(--chart-4);
   --color-chart-5: var(--chart-5);
+  --color-surface: var(--surface);
+  --color-surface-raised: var(--surface-raised);
   --color-sheet: var(--sheet);
   --color-sheet-line: var(--sheet-line);
   --color-cut: var(--cut);
@@ -181,6 +225,40 @@
   html {
     scroll-behavior: smooth;
     scroll-padding-top: 6rem;
+  }
+
+  /*
+   * Control typography, declared at zero specificity on purpose.
+   *
+   * A theme retunes a whole button vocabulary from tokens; a single call site
+   * still overrides any part of it with a plain utility, because @layer base
+   * always loses to @layer utilities whatever the selectors say. Font size
+   * lives here rather than in the size variant for exactly that reason — a
+   * `text-base` inside the variant is a utility, and no stylesheet can undo it.
+   *
+   * Fallbacks are not decoration: a consumer who installed the components
+   * before this token existed has no --font-button, and an unresolved var()
+   * would drop the declaration rather than inherit the old look.
+   */
+  :where([data-slot="holo-button"], [data-slot="quack-button"]) {
+    font-family: var(--font-button, var(--font-sans));
+    font-size: var(--text-button, 0.875rem);
+    font-weight: var(--weight-button, 600);
+    letter-spacing: var(--tracking-button, normal);
+    text-transform: var(--case-button, none);
+  }
+  :where([data-slot="holo-button"], [data-slot="quack-button"])[data-size="sm"] {
+    font-size: var(--text-button-sm, 0.75rem);
+  }
+  :where([data-slot="holo-button"], [data-slot="quack-button"])[data-size="lg"] {
+    font-size: var(--text-button-lg, 1rem);
+  }
+  :where([data-slot="holo-badge"]) {
+    font-family: var(--font-badge, var(--font-sans));
+    font-size: var(--text-badge, 0.75rem);
+    font-weight: var(--weight-badge, 600);
+    letter-spacing: var(--tracking-badge, normal);
+    text-transform: var(--case-badge, none);
   }
 }
 
@@ -260,7 +338,7 @@
     background: linear-gradient(
       105deg,
       transparent 42%,
-      oklch(1 0 0 / 0.16) 49%,
+      var(--sheen, oklch(1 0 0 / 0.16)) 49%,
       transparent 56%
     );
     background-size: 250% 100%;
@@ -317,6 +395,33 @@
   }
 
   /*
+   * Display scale. --font-display gave every consumer the face and none of the
+   * sizes, so each one invented its own clamp(). Zero specificity again: the
+   * point of a display class is that one page can still say text-4xl over it.
+   */
+  :where(.display-xl) {
+    font-family: var(--font-display);
+    font-size: clamp(2.5rem, 6.5vw, 4.5rem);
+    font-weight: 800;
+    line-height: 0.98;
+    letter-spacing: -0.03em;
+  }
+  :where(.display-lg) {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 4.5vw, 3rem);
+    font-weight: 700;
+    line-height: 1.05;
+    letter-spacing: -0.025em;
+  }
+  :where(.display-md) {
+    font-family: var(--font-display);
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+  }
+
+  /*
    * Stock shadcn neutral, scoped. Used by the landing page to show the same
    * components before and after the duck theme is installed.
    */
@@ -325,6 +430,13 @@
     --sticker-border: 1px;
     --glow: 0 0 #0000;
     --glow-primary: 0 0 #0000;
+    /* Stock shadcn labels are medium, not semibold. */
+    --weight-button: 500;
+    --weight-badge: 500;
+    --sheen: oklch(0 0 0 / 0.05);
+    --surface: oklch(1 0 0);
+    --surface-raised: oklch(0.97 0 0);
+    --glass: oklch(1 0 0 / 0.72);
     --holo: linear-gradient(135deg, var(--border), var(--border));
     --background: oklch(1 0 0);
     --foreground: oklch(0.145 0 0);
@@ -342,6 +454,10 @@
   }
 
   .dark .theme-neutral {
+    --sheen: oklch(1 0 0 / 0.08);
+    --surface: oklch(0.205 0 0);
+    --surface-raised: oklch(0.269 0 0);
+    --glass: oklch(0.205 0 0 / 0.72);
     --background: oklch(0.145 0 0);
     --foreground: oklch(0.985 0 0);
     --card: oklch(0.205 0 0);
@@ -381,6 +497,22 @@
     --glow-primary:
       0 0 0 1px oklch(0.897 0.25 135 / 0.5),
       0 12px 40px -12px oklch(0.897 0.25 135 / 0.6);
+    /* The sweep is the accent, not a white highlight. */
+    --sheen: oklch(0.897 0.25 135 / 0.14);
+    /* Noir's CTA vocabulary: mono, uppercase, tracked, one size for every
+       button. This is the whole of §2.3 expressed as five declarations. */
+    --font-button: var(--font-mono);
+    --weight-button: 500;
+    --tracking-button: 0.16em;
+    --case-button: uppercase;
+    --text-button-sm: 0.6875rem;
+    --text-button: 0.75rem;
+    --text-button-lg: 0.75rem;
+    --font-badge: var(--font-mono);
+    --weight-badge: 400;
+    --tracking-badge: 0.12em;
+    --case-badge: uppercase;
+    --text-badge: 0.6875rem;
     --background: oklch(0.144 0.003 264);
     --foreground: oklch(0.963 0.003 68);
     --card: oklch(0.18 0.005 253);
@@ -400,6 +532,9 @@
     --border: oklch(0.277 0.008 253);
     --input: oklch(0.277 0.008 253);
     --ring: oklch(0.897 0.25 135);
+    --surface: oklch(0.18 0.005 253);
+    --surface-raised: oklch(0.213 0.007 253);
+    --glass: oklch(0.18 0.005 253 / 0.72);
     --sheet: oklch(0.18 0.005 253);
     --sheet-line: oklch(0.277 0.008 253);
     --cut: oklch(0.337 0.01 253);

@@ -42,6 +42,18 @@ export default function StickerCardDemo() {
           <QuackButton size="sm">Upgrade the flock</QuackButton>
         </StickerCardFooter>
       </StickerCard>
+
+      {/* asChild: the whole card is the link, ticks included. */}
+      <StickerCard asChild ticks className="sm:col-span-2">
+        <a href="#sticker-card">
+          <StickerCardHeader>
+            <StickerCardTitle>Migration notes</StickerCardTitle>
+            <StickerCardDescription>
+              One card, one link, one focus stop — no nested anchor to tab past.
+            </StickerCardDescription>
+          </StickerCardHeader>
+        </a>
+      </StickerCard>
     </div>
   );
 }

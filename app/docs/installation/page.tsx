@@ -85,6 +85,7 @@ export default function InstallationPage() {
         { id: "requirements", label: "Requirements" },
         { id: "registry", label: "Add the registry" },
         { id: "theme", label: "Install the theme" },
+        { id: "upgrading", label: "Upgrading" },
         { id: "components", label: "Add components" },
         { id: "fonts", label: "Fonts" },
         { id: "manual", label: "Manual install" },
@@ -149,6 +150,31 @@ export default function InstallationPage() {
             <code>--sticker-border</code>), the utility classes and the
             keyframes. Existing shadcn components change appearance
             immediately.
+          </p>
+        </Prose>
+      </DocSection>
+
+      <DocSection
+        id="upgrading"
+        title="Upgrading"
+        description="One thing the CLI cannot do for you."
+      >
+        <Prose>
+          <p>
+            <code>shadcn add</code> merges a registry&rsquo;s CSS{" "}
+            <strong>by selector</strong>. When an item changes a rule&rsquo;s{" "}
+            <em>selector</em> — as{" "}
+            <code>@duck/hud-label</code> did, moving its default colour from{" "}
+            <code>.hud</code> to <code>:where(.hud)</code> so that{" "}
+            <code>class=&quot;hud text-primary&quot;</code> stops rendering muted
+            — a reinstall adds the new rule and leaves the old one in place, and
+            the old one still wins.
+          </p>
+          <p>
+            So after upgrading an item, grep your stylesheet for the rules it
+            owns and delete the duplicates. The same applies to any{" "}
+            <code>.hud</code>, <code>.display-*</code> or theme-token rule you
+            have edited by hand: the merge will not notice.
           </p>
         </Prose>
       </DocSection>

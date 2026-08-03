@@ -51,7 +51,66 @@ const extras = [
     value: "3px",
     role: "Border width for the sticker look.",
   },
+  {
+    name: "--sheen",
+    value: "color",
+    role: "The sweep colour in .sheen. White on a duck surface, the accent on a themed one.",
+  },
+  {
+    name: "--surface / --surface-raised",
+    value: "color",
+    role: "Third and fourth surface steps, for a theme that layers canvas over surface over raised.",
+  },
+  {
+    name: "--glass / --glass-blur",
+    value: "color / length",
+    role: "Translucent panel fill and its backdrop blur. StickerCard glass reads both.",
+  },
 ];
+
+const controlTypography = [
+  {
+    name: "--font-button",
+    value: "var(--font-sans)",
+    role: "Family for every button label.",
+  },
+  { name: "--weight-button", value: "600", role: "Label weight." },
+  { name: "--tracking-button", value: "normal", role: "Label tracking." },
+  {
+    name: "--case-button",
+    value: "none",
+    role: "text-transform. uppercase turns every CTA into HUD chrome.",
+  },
+  {
+    name: "--text-button-sm / --text-button / --text-button-lg",
+    value: "0.75 / 0.875 / 1rem",
+    role: "One size per size variant, selected by the button's own data-size.",
+  },
+  {
+    name: "--font-badge, --weight-badge, --tracking-badge, --case-badge, --text-badge",
+    value: "same shape",
+    role: "The badge's five.",
+  },
+];
+
+const controlType = `/* Noir's whole CTA vocabulary. No markup changes, no per-call-site class. */
+.theme-noir {
+  --font-button: var(--font-mono);
+  --weight-button: 500;
+  --tracking-button: 0.16em;
+  --case-button: uppercase;
+  --text-button-sm: 0.6875rem;
+  --text-button: 0.75rem;
+  --text-button-lg: 0.75rem;
+}
+
+/* Variants are visible to CSS, so a rule can reach one of them. */
+[data-slot="holo-button"][data-variant="outline"]:hover {
+  background: color-mix(in oklab, var(--primary) 8%, transparent);
+}`;
+
+const commentTrap = `/* HoloButton's size variant */   /* <- do not do this */
+.thing { color: var(--primary); }  /* silently swallowed */`;
 
 const utilities = [
   { name: ".holo-border", role: "Iridescent border on any element." },
@@ -63,6 +122,12 @@ const utilities = [
   { name: ".duck-glow / .duck-glow-primary", role: "Soft outer glows." },
   { name: ".sticker", role: "Border width from --sticker-border." },
   { name: ".kiss-cut", role: "Sticker sheet backing paper." },
+  { name: ".grain", role: "Fixed film-grain overlay over the whole page." },
+  {
+    name: ".display-xl / -lg / -md",
+    role: "Display scale on top of --font-display, so nobody invents a clamp().",
+  },
+  { name: ".balance", role: "text-wrap: balance, for headlines." },
 ];
 
 const fontInstall = `npm i @fontsource-variable/bricolage-grotesque @fontsource-variable/geist`;
@@ -115,6 +180,45 @@ function TokenRows({
   );
 }
 
+function VariableTable({
+  rows,
+}: {
+  rows: { name: string; value: string; role: string }[];
+}) {
+  return (
+    <div className="overflow-x-auto rounded-xl border-2 border-border">
+      <table className="w-full min-w-[36rem] text-left text-sm">
+        <thead>
+          <tr className="border-b border-border bg-muted/50">
+            <th scope="col" className="px-4 py-3 font-semibold">
+              Variable
+            </th>
+            <th scope="col" className="px-4 py-3 font-semibold">
+              Kind
+            </th>
+            <th scope="col" className="px-4 py-3 font-semibold">
+              Role
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((row) => (
+            <tr key={row.name} className="border-b border-border last:border-0">
+              <td className="px-4 py-3 font-mono text-xs text-primary">
+                {row.name}
+              </td>
+              <td className="px-4 py-3 font-mono text-xs text-muted-foreground">
+                {row.value}
+              </td>
+              <td className="px-4 py-3 text-muted-foreground">{row.role}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
 export default function ThemingPage() {
   return (
     <DocShell
@@ -125,8 +229,10 @@ export default function ThemingPage() {
         { id: "surfaces", label: "Surfaces" },
         { id: "accents", label: "Accents" },
         { id: "extras", label: "Duck extras" },
+        { id: "control-type", label: "Control typography" },
         { id: "type", label: "Type" },
         { id: "utilities", label: "Utilities" },
+        { id: "writing-css", label: "Writing the CSS" },
         { id: "retune", label: "Retuning" },
         { id: "modes", label: "Light and dark" },
         { id: "dark-only", label: "Dark-only apps" },
@@ -152,36 +258,33 @@ export default function ThemingPage() {
         title="Duck extras"
         description="Five variables shadcn does not define. Components rely on them, so a theme that omits them will render flat."
       >
-        <div className="overflow-x-auto rounded-xl border-2 border-border">
-          <table className="w-full min-w-[36rem] text-left text-sm">
-            <thead>
-              <tr className="border-b border-border bg-muted/50">
-                <th scope="col" className="px-4 py-3 font-semibold">
-                  Variable
-                </th>
-                <th scope="col" className="px-4 py-3 font-semibold">
-                  Kind
-                </th>
-                <th scope="col" className="px-4 py-3 font-semibold">
-                  Role
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {extras.map((extra) => (
-                <tr key={extra.name} className="border-b border-border last:border-0">
-                  <td className="px-4 py-3 font-mono text-xs text-primary">
-                    {extra.name}
-                  </td>
-                  <td className="px-4 py-3 font-mono text-xs text-muted-foreground">
-                    {extra.value}
-                  </td>
-                  <td className="px-4 py-3 text-muted-foreground">{extra.role}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <VariableTable rows={extras} />
+      </DocSection>
+
+      <DocSection
+        id="control-type"
+        title="Control typography"
+        description="A theme's label vocabulary lives in tokens, because a hardcoded text-sm font-semibold in a component is a Tailwind utility and no stylesheet can undo it."
+      >
+        <VariableTable rows={controlTypography} />
+        <Prose>
+          <p>
+            The components read these through rules in <code>@layer base</code>{" "}
+            at zero specificity, so a theme sets the vocabulary once and a single
+            call site still overrides any part of it with a plain utility. Font
+            size in particular belongs here rather than in the size variant:{" "}
+            <code>lg: &quot;… text-base&quot;</code> is a utility, and a utility
+            cannot be beaten from CSS at all — only by another utility on the
+            same element, where <code>cn()</code> strips one of the pair.
+          </p>
+          <p>
+            Every variant-bearing component also emits{" "}
+            <code>data-variant</code> and <code>data-size</code> next to{" "}
+            <code>data-slot</code>, which is what lets a rule reach one variant
+            instead of one call site.
+          </p>
+        </Prose>
+        <CodeBlock code={controlType} lang="css" filename="app/globals.css" />
       </DocSection>
 
       <DocSection
@@ -248,6 +351,38 @@ export default function ThemingPage() {
             </div>
           ))}
         </div>
+      </DocSection>
+
+      <DocSection
+        id="writing-css"
+        title="Writing the CSS"
+        description="Two traps that cost a screenshot and a stack trace to find."
+      >
+        <Prose>
+          <p>
+            <strong>A class you ship outranks Tailwind&rsquo;s own utilities.</strong>{" "}
+            A registry <code>css</code> block lands at the end of the utilities
+            layer, and a plain class rule has the same specificity as a utility,
+            so it wins on order. Declare anything a utility is expected to
+            override — colour, radius, font size — inside{" "}
+            <code>:where()</code>, which drops it to zero specificity. That is
+            why the theme writes{" "}
+            <code>:where(.hud) &#123; color: … &#125;</code> rather than{" "}
+            <code>.hud &#123; color: … &#125;</code>:{" "}
+            <code>class=&quot;hud text-primary&quot;</code> renders muted
+            otherwise, with no error anywhere.
+          </p>
+          <p>
+            <strong>
+              Tailwind v4&rsquo;s parser treats an apostrophe inside a comment as
+              a string delimiter.
+            </strong>{" "}
+            One in a CSS comment swallows everything up to the next one, and the
+            only symptom is <code>Unterminated string</code> somewhere deep in a
+            build trace.
+          </p>
+        </Prose>
+        <CodeBlock code={commentTrap} lang="css" />
       </DocSection>
 
       <DocSection

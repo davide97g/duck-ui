@@ -7,7 +7,7 @@
       "name": "theme",
       "type": "registry:theme",
       "title": "Duck Theme",
-      "description": "duck/ui theme: dark-first canvas, duck-lime primary, holographic accents. Installs the full shadcn CSS-variable contract plus the holo utilities and the motion vocabulary, so every existing shadcn component is duck-styled with no markup changes.",
+      "description": "duck/ui theme: dark-first canvas, duck-lime primary, holographic accents. Installs the full shadcn CSS-variable contract plus the holo utilities, the display scale, the control-typography tokens and the motion vocabulary, so every existing shadcn component is duck-styled with no markup changes — and so a different theme can undo the duck styling without touching any.",
       "cssVars": {
         "theme": {
           "radius": "0.75rem",
@@ -20,6 +20,8 @@
           "font-display": "ui-sans-serif, system-ui, sans-serif",
           "ease-duck": "cubic-bezier(0.16, 1, 0.3, 1)",
           "ease-squash": "cubic-bezier(0.34, 1.56, 0.64, 1)",
+          "color-surface": "var(--surface)",
+          "color-surface-raised": "var(--surface-raised)",
           "color-sheet": "var(--sheet)",
           "color-sheet-line": "var(--sheet-line)",
           "color-cut": "var(--cut)",
@@ -55,6 +57,23 @@
           "glow": "0 0 24px oklch(0.78 0.15 195 / 0.2)",
           "glow-primary": "0 0 24px oklch(0.76 0.16 115 / 0.35)",
           "sticker-border": "3px",
+          "sheen": "oklch(1 0 0 / 0.16)",
+          "surface": "oklch(1 0 0)",
+          "surface-raised": "oklch(0.975 0.004 285)",
+          "glass": "oklch(1 0 0 / 0.72)",
+          "glass-blur": "12px",
+          "font-button": "var(--font-sans)",
+          "weight-button": "600",
+          "tracking-button": "normal",
+          "case-button": "none",
+          "text-button-sm": "0.75rem",
+          "text-button": "0.875rem",
+          "text-button-lg": "1rem",
+          "font-badge": "var(--font-sans)",
+          "weight-badge": "600",
+          "tracking-badge": "normal",
+          "case-badge": "none",
+          "text-badge": "0.75rem",
           "vinyl": "oklch(0.975 0.004 285)",
           "sheet": "oklch(0.97 0.004 285)",
           "sheet-line": "oklch(0.9 0.006 285)",
@@ -91,6 +110,9 @@
           "chart-5": "oklch(0.7 0.19 350)",
           "glow": "0 0 32px oklch(0.78 0.15 195 / 0.25)",
           "glow-primary": "0 0 32px oklch(0.85 0.17 115 / 0.35)",
+          "surface": "oklch(0.185 0.007 285)",
+          "surface-raised": "oklch(0.225 0.008 285)",
+          "glass": "oklch(0.185 0.007 285 / 0.72)",
           "sheet": "oklch(0.175 0.006 285)",
           "sheet-line": "oklch(0.225 0.008 285)",
           "cut": "oklch(0.34 0.01 285)"
@@ -134,7 +156,7 @@
             "position": "absolute",
             "inset": "0",
             "pointer-events": "none",
-            "background": "linear-gradient(105deg, transparent 42%, oklch(1 0 0 / 0.16) 49%, transparent 56%)",
+            "background": "linear-gradient(105deg, transparent 42%, var(--sheen, oklch(1 0 0 / 0.16)) 49%, transparent 56%)",
             "background-size": "250% 100%",
             "background-position": "160% 0",
             "transition": "background-position 0.7s var(--ease-duck)"
@@ -157,6 +179,60 @@
           },
           ".cut-line": {
             "border": "1.5px dashed var(--cut)"
+          },
+          ".grain": {
+            "position": "fixed",
+            "inset": "0",
+            "z-index": "60",
+            "pointer-events": "none",
+            "opacity": "0.04",
+            "background-image": "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E\")"
+          },
+          ".balance": {
+            "text-wrap": "balance"
+          },
+          ":where(.display-xl)": {
+            "font-family": "var(--font-display)",
+            "font-size": "clamp(2.5rem, 6.5vw, 4.5rem)",
+            "font-weight": "800",
+            "line-height": "0.98",
+            "letter-spacing": "-0.03em"
+          },
+          ":where(.display-lg)": {
+            "font-family": "var(--font-display)",
+            "font-size": "clamp(2rem, 4.5vw, 3rem)",
+            "font-weight": "700",
+            "line-height": "1.05",
+            "letter-spacing": "-0.025em"
+          },
+          ":where(.display-md)": {
+            "font-family": "var(--font-display)",
+            "font-size": "clamp(1.5rem, 3vw, 2rem)",
+            "font-weight": "700",
+            "line-height": "1.15",
+            "letter-spacing": "-0.02em"
+          }
+        },
+        "@layer base": {
+          ":where([data-slot=\"holo-button\"], [data-slot=\"quack-button\"])": {
+            "font-family": "var(--font-button, var(--font-sans))",
+            "font-size": "var(--text-button, 0.875rem)",
+            "font-weight": "var(--weight-button, 600)",
+            "letter-spacing": "var(--tracking-button, normal)",
+            "text-transform": "var(--case-button, none)"
+          },
+          ":where([data-slot=\"holo-button\"], [data-slot=\"quack-button\"])[data-size=\"sm\"]": {
+            "font-size": "var(--text-button-sm, 0.75rem)"
+          },
+          ":where([data-slot=\"holo-button\"], [data-slot=\"quack-button\"])[data-size=\"lg\"]": {
+            "font-size": "var(--text-button-lg, 1rem)"
+          },
+          ":where([data-slot=\"holo-badge\"])": {
+            "font-family": "var(--font-badge, var(--font-sans))",
+            "font-size": "var(--text-badge, 0.75rem)",
+            "font-weight": "var(--weight-badge, 600)",
+            "letter-spacing": "var(--tracking-badge, normal)",
+            "text-transform": "var(--case-badge, none)"
           }
         },
         "@utility duck-glow": {
@@ -387,6 +463,22 @@
           "glow": "0 0 28px oklch(0.897 0.25 135 / 0.16)",
           "glow-primary": "0 0 0 1px oklch(0.897 0.25 135 / 0.5), 0 12px 40px -12px oklch(0.897 0.25 135 / 0.6)",
           "sticker-border": "1px",
+          "sheen": "oklch(0.897 0.25 135 / 0.14)",
+          "surface": "oklch(0.18 0.005 253)",
+          "surface-raised": "oklch(0.213 0.007 253)",
+          "glass": "oklch(0.18 0.005 253 / 0.72)",
+          "font-button": "var(--font-mono)",
+          "weight-button": "500",
+          "tracking-button": "0.16em",
+          "case-button": "uppercase",
+          "text-button-sm": "0.6875rem",
+          "text-button": "0.75rem",
+          "text-button-lg": "0.75rem",
+          "font-badge": "var(--font-mono)",
+          "weight-badge": "400",
+          "tracking-badge": "0.12em",
+          "case-badge": "uppercase",
+          "text-badge": "0.6875rem",
           "vinyl": "oklch(0.963 0.003 68)",
           "sheet": "oklch(0.18 0.005 253)",
           "sheet-line": "oklch(0.277 0.008 253)",
@@ -419,6 +511,10 @@
           "chart-5": "oklch(0.863 0.008 68)",
           "glow": "0 0 28px oklch(0.897 0.25 135 / 0.16)",
           "glow-primary": "0 0 0 1px oklch(0.897 0.25 135 / 0.5), 0 12px 40px -12px oklch(0.897 0.25 135 / 0.6)",
+          "sheen": "oklch(0.897 0.25 135 / 0.14)",
+          "surface": "oklch(0.18 0.005 253)",
+          "surface-raised": "oklch(0.213 0.007 253)",
+          "glass": "oklch(0.18 0.005 253 / 0.72)",
           "sheet": "oklch(0.18 0.005 253)",
           "sheet-line": "oklch(0.277 0.008 253)",
           "cut": "oklch(0.337 0.01 253)"
@@ -444,7 +540,7 @@
       "name": "quack-button",
       "type": "registry:ui",
       "title": "Quack Button",
-      "description": "Button with a full motion cycle: an idle animation while it waits, magnetic pull toward the pointer, a squash on press, and animated loading, success and error states.",
+      "description": "Button with a full motion cycle: an idle animation while it waits, magnetic pull toward the pointer, a squash on press, and animated loading, success and error states. The loading mark is swappable, so a theme with no mascot can drop in a plain spinner.",
       "dependencies": [
         "class-variance-authority",
         "@radix-ui/react-slot",
@@ -503,7 +599,10 @@
       "name": "sticker-card",
       "type": "registry:ui",
       "title": "Sticker Card",
-      "description": "The die-cut sticker: thick border, generous radius, soft glow. Optional iridescent ring, pointer tilt, and a corner that peels off the backing on hover.",
+      "description": "The die-cut sticker: thick border, generous radius, soft glow. Optional iridescent ring, pointer tilt, corner ticks, a translucent surface, a corner that peels off the backing on hover, and asChild for a whole-card link.",
+      "dependencies": [
+        "@radix-ui/react-slot"
+      ],
       "registryDependencies": [
         "@duck/theme",
         "@duck/use-holo-pointer"
@@ -645,7 +744,7 @@
       "name": "video-card",
       "type": "registry:ui",
       "title": "Video Card",
-      "description": "A YouTube card that stays cheap until it is wanted. The player iframe only mounts on click.",
+      "description": "A YouTube card that stays cheap until it is wanted. The player iframe only mounts on click, or pass href and the card navigates out instead of embedding.",
       "dependencies": [
         "lucide-react"
       ],
@@ -682,7 +781,7 @@
       "name": "holo-badge",
       "type": "registry:ui",
       "title": "Holo Badge",
-      "description": "Pill for status, counts and short labels. Variants: holo, primary, outline, muted, success, danger.",
+      "description": "Pill for status, counts and short labels. Variants: holo, primary, outline, muted, success, danger. Shapes: pill for a status, tag for taxonomy that should follow the radius scale.",
       "dependencies": [
         "class-variance-authority"
       ],

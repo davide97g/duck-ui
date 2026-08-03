@@ -102,6 +102,12 @@ export const components: ComponentDoc[] = [
           "Image URL for the mark shown while loading. Defaults to /duck.svg, the mark duck-spinner brings with it.",
       },
       {
+        name: "loadingIndicator",
+        type: "React.ReactNode",
+        description:
+          "Replaces the mark entirely while loading — a lucide spinner, a themed glyph, or nothing. For themes with no mascot.",
+      },
+      {
         name: "loadingLabel",
         type: "string",
         description: "Replaces the label while loading.",
@@ -162,6 +168,8 @@ export const components: ComponentDoc[] = [
     ],
     rules: [
       "Reach for holo-button when you want the look and nothing else. Reach for quack-button when the button has work to report.",
+      "Label typography is a theme decision, not a call-site one: family, weight, tracking, case and size come from --font-button, --weight-button, --tracking-button, --case-button and --text-button / --text-button-sm / --text-button-lg. Set them once and every button follows; a utility on one button still overrides them.",
+      "The button emits data-variant and data-size, so a theme can reach a single variant from CSS — button[data-variant=\"outline\"]:hover — instead of hanging a class on every outline button.",
     ],
   },
   {
@@ -194,9 +202,10 @@ export const components: ComponentDoc[] = [
     slug: "sticker-card",
     title: "Sticker Card",
     summary:
-      "The die-cut sticker: thick border, generous radius, soft glow. Optional iridescent ring, pointer tilt and a corner that peels off the backing.",
+      "The die-cut sticker: thick border, generous radius, soft glow. Optional iridescent ring, pointer tilt, corner ticks, a translucent surface and a corner that peels off the backing.",
     category: "Surfaces",
     client: true,
+    dependencies: ["@radix-ui/react-slot"],
     registryDependencies: ["@duck/theme", "@duck/use-holo-pointer"],
     exports: [
       "StickerCard",
@@ -225,10 +234,32 @@ export const components: ComponentDoc[] = [
         default: "false",
         description: "A corner lifts off the backing on hover.",
       },
+      {
+        name: "ticks",
+        type: "boolean",
+        default: "false",
+        description:
+          "Four corner brackets in the accent colour, fading in on hover. Turns a rectangle into an instrument.",
+      },
+      {
+        name: "glass",
+        type: "boolean",
+        default: "false",
+        description:
+          "Translucent surface — --glass over a --glass-blur backdrop filter — for panels sitting on artwork or a canvas.",
+      },
+      {
+        name: "asChild",
+        type: "boolean",
+        default: "false",
+        description:
+          "Render the child element instead of a div, for a whole-card link. Ticks and peel land inside the child.",
+      },
     ],
     rules: [
       "Peel and tilt together is a lot. Pick one per card.",
       "In a grid of cards, at most one carries holo.",
+      "glass needs something behind it. Over a flat canvas it only costs a compositing layer.",
     ],
   },
   {
@@ -640,7 +671,35 @@ export const components: ComponentDoc[] = [
       { name: "channel", type: "string", description: "Line under the title." },
       { name: "duration", type: "string", description: 'Runtime label, for example "12:04".' },
       { name: "thumbnail", type: "string", description: "Override the default YouTube poster." },
+      {
+        name: "href",
+        type: "string",
+        description:
+          "Navigate here instead of mounting the player. The play glyph becomes an out arrow.",
+      },
+      {
+        name: "target",
+        type: "string",
+        default: '"_blank"',
+        description: "Link target in href mode.",
+      },
+      {
+        name: "rel",
+        type: "string",
+        default: '"noopener"',
+        description:
+          "Link rel in href mode. noopener without noreferrer, so the destination can still credit the visit.",
+      },
+      {
+        name: "onClick",
+        type: "React.MouseEventHandler",
+        description:
+          "Fires on the play button, or on the link in href mode. Call preventDefault to keep the player from mounting.",
+      },
       { name: "holo", type: "boolean", default: "false", description: "Iridescent frame." },
+    ],
+    rules: [
+      "Use href when the click belongs to YouTube — an outbound click to track, a subscription to credit, a consent banner that forbids a third-party player. Use the embed when the video belongs to the page.",
     ],
   },
   {
@@ -709,6 +768,17 @@ export const components: ComponentDoc[] = [
         default: '"holo"',
         description: "Pick by meaning, not by contrast.",
       },
+      {
+        name: "shape",
+        type: '"pill" | "tag"',
+        default: '"pill"',
+        description:
+          "pill is fully round, for a status or a count. tag follows the radius scale, so it squares off with the rest of the theme.",
+      },
+    ],
+    rules: [
+      "A status is a pill. A tag is a tag: rounded-full is 9999px and ignores --radius, so a square-cornered theme needs shape=\"tag\" rather than a rounded-none on every call site.",
+      "Typography comes from --font-badge, --weight-badge, --tracking-badge, --case-badge and --text-badge. The badge also emits data-variant and data-shape for CSS that needs to reach one of them.",
     ],
   },
   {

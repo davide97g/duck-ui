@@ -61,6 +61,7 @@ function StickerProgressTrack({
   return (
     <div
       data-slot="sticker-progress-track"
+      data-size={size}
       role="progressbar"
       aria-label={label ?? "Progress"}
       aria-busy={indeterminate || undefined}
@@ -117,6 +118,7 @@ function StickerProgress({
   return (
     <div
       data-slot="sticker-progress"
+      data-size={size}
       className={cn("flex w-full flex-col gap-1.5", className)}
       {...props}
     >

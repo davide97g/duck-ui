@@ -16,12 +16,15 @@ import { useHoloPointer } from "@/hooks/use-holo-pointer";
  *
  * Every transform is composed from CSS variables so hover lift, magnetism
  * and press never fight each other.
+ *
+ * Label typography comes from the --*-button tokens, not from these classes —
+ * see the note on HoloButton.
  */
 
 const quackButtonVariants = cva(
   [
     "group/quack relative inline-flex items-center justify-center gap-2 overflow-hidden",
-    "font-semibold whitespace-nowrap cursor-pointer select-none",
+    "whitespace-nowrap cursor-pointer select-none",
     "outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
     "disabled:pointer-events-none disabled:opacity-50",
     "[&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4",
@@ -42,9 +45,9 @@ const quackButtonVariants = cva(
           "bg-destructive text-destructive-foreground hover:bg-destructive/90",
       },
       size: {
-        sm: "h-8 rounded-md px-3 text-xs",
-        default: "h-10 rounded-lg px-5 text-sm",
-        lg: "h-12 rounded-xl px-7 text-base",
+        sm: "h-8 rounded-md px-3",
+        default: "h-10 rounded-lg px-5",
+        lg: "h-12 rounded-xl px-7",
         icon: "size-10 rounded-lg",
       },
     },
@@ -82,6 +85,14 @@ export interface QuackButtonProps
   state?: QuackButtonState;
   /** Mark shown while loading. Any image URL; defaults to the duck/ui logo. */
   markSrc?: string;
+  /**
+   * Anything to render in place of the paddling mark while loading — a lucide
+   * spinner, a themed glyph, nothing at all. A theme with no mascot had
+   * nowhere to put one of these, and the default mark 404s in a project that
+   * never installed duck-spinner's asset. EmptyPond's `art` prop is the same
+   * escape hatch.
+   */
+  loadingIndicator?: React.ReactNode;
   loadingLabel?: string;
   successLabel?: string;
   errorLabel?: string;
@@ -89,8 +100,8 @@ export interface QuackButtonProps
 
 function QuackButton({
   className,
-  variant,
-  size,
+  variant = "primary",
+  size = "default",
   asChild = false,
   children,
   idle = "none",
@@ -98,6 +109,7 @@ function QuackButton({
   ripple = true,
   state = "idle",
   markSrc,
+  loadingIndicator,
   loadingLabel,
   successLabel,
   errorLabel,
@@ -146,15 +158,18 @@ function QuackButton({
           key={state}
           className="inline-grid size-4 place-items-center [animation:duck-pop_0.4s_var(--ease-squash)]"
         >
-          {busy && (
-            <DuckGlyph
-              src={markSrc}
-              // The mark is a photographic logo, not a flat icon: it carries a
-              // transparent halo, so it needs scaling up and a hairline shadow
-              // to stay readable at 16px on a filled button.
-              className="scale-125 drop-shadow-[0_1px_2px_oklch(0_0_0/0.45)] [animation:duck-paddle_0.9s_ease-in-out_infinite]"
-            />
-          )}
+          {busy &&
+            (loadingIndicator !== undefined ? (
+              loadingIndicator
+            ) : (
+              <DuckGlyph
+                src={markSrc}
+                // The mark is a photographic logo, not a flat icon: it carries
+                // a transparent halo, so it needs scaling up and a hairline
+                // shadow to stay readable at 16px on a filled button.
+                className="scale-125 drop-shadow-[0_1px_2px_oklch(0_0_0/0.45)] [animation:duck-paddle_0.9s_ease-in-out_infinite]"
+              />
+            ))}
           {state === "success" && <Check className="size-4" strokeWidth={3} />}
           {state === "error" && <TriangleAlert className="size-4" />}
         </span>
@@ -167,6 +182,8 @@ function QuackButton({
     <Comp
       ref={ref}
       data-slot="quack-button"
+      data-variant={variant}
+      data-size={size}
       data-state={state}
       aria-busy={busy || undefined}
       aria-live={state === "idle" ? undefined : "polite"}

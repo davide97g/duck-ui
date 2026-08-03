@@ -96,6 +96,9 @@ function HoloAvatar({
     <span
       ref={holoRef}
       data-slot="holo-avatar"
+      data-size={size}
+      data-shape={shape}
+      data-variant={ring}
       className={cn(
         avatarVariants({ size, shape }),
         ring === "foil" && "tilt data-[holo=active]:tilt-live",
