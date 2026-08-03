@@ -2,7 +2,7 @@
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "theme-noir",
   "title": "Noir Theme",
-  "description": "Terminal noir: near-black canvas, one lime accent, hairline 1px edges and square corners. Same token contract as the duck theme with the sticker vocabulary dialled to zero — iridescence flattened to lime, glow narrowed, radius collapsed. Proof that a duck/ui install can carry a completely different identity without touching component markup.",
+  "description": "Terminal noir: near-black canvas, one lime accent, hairline 1px edges and square corners. Same token contract as the duck theme with the sticker vocabulary dialled to zero — iridescence flattened to lime, glow narrowed, radius collapsed. Proof that a duck/ui install can carry a completely different identity without touching component markup. Unlike the base theme this one does set typefaces — Inter, Space Grotesk and JetBrains Mono are part of the look — so re-declare --font-sans, --font-display and --font-mono after installing it if your project ships its own faces.",
   "registryDependencies": [
     "@duck/theme"
   ],

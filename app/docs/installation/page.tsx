@@ -210,9 +210,13 @@ export default function InstallationPage() {
             all.
           </p>
           <p>
-            duck/ui is additive, so there is no menu, table, select or combobox
-            here — add the standard shadcn/ui ones and the theme styles them on
-            sight. The overlays duck does ship are the ones it restyles heavily:{" "}
+            duck/ui is additive, so there is no menu, table or combobox here —
+            add the standard shadcn/ui ones and the theme styles them on sight.
+            A select used to be on that list and is not any more: a stock trigger
+            beside a <code>GlowInput</code> reads as a different design system,
+            so <code>@duck/glow-select</code> wears the field&apos;s own edge and
+            focus glow, and <code>@duck/glow-color</code> does the same for the
+            one input the platform will not let you style at all. The overlays duck does ship are the ones it restyles heavily:{" "}
             <code>@duck/sticker-dialog</code>,{" "}
             <code>@duck/sticker-drawer</code>,{" "}
             <code>@duck/sticker-popover</code> and{" "}
@@ -221,8 +225,7 @@ export default function InstallationPage() {
             type reach a stock overlay by themselves; the 3px edge does not, so
             paste <code>STICKER_SURFACE</code> — exported by{" "}
             <code>@duck/sticker-popover</code> — onto a{" "}
-            <code>DropdownMenuContent</code> or <code>SelectContent</code> that
-            opens beside a sticker surface.
+            <code>DropdownMenuContent</code> that opens beside a sticker surface.
           </p>
           <p>
             A tooltip is still the weakest place to put anything. It is
@@ -240,6 +243,31 @@ export default function InstallationPage() {
         description="Optional, but the system was drawn with these. Bricolage Grotesque for display, Geist for text and code."
       >
         <CodeBlock code={fonts} lang="tsx" filename="app/layout.tsx" />
+        <Prose>
+          <p>
+            The theme declares no typefaces, on purpose. It used to set{" "}
+            <code>--font-sans</code> to a system stack, which silently replaced
+            whatever the project had loaded — nothing broke loudly, the app just
+            rendered in the system face until somebody noticed. Now{" "}
+            <code>--font-sans</code> and <code>--font-mono</code> stay
+            Tailwind&apos;s defaults, and <code>--font-display</code> follows{" "}
+            <code>--font-sans</code> until you point it at a display face. Your
+            own declarations survive a reinstall.
+          </p>
+          <p>
+            <code>@duck/theme-noir</code> is the exception: Inter, Space Grotesk
+            and JetBrains Mono are part of that look, so it does set all three.
+            Re-declare your faces after installing it.
+          </p>
+          <p>
+            Treat the token block the CLI writes as generated. A reinstall
+            rewrites the values inside <code>:root</code> and <code>.dark</code>{" "}
+            but keeps whatever comments were there, so a hand-written{" "}
+            <code>{"/* Claude terracotta */"}</code> beside{" "}
+            <code>--primary</code> outlives the colour it described. Annotate
+            your own overrides somewhere the generator does not touch.
+          </p>
+        </Prose>
       </DocSection>
 
       <DocSection

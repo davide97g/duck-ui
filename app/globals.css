@@ -213,6 +213,14 @@
 @layer base {
   * {
     @apply border-border outline-ring/50;
+    /* Custom properties inherit, and this one is a width override, not a theme
+       value: a `sticker-none` card would otherwise take the edge off every
+       field, chip and keycap inside it. `initial` on an unregistered property
+       is the guaranteed-invalid value, so `.sticker` falls back to
+       --sticker-border here and only reads the override on the element that
+       actually set it. The utilities layer beats this one, so `sticker-none`
+       still wins where it is written. */
+    --sticker-width: initial;
   }
   body {
     @apply bg-background text-foreground;
@@ -253,8 +261,16 @@
     letter-spacing: var(--tracking-button, normal);
     text-transform: var(--case-button, none);
   }
+  /* The instrument sizes read at the sm type size — one more selector on the
+     rule that already exists, so a theme retunes them from the same token. */
   [data-slot="holo-button"][data-size="sm"],
-  [data-slot="quack-button"][data-size="sm"] {
+  [data-slot="quack-button"][data-size="sm"],
+  [data-slot="holo-button"][data-size="xs"],
+  [data-slot="quack-button"][data-size="xs"],
+  [data-slot="holo-button"][data-size="icon-xs"],
+  [data-slot="quack-button"][data-size="icon-xs"],
+  [data-slot="holo-button"][data-size="icon-sm"],
+  [data-slot="quack-button"][data-size="icon-sm"] {
     font-size: var(--text-button-sm, 0.75rem);
   }
   [data-slot="holo-button"][data-size="lg"],
@@ -283,7 +299,7 @@
      between them on one prop — a fixed 2px here made the card border
      visibly thin out whenever `holo` was set. */
   .holo-border {
-    border: var(--sticker-border) solid transparent;
+    border: var(--sticker-width, var(--sticker-border)) solid transparent;
     background:
       linear-gradient(var(--card), var(--card)) padding-box,
       var(--holo) border-box;
@@ -300,7 +316,7 @@
   }
 
   .holo-border-animated {
-    border: var(--sticker-border) solid transparent;
+    border: var(--sticker-width, var(--sticker-border)) solid transparent;
     background:
       linear-gradient(var(--card), var(--card)) padding-box,
       var(--holo) border-box;
@@ -320,9 +336,29 @@
     animation: holo-shift 6s ease-in-out infinite;
   }
 
-  /* Sticker look: thick border */
+  /* Sticker look: thick border.
+
+     The width is read through --sticker-width so a call site can win. `.sticker`
+     is declared here, at the end of the utilities layer, so a `border-0` or a
+     `[border-width:1px]` on the same element loses on order at equal
+     specificity — the 3px edge stays, and the only way past it used to be a
+     prop on every component that draws the edge. A variable is immune to
+     order: set --sticker-width anywhere and this reads it, whichever rule came
+     first. `sticker-none` below is the shorthand for zero; for a hairline write
+     `[--sticker-width:1px]`.
+
+     The variable is reset on every element in @layer base, because a custom
+     property inherits and a `sticker-none` card would otherwise take the edge
+     off every field inside it. */
   .sticker {
-    border-width: var(--sticker-border);
+    border-width: var(--sticker-width, var(--sticker-border));
+  }
+
+  /* The documented escape hatch. Turns the edge off wherever the component has
+     no `frame` prop of its own — and on somebody else's element wearing
+     `.sticker` through a pasted recipe. */
+  .sticker-none {
+    --sticker-width: 0px;
   }
 
   /* Foil surface that tracks the pointer. Pair with useHoloPointer. */

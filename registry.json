@@ -7,7 +7,7 @@
       "name": "theme",
       "type": "registry:theme",
       "title": "Duck Theme",
-      "description": "duck/ui theme: dark-first canvas, duck-lime primary, holographic accents. Installs the full shadcn CSS-variable contract plus the holo utilities, the display scale, the control-typography tokens, the motion vocabulary and a print layer that re-asserts the light palette on paper, so every existing shadcn component is duck-styled with no markup changes — and so a different theme can undo the duck styling without touching any.",
+      "description": "duck/ui theme: dark-first canvas, duck-lime primary, holographic accents. Installs the full shadcn CSS-variable contract plus the holo utilities, the display scale, the control-typography tokens, the motion vocabulary and a print layer that re-asserts the light palette on paper, so every existing shadcn component is duck-styled with no markup changes — and so a different theme can undo the duck styling without touching any. It declares no typefaces: --font-sans and --font-mono stay Tailwind's, and --font-display follows --font-sans until you point it at a display face.",
       "cssVars": {
         "theme": {
           "radius": "0.75rem",
@@ -16,8 +16,7 @@
           "radius-lg": "var(--radius)",
           "radius-xl": "calc(var(--radius) * 1.333)",
           "radius-2xl": "calc(var(--radius) * 1.833)",
-          "font-sans": "ui-sans-serif, system-ui, sans-serif",
-          "font-display": "ui-sans-serif, system-ui, sans-serif",
+          "font-display": "var(--font-sans)",
           "ease-duck": "cubic-bezier(0.16, 1, 0.3, 1)",
           "ease-squash": "cubic-bezier(0.34, 1.56, 0.64, 1)",
           "color-surface": "var(--surface)",
@@ -121,11 +120,11 @@
       "css": {
         "@layer utilities": {
           ".holo-border": {
-            "border": "var(--sticker-border) solid transparent",
+            "border": "var(--sticker-width, var(--sticker-border)) solid transparent",
             "background": "linear-gradient(var(--card), var(--card)) padding-box, var(--holo) border-box"
           },
           ".holo-border-animated": {
-            "border": "var(--sticker-border) solid transparent",
+            "border": "var(--sticker-width, var(--sticker-border)) solid transparent",
             "background": "linear-gradient(var(--card), var(--card)) padding-box, var(--holo) border-box",
             "background-size": "100% 100%, 300% 300%",
             "animation": "holo-shift 4s ease-in-out infinite"
@@ -139,7 +138,10 @@
             "animation": "holo-shift 6s ease-in-out infinite"
           },
           ".sticker": {
-            "border-width": "var(--sticker-border)"
+            "border-width": "var(--sticker-width, var(--sticker-border))"
+          },
+          ".sticker-none": {
+            "--sticker-width": "0px"
           },
           ".foil": {
             "background-image": "radial-gradient(80% 80% at calc(var(--fx) * 1%) calc(var(--fy) * 1%), oklch(1 0 0 / 0.6), oklch(1 0 0 / 0) 60%), var(--foil)",
@@ -214,6 +216,9 @@
           }
         },
         "@layer base": {
+          "*": {
+            "--sticker-width": "initial"
+          },
           "[data-slot=\"holo-button\"], [data-slot=\"quack-button\"]": {
             "font-family": "var(--font-button, var(--font-sans))",
             "font-size": "var(--text-button, 0.875rem)",
@@ -233,6 +238,9 @@
             "font-weight": "var(--weight-badge, 600)",
             "letter-spacing": "var(--tracking-badge, normal)",
             "text-transform": "var(--case-badge, none)"
+          },
+          "[data-slot=\"holo-button\"][data-size=\"xs\"], [data-slot=\"quack-button\"][data-size=\"xs\"], [data-slot=\"holo-button\"][data-size=\"icon-xs\"], [data-slot=\"quack-button\"][data-size=\"icon-xs\"], [data-slot=\"holo-button\"][data-size=\"icon-sm\"], [data-slot=\"quack-button\"][data-size=\"icon-sm\"]": {
+            "font-size": "var(--text-button-sm, 0.75rem)"
           }
         },
         "@utility duck-glow": {
@@ -509,7 +517,7 @@
         }
       },
       "title": "Noir Theme",
-      "description": "Terminal noir: near-black canvas, one lime accent, hairline 1px edges and square corners. Same token contract as the duck theme with the sticker vocabulary dialled to zero — iridescence flattened to lime, glow narrowed, radius collapsed. Proof that a duck/ui install can carry a completely different identity without touching component markup.",
+      "description": "Terminal noir: near-black canvas, one lime accent, hairline 1px edges and square corners. Same token contract as the duck theme with the sticker vocabulary dialled to zero — iridescence flattened to lime, glow narrowed, radius collapsed. Proof that a duck/ui install can carry a completely different identity without touching component markup. Unlike the base theme this one does set typefaces — Inter, Space Grotesk and JetBrains Mono are part of the look — so re-declare --font-sans, --font-display and --font-mono after installing it if your project ships its own faces.",
       "registryDependencies": [
         "@duck/theme"
       ],
@@ -629,7 +637,7 @@
       "name": "quack-button",
       "type": "registry:ui",
       "title": "Quack Button",
-      "description": "Button with a full motion cycle: an idle animation while it waits, magnetic pull toward the pointer, a squash on press, and animated loading, success and error states. The loading mark is swappable, so a theme with no mascot can drop in a plain spinner.",
+      "description": "Button with a full motion cycle: an idle animation while it waits, magnetic pull toward the pointer, a squash on press, and animated loading, success and error states. Sizes run from xs and icon-xs — the 24–28px instrument scale a control rail is built from, radius and icon size included — up to lg. The loading mark is swappable, so a theme with no mascot can drop in a plain spinner.",
       "dependencies": [
         "class-variance-authority",
         "@radix-ui/react-slot",
@@ -670,7 +678,7 @@
       "name": "copy-button",
       "type": "registry:ui",
       "title": "Copy Button",
-      "description": "Copies a string to the clipboard and confirms it with a check that pops in and settles back after two seconds.",
+      "description": "Copies a string to the clipboard and confirms it with a check that pops in and settles back after two seconds. A refused write — plain HTTP, an embedded browser, a denied prompt — announces errorLabel and reports through onError, so the button never just appears to do nothing.",
       "dependencies": [
         "lucide-react"
       ],
@@ -688,7 +696,7 @@
       "name": "hud-chip",
       "type": "registry:ui",
       "title": "Hud Chip",
-      "description": "The interactive HUD label: nav items, row actions, a zoom cluster, retry, esc. Mono, uppercase and tracked like HudLabel, because a chip and a label in the same row must not drift apart, and a real button underneath. Variants outline, ghost, primary; active paints the current read and leaves the ARIA to the call site; asChild for a Link.",
+      "description": "The interactive HUD label: nav items, row actions, a zoom cluster, retry, esc. Mono, uppercase and tracked like HudLabel, because a chip and a label in the same row must not drift apart, and a real button underneath. Variants outline, ghost, primary; sizes xs, sm and default; active paints the current read and leaves the ARIA to the call site; asChild for a Link; frame={false} drops the die-cut edge.",
       "dependencies": [
         "class-variance-authority",
         "@radix-ui/react-slot"
@@ -708,7 +716,7 @@
       "name": "sticker-card",
       "type": "registry:ui",
       "title": "Sticker Card",
-      "description": "The die-cut sticker: thick border, generous radius, soft glow. Optional iridescent ring, pointer tilt, corner ticks, a translucent surface, a corner that peels off the backing on hover, and asChild for a whole-card link.",
+      "description": "The die-cut sticker: thick border, generous radius, soft glow. Optional iridescent ring, pointer tilt, corner ticks, a translucent surface, a corner that peels off the backing on hover, asChild for a whole-card link, and frame={false} for a card nested inside a surface that is already the frame.",
       "dependencies": [
         "@radix-ui/react-slot"
       ],
@@ -780,7 +788,7 @@
       "name": "code-snippet",
       "type": "registry:ui",
       "title": "Code Snippet",
-      "description": "Self-highlighting code block with six color schemes, line numbers, line highlighting, collapsing, wrapping and PNG export. The highlighter is local, so there is no async theme load and no flash of unstyled code.",
+      "description": "Self-highlighting code block with six color schemes, line numbers, line highlighting, collapsing, wrapping and PNG export. The highlighter is local, so there is no async theme load and no flash of unstyled code. A refused clipboard write tells the reader to select the code instead, and reports through onCopyError.",
       "dependencies": [
         "lucide-react"
       ],
@@ -956,9 +964,10 @@
       "name": "holo-badge",
       "type": "registry:ui",
       "title": "Holo Badge",
-      "description": "Pill for status, counts and short labels. Variants: holo, primary, outline, muted, success, danger. Shapes: pill for a status, tag for taxonomy that should follow the radius scale.",
+      "description": "Pill for status, counts and short labels. Variants: holo, primary, outline, muted, success, danger. Shapes: pill for a status, tag for taxonomy that should follow the radius scale, block for a rail-wide status strip. asChild when the badge is semantically a heading, a dd or a link.",
       "dependencies": [
-        "class-variance-authority"
+        "class-variance-authority",
+        "@radix-ui/react-slot"
       ],
       "registryDependencies": [
         "@duck/theme"
@@ -974,9 +983,10 @@
       "name": "hud-label",
       "type": "registry:ui",
       "title": "Hud Label",
-      "description": "The instrument-panel label: tiny, mono, uppercase, tracked wide enough to read as machine output rather than prose. Tones muted, foreground, primary and accent; an optional status square that takes the label's own colour. Ships a matching .hud utility for the many places the label is an attribute of an existing element rather than an element of its own.",
+      "description": "The instrument-panel label: tiny, mono, uppercase, tracked wide enough to read as machine output rather than prose. Tones muted, foreground, primary and accent; an optional status square that takes the label's own colour; asChild for the section heading that is semantically an h3. Ships a matching .hud utility for the many places the label is an attribute of an existing element rather than an element of its own.",
       "dependencies": [
-        "class-variance-authority"
+        "class-variance-authority",
+        "@radix-ui/react-slot"
       ],
       "registryDependencies": [
         "@duck/theme"
@@ -1085,7 +1095,7 @@
       "name": "glow-input",
       "type": "registry:ui",
       "title": "Glow Input",
-      "description": "Input, textarea and two field wrappers that wire up label, helper text, errors, aria-invalid and aria-describedby. GlowField wraps one control; GlowFieldset emits a real fieldset and legend for groups. frame={false} drops the sticker edge and the focus glow for a field inside a surface that is already the frame.",
+      "description": "Input, textarea and two field wrappers that wire up label, helper text, errors, aria-invalid and aria-describedby. GlowField wraps one control; GlowFieldset emits a real fieldset and legend for groups. frame={false} drops the sticker edge and the focus glow for a field inside a surface that is already the frame. Exports its own class strings, so a second control that has to read as the same field imports the recipe rather than copying it.",
       "registryDependencies": [
         "@duck/theme"
       ],
@@ -1117,10 +1127,51 @@
       ]
     },
     {
+      "name": "glow-select",
+      "type": "registry:ui",
+      "title": "Glow Select",
+      "description": "The select the field family was missing. The trigger wears GlowInput's own class strings and the menu wears StickerPopover's own surface — both imported, so neither can drift from the component it came from. Radix Select underneath for typeahead, roving highlight, collision-aware positioning and a hidden native select that still submits. Sizes sm and default, frame={false} for a select that is a row action.",
+      "dependencies": [
+        "@radix-ui/react-select",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@duck/theme",
+        "@duck/glow-input",
+        "@duck/sticker-popover",
+        "@duck/hud-label"
+      ],
+      "files": [
+        {
+          "path": "registry/duck/ui/glow-select.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "glow-color",
+      "type": "registry:ui",
+      "title": "Glow Color",
+      "description": "The colour field a design tool has more of than any other control. The four rules that make input[type=color] stop looking like an OS widget live here, so the swatch is a die-cut object with the lime focus glow, and the Chromium eyedropper appears beside it wherever the browser has one. Hex in, hex out, shorthand normalised.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@duck/theme",
+        "@duck/glow-input"
+      ],
+      "files": [
+        {
+          "path": "registry/duck/ui/glow-color.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "duck-tabs",
       "type": "registry:ui",
       "title": "Duck Tabs",
-      "description": "Tabs with an indicator that slides between triggers. Arrow keys move, Home and End jump to the ends.",
+      "description": "Tabs with an indicator that slides between triggers. Arrow keys move, Home and End jump to the ends. orientation=vertical is a real axis change — the list measures the vertical axis, Up and Down move, and the indicator becomes a bar down the left edge — so a settings dialog can keep its section rail.",
       "registryDependencies": [
         "@duck/theme"
       ],
@@ -1236,7 +1287,7 @@
       "name": "duck-slider",
       "type": "registry:ui",
       "title": "Duck Slider",
-      "description": "The waterline: the filled track is water, the thumb floats on it, and letting go leaves a wake. A real input type=range, so arrows, PageUp/PageDown, Home/End, touch and RTL are the browser's job. Single value.",
+      "description": "The waterline: the filled track is water, the thumb floats on it, and letting go leaves a wake. A real input type=range, so arrows, PageUp/PageDown, Home/End, touch and RTL are the browser's job. curve=log owns the geometric mapping a font-size or zoom slider needs, and keeps aria-valuetext honest; label, valuePosition=row and action put the readout and a reset on the label row instead of above the track. Single value.",
       "registryDependencies": [
         "@duck/theme"
       ],
@@ -1322,7 +1373,7 @@
       "name": "sticker-drop",
       "type": "registry:ui",
       "title": "Sticker Drop",
-      "description": "File dropzone built on the backing paper: the zone is the kiss-cut sheet, dragging lights the cut lines, and each accepted file lands as its own sticker. Wraps a clipped \u2014 not hidden \u2014 file input, so it stays keyboard operable. Controllable through files, so a submit can clear the sheet.",
+      "description": "File dropzone built on the backing paper: the zone is the kiss-cut sheet, dragging lights the cut lines, and each accepted file lands as its own sticker. Wraps a clipped — not hidden — file input, so it stays keyboard operable. Controllable through files, so a submit can clear the sheet.",
       "dependencies": [
         "lucide-react"
       ],
@@ -1401,7 +1452,7 @@
       "name": "sticker-kbd",
       "type": "registry:ui",
       "title": "Sticker Kbd",
-      "description": "A keycap is already a die-cut object: a 3px edge and a 2px bottom lip that compresses to nothing when the key goes down. Pass watch and it depresses on the real keystroke.",
+      "description": "A keycap is already a die-cut object: a 3px edge and a 2px bottom lip that compresses to nothing when the key goes down. Pass watch and it depresses on the real keystroke. frame={false} prints the cap flat, for a keycap inside a tooltip or a menu row.",
       "registryDependencies": [
         "@duck/theme"
       ],
@@ -1643,7 +1694,7 @@
       "name": "sticker-tooltip",
       "type": "registry:ui",
       "title": "Sticker Tooltip",
-      "description": "Hover and focus label on Radix Tooltip, so the focus behaviour, the escape handler and the aria wiring are real. duck supplies the die-cut edge and a 120ms arrival. For labels with nowhere else to live, never for information the task needs.",
+      "description": "Hover and focus label on Radix Tooltip, so the focus behaviour, the escape handler and the aria wiring are real. duck supplies the die-cut edge and a 120ms arrival. A disabled child is wrapped in a focusable span, because a dead control is exactly when the label matters. For labels with nowhere else to live, never for information the task needs.",
       "dependencies": [
         "@radix-ui/react-tooltip"
       ],

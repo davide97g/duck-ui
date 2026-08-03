@@ -64,9 +64,10 @@ export const components: ComponentDoc[] = [
       },
       {
         name: "size",
-        type: '"sm" | "default" | "lg" | "icon"',
+        type: '"xs" | "sm" | "default" | "lg" | "icon-xs" | "icon-sm" | "icon"',
         default: '"default"',
-        description: "Control height and padding.",
+        description:
+          "Control height and padding. xs, icon-xs and icon-sm are the instrument scale a control rail runs on — 28px and 32px, with the radius stepped down to rounded-md and the icon to 14px, because rounded-lg on a small square reads as a circle with corners. For an exact 24px control take icon-xs and add size-6.",
       },
       {
         name: "idle",
@@ -192,10 +193,27 @@ export const components: ComponentDoc[] = [
         description: "Accessible label after a successful copy.",
       },
       {
+        name: "errorLabel",
+        type: "string",
+        default: '"Copy failed"',
+        description:
+          "Announced, and shown on the icon, when the write is refused — plain HTTP, an embedded browser, a denied prompt.",
+      },
+      {
         name: "onCopied",
         type: "(value: string) => void",
         description: "Fires after the clipboard write resolves.",
       },
+      {
+        name: "onError",
+        type: "(error: unknown) => void",
+        description:
+          "Fires with the rejection. The button can say the write failed; only the caller knows whether the answer is \"select the text and copy it manually\" or a toast.",
+      },
+    ],
+    rules: [
+      "It never claims a success it did not get. A refused write shows the cross, announces errorLabel and calls onError — the old behaviour was to swallow the rejection silently, which left a control that appears to do nothing.",
+      "Clipboard access needs a secure context. Over plain HTTP, and in some embedded browsers, there is no clipboard to write to and no amount of retrying will produce one.",
     ],
   },
   {
@@ -217,9 +235,17 @@ export const components: ComponentDoc[] = [
       },
       {
         name: "size",
-        type: '"sm" | "default"',
+        type: '"xs" | "sm" | "default"',
         default: '"default"',
-        description: "28px or 36px. sm drops the type to 10px and the icons to 12px with it.",
+        description:
+          "24px, 28px or 36px. xs and sm drop the type to 10px and the icons to 12px with it — xs is the chip that fits a 32px list row.",
+      },
+      {
+        name: "frame",
+        type: "boolean",
+        default: "true",
+        description:
+          "The die-cut edge on variant=outline. Off for a row action inside a surface that already has one.",
       },
       {
         name: "active",
@@ -299,6 +325,13 @@ export const components: ComponentDoc[] = [
         default: "false",
         description:
           "Translucent surface — --glass over a --glass-blur backdrop filter — for panels sitting on artwork or a canvas.",
+      },
+      {
+        name: "frame",
+        type: "boolean",
+        default: "true",
+        description:
+          "Draw the die-cut edge. Off for a card inside a card, or a panel whose container is already the frame — the fill, the radius and the padding stay, and holo has no border box left to paint its gradient into.",
       },
       {
         name: "asChild",
@@ -558,6 +591,17 @@ export const components: ComponentDoc[] = [
         type: "boolean",
         default: "true",
         description: "Copy control for the code itself.",
+      },
+      {
+        name: "onCopied",
+        type: "(value: string) => void",
+        description: "Fires after the code reaches the clipboard.",
+      },
+      {
+        name: "onCopyError",
+        type: "(error: unknown) => void",
+        description:
+          "The clipboard refused — plain HTTP, an embedded browser, a denied prompt. The block already tells the reader to select the code instead; this is for a page that wants to say more.",
       },
       {
         name: "exportable",
@@ -966,7 +1010,7 @@ export const components: ComponentDoc[] = [
     title: "Holo Badge",
     summary: "A pill for status, counts and short labels.",
     category: "Display",
-    dependencies: ["class-variance-authority"],
+    dependencies: ["class-variance-authority", "@radix-ui/react-slot"],
     registryDependencies: ["@duck/theme"],
     exports: ["HoloBadge", "holoBadgeVariants"],
     props: [
@@ -978,14 +1022,22 @@ export const components: ComponentDoc[] = [
       },
       {
         name: "shape",
-        type: '"pill" | "tag"',
+        type: '"pill" | "tag" | "block"',
         default: '"pill"',
         description:
-          "pill is fully round, for a status or a count. tag follows the radius scale, so it squares off with the rest of the theme.",
+          "pill is fully round, for a status or a count. tag follows the radius scale, so it squares off with the rest of the theme. block is the rail-wide status strip: full width, centred, its own line.",
+      },
+      {
+        name: "asChild",
+        type: "boolean",
+        default: "false",
+        description:
+          "Render the child element instead of a span, for a badge that is semantically a heading, a <dd> or a link.",
       },
     ],
     rules: [
       "A status is a pill. A tag is a tag: rounded-full is 9999px and ignores --radius, so a square-cornered theme needs shape=\"tag\" rather than a rounded-none on every call site.",
+      "A badge that fills its rail is shape=\"block\", not a tag plus w-full justify-center. Same decision as pill against tag, and it was being rewritten at every call site.",
       "Typography comes from --font-badge, --weight-badge, --tracking-badge, --case-badge and --text-badge. The badge also emits data-variant and data-shape for CSS that needs to reach one of them.",
     ],
   },
@@ -995,7 +1047,7 @@ export const components: ComponentDoc[] = [
     summary:
       "The instrument-panel label: tiny, mono, uppercase, tracked wide enough to read as machine output rather than prose.",
     category: "Display",
-    dependencies: ["class-variance-authority"],
+    dependencies: ["class-variance-authority", "@radix-ui/react-slot"],
     registryDependencies: ["@duck/theme"],
     exports: ["HudLabel", "hudLabelVariants"],
     props: [
@@ -1032,9 +1084,17 @@ export const components: ComponentDoc[] = [
         description:
           "Colour the dot against the text — a red dot on a muted row. Without it the dot follows the tone.",
       },
+      {
+        name: "asChild",
+        type: "boolean",
+        default: "false",
+        description:
+          "Render the child element instead of a span. A section heading in a control rail is a HUD label and is also an h3; this is how it can be both.",
+      },
     ],
     rules: [
       "Label, not sentence. Two or three words; the tracking makes anything longer unreadable.",
+      "Three ways in, and they are not interchangeable: the component when the label is the element, asChild when the element already exists and has semantics worth keeping, the .hud utility when the label is a property of something you are not otherwise touching — a <dt>, a <figcaption>, a table header. hudLabelVariants() on a heading was the old answer to the middle case; asChild is the one that cannot drift.",
       "The uppercase is a text-transform, so pass normal-case content and let the component shout.",
       "Only primary glows. Use dotTone rather than a [&>span] selector at the call site — a child selector in application code is a missing prop.",
     ],
@@ -1164,7 +1224,15 @@ export const components: ComponentDoc[] = [
       "Text input, textarea and two field wrappers that wire up label, helper text and errors so the control stays accessible.",
     category: "Inputs",
     registryDependencies: ["@duck/theme"],
-    exports: ["GlowInput", "GlowTextarea", "GlowField", "GlowFieldset"],
+    exports: [
+      "GlowInput",
+      "GlowTextarea",
+      "GlowField",
+      "GlowFieldset",
+      "GLOW_FIELD_BASE",
+      "GLOW_FIELD_FRAME",
+      "GLOW_FIELD_BARE",
+    ],
     props: [
       { name: "label", type: "string", description: "On GlowField: visible label above the control." },
       {
@@ -1198,6 +1266,7 @@ export const components: ComponentDoc[] = [
       "The reason is mechanical: GlowField clones its single child to inject the id, so the child has to be one element that accepts one. A label beside a slider, or any pair, gives <label htmlFor> nothing to point at — that is GlowFieldset's legend.",
       "frame={false} rather than border-0 at the call site: .sticker is declared in the theme's utilities layer, which lands after Tailwind's, so a border utility loses on order and the 3px edge stays.",
       "A frameless field keeps the type, the caret, the placeholder and the selection colours, and shows aria-invalid in the text instead of a border it no longer has. Give the parent the focus-within glow.",
+      "The three class strings are exported for the same reason StickerPopover exports STICKER_SURFACE: a control that has to read as this field — GlowSelect's trigger, GlowColor's swatch, an editor's own composer — imports the recipe rather than copying it. A copy drifts the first time this file changes.",
     ],
   },
   {
@@ -1276,6 +1345,156 @@ export const components: ComponentDoc[] = [
     ],
   },
   {
+    slug: "glow-select",
+    title: "Glow Select",
+    summary:
+      "The select the field family was missing: GlowInput's trigger, StickerPopover's menu, Radix Select's behaviour.",
+    category: "Inputs",
+    client: true,
+    dependencies: ["@radix-ui/react-select", "lucide-react"],
+    registryDependencies: [
+      "@duck/theme",
+      "@duck/glow-input",
+      "@duck/sticker-popover",
+      "@duck/hud-label",
+    ],
+    exports: [
+      "GlowSelect",
+      "GlowSelectRoot",
+      "GlowSelectTrigger",
+      "GlowSelectValue",
+      "GlowSelectContent",
+      "GlowSelectItem",
+      "GlowSelectGroup",
+      "GlowSelectLabel",
+      "GlowSelectSeparator",
+    ],
+    props: [
+      {
+        name: "value",
+        type: "string",
+        description: "Controlled selection. Pair with onValueChange.",
+      },
+      {
+        name: "defaultValue",
+        type: "string",
+        description: "Uncontrolled starting selection.",
+      },
+      {
+        name: "onValueChange",
+        type: "(value: string) => void",
+        description: "Fires with the chosen item's value.",
+      },
+      {
+        name: "placeholder",
+        type: "string",
+        description:
+          "Shown until something is chosen, in the placeholder colour — the value is text the user did not type.",
+      },
+      {
+        name: "size",
+        type: '"sm" | "default"',
+        default: '"default"',
+        description:
+          "sm is the 32px rail size, beside a slider row or an icon button.",
+      },
+      {
+        name: "frame",
+        type: "boolean",
+        default: "true",
+        description:
+          "The sticker edge and the focus glow on the trigger. Off for a select that is a row action rather than a field.",
+      },
+      {
+        name: "chevron",
+        type: "boolean",
+        default: "true",
+        description: "Draw the chevron. Off for a trigger that is an icon and nothing else.",
+      },
+      {
+        name: "contentClassName",
+        type: "string",
+        description:
+          "Sizing for the menu. It matches the trigger's width until told otherwise; className styles the trigger.",
+      },
+    ],
+    rules: [
+      "The trigger wears GlowInput's exported class strings and the menu wears StickerPopover's exported STICKER_SURFACE. Both are imports, not copies, so a select next to a field cannot drift from it — which is what every hand-rolled local select eventually does.",
+      "This is the one place duck breaks its own rule 7. A stock shadcn select beside a GlowInput reads as a different design system: 1px against the 3px die-cut edge, --radius-md against rounded-lg, no lime glow, and a menu made of other material.",
+      "Radix rather than a native <select>, unlike DuckSwitch and DuckSlider: the option list of a native select is drawn by the OS and cannot take the die-cut edge, which is half of what this component is for. The hidden native select underneath still submits in a plain form.",
+      "The open trigger keeps the glow through data-[state=open], because a pointer that opened the menu got focus but not focus-visible — without it the frame goes cold while its own menu is up.",
+      "Inside GlowField, pass nothing extra: the id, aria-describedby and aria-invalid it clones onto its child land on the trigger.",
+    ],
+  },
+  {
+    slug: "glow-color",
+    title: "Glow Color",
+    summary:
+      "A colour swatch that is a duck field rather than an OS widget, with the eyedropper beside it where the browser has one.",
+    category: "Inputs",
+    client: true,
+    dependencies: ["lucide-react"],
+    registryDependencies: ["@duck/theme", "@duck/glow-input"],
+    exports: ["GlowColor", "normalizeHex"],
+    props: [
+      {
+        name: "value",
+        type: "string",
+        description:
+          "Controlled colour as #rrggbb. Shorthand and an alpha pair are accepted and normalised.",
+      },
+      {
+        name: "defaultValue",
+        type: "string",
+        default: '"#000000"',
+        description: "Uncontrolled starting colour.",
+      },
+      {
+        name: "onValueChange",
+        type: "(hex: string) => void",
+        description:
+          "The colour, always as #rrggbb. Fires for the swatch and for an eyedropper pick — wire this one.",
+      },
+      {
+        name: "size",
+        type: '"sm" | "default"',
+        default: '"default"',
+        description: "32px or 40px swatch. sm is the rail size.",
+      },
+      {
+        name: "eyedropper",
+        type: "boolean",
+        default: "true",
+        description:
+          "Offer the screen picker where the browser has one. Chromium only, so the control appears after mount rather than on the server.",
+      },
+      {
+        name: "showValue",
+        type: "boolean",
+        default: "false",
+        description: "Print the hex beside the swatch in tabular mono.",
+      },
+      {
+        name: "frame",
+        type: "boolean",
+        default: "true",
+        description: "The sticker edge and the lime focus glow around the swatch.",
+      },
+      {
+        name: "swatchClassName",
+        type: "string",
+        description: "Styles the swatch. className styles the row it sits in.",
+      },
+    ],
+    rules: [
+      "A picked colour has no DOM event behind it, so it reports through onValueChange. onChange stays the swatch's own native event, for a form that reads the input directly.",
+      "Values are normalised to #rrggbb before they reach the input, because input[type=color] accepts nothing else and renders anything else as black — which is how a #fff default becomes a black swatch with no error anywhere.",
+      "There is no alpha channel. An eighth and ninth hex digit are dropped rather than half-honoured; if opacity matters, keep it in a separate control.",
+      "The eyedropper is Chromium-only and the component says so by rendering it from a mounted effect. Do not gate it on a user agent string, and do not assume it is there.",
+      "A rejected pick — Escape, a dismissed picker — is not an error and does not change the value.",
+    ],
+  },
+  {
     slug: "duck-tabs",
     title: "Duck Tabs",
     summary:
@@ -1288,6 +1507,24 @@ export const components: ComponentDoc[] = [
       { name: "defaultValue", type: "string", description: "Uncontrolled starting tab." },
       { name: "value", type: "string", description: "Controlled active tab." },
       { name: "onValueChange", type: "(value: string) => void", description: "Fires on every change." },
+      {
+        name: "orientation",
+        type: '"horizontal" | "vertical"',
+        default: '"horizontal"',
+        description:
+          "vertical puts the list beside the panel: the indicator becomes a bar down the left edge, Up and Down move, and aria-orientation says so. The section rail a settings dialog wants at ≥640px.",
+      },
+      {
+        name: "frame",
+        type: "boolean",
+        default: "true",
+        description:
+          "On DuckTabsList: the die-cut edge around the list. Off for a rail inside a panel that is already the frame.",
+      },
+    ],
+    rules: [
+      "The indicator is measured, not animated between fixed positions, so a label that changes width mid-life still lands right. It re-measures on the active value, on the children, and on a resize.",
+      "A vertical rail drops the filled pill: covering labels of different lengths means sizing to the longest one, which is a block of colour rather than a marker. The active label carries the accent instead.",
     ],
   },
   {
@@ -1508,13 +1745,48 @@ export const components: ComponentDoc[] = [
         name: "showValue",
         type: "boolean",
         default: "false",
-        description: "Print the formatted value above the track, in tabular figures.",
+        description: "Print the formatted value, in tabular figures.",
+      },
+      {
+        name: "valuePosition",
+        type: '"above" | "row"',
+        default: '"above"',
+        description:
+          "Where that value goes. row puts it at the end of the label row, right-aligned, so a dragging slider never reflows the row it sits in and forty of them stay a fixed height.",
+      },
+      {
+        name: "label",
+        type: "ReactNode",
+        description:
+          "The control's name, rendered as a real <label> tied to the input. Pass it and the label, the readout and action share one row.",
+      },
+      {
+        name: "action",
+        type: "ReactNode",
+        description:
+          "Trailing affordance on the label row — a reset button, a lock, a menu. Nothing is wired: it is your element.",
+      },
+      {
+        name: "curve",
+        type: '"linear" | "log"',
+        default: '"linear"',
+        description:
+          "log maps position to value geometrically, for a font size running 12→400 or a scale running 0.05→8 where the useful half of a linear range is the first 15% of the track. Needs min > 0, and falls back to linear without one.",
+      },
+      {
+        name: "onValueChange",
+        type: "(value: number) => void",
+        description:
+          "The value, already mapped. This is the channel to wire on a log slider — the input's own valueAsNumber is a track position there.",
       },
     ],
     rules: [
       "No holo variant, on purpose. Settings pages have six sliders and the viewport has one holo budget.",
       "Single value. A two-thumb range is a different control — do not fake it with two of these.",
       "Pass formatValue whenever the number is not self-explanatory.",
+      "On curve=\"log\" the component owns the mapping, so min, max and step stay honest: the input's min/max describe the track (0…1000 positions), step stays the grain of the value you receive, and aria-valuetext reports the real number rather than the position. Read the value from onValueChange, not from the event.",
+      "A log slider still quantises to step, so the bottom of a wide range repeats values — 12px at two dozen adjacent positions on a 12→400 track. That is inherent to the mapping. What the component does about it is make one arrow press worth one step: it walks on in the direction of travel until the value actually changes, because a key that quantises back to the value you already had reads as broken.",
+      "label makes the slider a labelled control on its own. Inside a GlowFieldset, leave it off and let the legend name the group — two names is worse than one.",
     ],
   },
   {
@@ -1926,9 +2198,17 @@ export const components: ComponentDoc[] = [
         default: "false",
         description: "Also require the platform command key — Meta on Apple, Control elsewhere.",
       },
+      {
+        name: "frame",
+        type: "boolean",
+        default: "true",
+        description:
+          "The die-cut edge and the lip. Off prints the cap flat — for a keycap inside a tooltip or a menu row, where a third border is noise; a pressed flat cap recolours instead of dropping.",
+      },
     ],
     rules: [
       "All of the motion is reactive, so it costs nothing against the one-idle-animation rule. Use as many as the page needs.",
+      "watch is teaching, not decoration: a dock or a palette that prints its own keyboard map presses the cap under the user's finger, which is where they are already looking.",
       "Print the key the user actually has to press. ⌘ on Apple, Ctrl elsewhere — decide at runtime, do not guess in the markup.",
     ],
   },
@@ -2085,6 +2365,13 @@ export const components: ComponentDoc[] = [
       { name: "arrow", type: "boolean", default: "true", description: "Draw the pointer." },
       { name: "delay", type: "number", default: "250", description: "Milliseconds of hover before it opens." },
       {
+        name: "wrapDisabled",
+        type: "boolean",
+        default: "true",
+        description:
+          "Wrap a disabled child in a focusable span so the label still opens. Off when the extra element breaks a layout.",
+      },
+      {
         name: "children",
         type: "React.ReactNode",
         description: "The control being labelled. Rendered as the trigger, so it must forward props.",
@@ -2094,6 +2381,7 @@ export const components: ComponentDoc[] = [
       "A tooltip is hover-only chrome: no touch, gone as soon as the pointer leaves. Use it for a label with nowhere else to live — an icon-only control, a truncated value — and never for information the task needs.",
       "For a keyboard shortcut, print it inline with StickerKbd instead. Every user can see that one.",
       "The all-in-one StickerTooltip brings its own provider. Compose the parts when a group of controls should share one delay.",
+      "A disabled control takes no pointer events and no focus, so Radix has nothing to open from — and \"why can\u2019t I press Save?\" is the case a tooltip exists for. Pass a disabled or aria-disabled child and the trigger becomes a tabIndex={0} span around it. Composing the parts yourself means writing that wrapper yourself.",
     ],
   },
   {

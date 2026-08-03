@@ -120,7 +120,11 @@ const utilities = [
   { name: ".sheen", role: "Light sweeping across on hover." },
   { name: ".tilt", role: "3D lean driven by --rx and --ry." },
   { name: ".duck-glow / .duck-glow-primary", role: "Soft outer glows." },
-  { name: ".sticker", role: "Border width from --sticker-border." },
+  {
+    name: ".sticker",
+    role: "Border width, read through --sticker-width so a call site can win.",
+  },
+  { name: ".sticker-none", role: "Turns that edge off. [--sticker-width:1px] makes it a hairline." },
   { name: ".kiss-cut", role: "Sticker sheet backing paper." },
   { name: ".grain", role: "Fixed film-grain overlay over the whole page." },
   {
@@ -381,10 +385,27 @@ export default function ThemingPage() {
             overrides long. That is why a component that might have to give up
             its frame or its mascot exposes a prop for it:{" "}
             <code>frame</code> on <code>GlowInput</code>,{" "}
-            <code>art</code> on <code>EmptyPond</code>, <code>mark</code> on{" "}
+            <code>GlowTextarea</code>, <code>GlowSelect</code>,{" "}
+            <code>GlowColor</code>, <code>StickerCard</code>,{" "}
+            <code>HudChip</code>, <code>DuckTabsList</code> and{" "}
+            <code>StickerKbd</code>; <code>art</code> on{" "}
+            <code>EmptyPond</code>; <code>mark</code> on{" "}
             <code>DuckThinking</code> and <code>QuackBubble</code>. If you find
             yourself stacking negations against a duck utility, look for the prop
             first.
+          </p>
+          <p>
+            For everything without a prop — a stock element wearing a pasted
+            recipe, a component of your own —{" "}
+            <code>.sticker</code> reads its width from{" "}
+            <code>--sticker-width</code>, falling back to{" "}
+            <code>--sticker-border</code>. A variable is immune to source order,
+            so <code>sticker-none</code> (zero) or{" "}
+            <code>[--sticker-width:1px]</code> (a hairline) wins wherever it is
+            written, whichever rule came first. The variable is reset on every
+            element in <code>@layer base</code>, because it would otherwise
+            inherit: a frameless card must not take the edge off the fields
+            inside it.
           </p>
           <p>
             <strong>

@@ -52,7 +52,7 @@ skill: `skills add dacoder/duck-ui`.
 | Actions | `quack-button`, `holo-button`, `copy-button`, `hud-chip`, `duck-button-group` |
 | Surfaces | `sticker-card`, `sticker-media-card`, `code-window`, `code-snippet`, `terminal`, `sticker-sheet`, `sticker-dialog`, `sticker-drawer`, `sticker-popover`, `video-card`, `quack-bubble`, `duck-viewport` |
 | Display | `holo-avatar`, `holo-badge`, `hud-label`, `hud-code`, `announcement`, `duck-spinner`, `holo-separator`, `duck-mark`, `sticker-kbd`, `stream-text`, `duck-prose`, `duck-marquee`, `duck-reveal`, `duck-timeline`, `duck-stat-grid`, `duck-section-marker`, `duck-chart` |
-| Inputs | `glow-input`, `glow-search`, `duck-switch`, `sticker-checkbox`, `sticker-radio-group`, `sticker-toggle-group`, `duck-slider`, `duck-media-slider`, `duck-volume`, `duck-audio-player`, `sticker-otp`, `sticker-drop` |
+| Inputs | `glow-input`, `glow-search`, `glow-select`, `glow-color`, `duck-switch`, `sticker-checkbox`, `sticker-radio-group`, `sticker-toggle-group`, `duck-slider`, `duck-media-slider`, `duck-volume`, `duck-audio-player`, `sticker-otp`, `sticker-drop` |
 | Navigation | `sticker-carousel`, `duck-tabs`, `theme-switcher`, `duck-list-header`, `duck-list-row`, `duck-scroll-rail`, `duck-command` |
 | Feedback | `quack-toast`, `sticker-skeleton`, `sticker-progress`, `empty-pond`, `duck-thinking`, `sticker-tooltip` |
 | Foundation | `theme`, `theme-noir`, `use-holo-pointer` |

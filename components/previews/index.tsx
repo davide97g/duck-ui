@@ -25,8 +25,10 @@ import DuckTimelineDemo from "./duck-timeline";
 import DuckViewportDemo from "./duck-viewport";
 import DuckVolumeDemo from "./duck-volume";
 import EmptyPondDemo from "./empty-pond";
+import GlowColorDemo from "./glow-color";
 import GlowInputDemo from "./glow-input";
 import GlowSearchDemo from "./glow-search";
+import GlowSelectDemo from "./glow-select";
 import HoloAvatarDemo from "./holo-avatar";
 import HoloBadgeDemo from "./holo-badge";
 import HoloButtonDemo from "./holo-button";
@@ -87,8 +89,10 @@ export const previews = {
   "duck-viewport": DuckViewportDemo,
   "duck-volume": DuckVolumeDemo,
   "empty-pond": EmptyPondDemo,
+  "glow-color": GlowColorDemo,
   "glow-input": GlowInputDemo,
   "glow-search": GlowSearchDemo,
+  "glow-select": GlowSelectDemo,
   "holo-avatar": HoloAvatarDemo,
   "holo-badge": HoloBadgeDemo,
   "holo-button": HoloButtonDemo,
