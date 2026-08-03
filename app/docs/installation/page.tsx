@@ -189,7 +189,8 @@ export default function InstallationPage() {
           <p>
             Files land in <code>components/ui/</code> and hooks in{" "}
             <code>hooks/</code>, following the aliases in your{" "}
-            <code>components.json</code>. One item also brings an asset:{" "}
+            <code>components.json</code>. One item also brings an asset — the
+            only one in the registry that does:{" "}
             <code>@duck/duck-spinner</code> writes{" "}
             <code>public/duck.svg</code> to your project root, so the loading
             mark is same-origin and survives an <code>img-src &apos;self&apos;</code>{" "}
@@ -198,11 +199,30 @@ export default function InstallationPage() {
             it from there, and the spinner renders as two empty rings.
           </p>
           <p>
-            duck/ui is additive, so there is no dropdown, table or combobox here
-            — add the standard shadcn/ui ones and the theme styles them on
+            It arrives without being asked for, because{" "}
+            <code>@duck/quack-button</code> and <code>@duck/quack-toast</code>{" "}
+            both depend on the spinner. A project with no mascot does not have
+            to keep it: <code>DuckSpinner</code> takes a <code>src</code> for
+            its own mark, <code>QuackButton</code> takes{" "}
+            <code>markSrc</code> for the same, and{" "}
+            <code>loadingIndicator</code> replaces the mark while loading with
+            whatever you like — a lucide spinner, a themed glyph, nothing at
+            all.
+          </p>
+          <p>
+            duck/ui is additive, so there is no menu, table, select or combobox
+            here — add the standard shadcn/ui ones and the theme styles them on
             sight. The overlays duck does ship are the ones it restyles heavily:{" "}
-            <code>@duck/sticker-dialog</code> and{" "}
-            <code>@duck/sticker-tooltip</code>, both on Radix.
+            <code>@duck/sticker-dialog</code>,{" "}
+            <code>@duck/sticker-drawer</code>,{" "}
+            <code>@duck/sticker-popover</code> and{" "}
+            <code>@duck/sticker-tooltip</code>, all on Radix, plus{" "}
+            <code>@duck/duck-command</code> for the palette. Colour, radius and
+            type reach a stock overlay by themselves; the 3px edge does not, so
+            paste <code>STICKER_SURFACE</code> — exported by{" "}
+            <code>@duck/sticker-popover</code> — onto a{" "}
+            <code>DropdownMenuContent</code> or <code>SelectContent</code> that
+            opens beside a sticker surface.
           </p>
           <p>
             A tooltip is still the weakest place to put anything. It is

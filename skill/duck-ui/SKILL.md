@@ -32,7 +32,7 @@ Registry dependencies resolve automatically. `@duck/quack-button` pulls `@duck/d
 4. **Dark is the default.** `<html class="dark">`. Light mode exists and is tested, but the dark palette is the reference.
 5. **Semantic tokens only.** `bg-primary`, `text-muted-foreground`, `border-border`. Never a raw hex or oklch inside component code.
 6. **Sticker language.** Thick borders (`--sticker-border`, 3px), radius at or above `0.75rem`, soft glows (`.duck-glow`) instead of hard drop shadows.
-7. **Compose with shadcn.** duck/ui is additive. For a dialog, a dropdown, a table or anything else it does not ship, use standard shadcn/ui. The theme already styles it.
+7. **Compose with shadcn.** duck/ui is additive. For a table, a menu, a select, a combobox or anything else it does not ship, use standard shadcn/ui — the theme already styles it. The overlays duck does ship are the ones the sticker edge changes: `StickerDialog`, `StickerDrawer`, `StickerPopover`, `StickerTooltip` and `DuckCommand`. Colour, radius and type reach a stock overlay on their own; the 3px edge does not, so paste `STICKER_SURFACE` — exported by `@duck/sticker-popover` — onto a `DropdownMenuContent` or `SelectContent` that opens beside a sticker surface: `className={cn(STICKER_SURFACE, "p-1")}`.
 8. **The code is theirs.** Components are copied into the project. Edit the file in place rather than wrapping it in another component.
 
 ## Component reference
@@ -68,10 +68,13 @@ All imports are `@/components/ui/<name>`, the hook is `@/hooks/use-holo-pointer`
 | `DuckMark` | `pose: rest \| swim`. Flat vector, inherits currentColor. Use above ~48px; below that use `DuckGlyph` |
 | `StickerKbd` | `watch` (a KeyboardEvent.key), `meta` |
 | `StickerSkeleton` / `StickerSkeletonText` | `shape: line \| title \| circle \| card \| poster \| video`, `delay`; text takes `lines`. `poster` and `video` carry their own ratio, so artwork needs no geometry at the call site |
-| `StickerProgress` / `StickerProgressTrack` | `value` (omit for indeterminate), `max`, `label`, `showValue`, `size: sm \| default`. `StickerProgressTrack` is the bar alone — no wrapper, no label row — for laying along the bottom edge of artwork. Nested inside a link or button, pass `aria-hidden`: a live progressbar there gets its `aria-valuenow` read into that element's accessible name |
+| `StickerProgress` / `StickerProgressTrack` | `value` (omit for indeterminate), `max`, `label`, `showValue`, `size: sm \| default`. `StickerProgressTrack` is the bar alone — no wrapper, no label row — for laying along the bottom edge of artwork. Nested inside a link or button it needs `aria-hidden` — see the accessibility rules |
 | `EmptyPond` | `title`, `hint`, `action`, `art`, `compact` |
 | `DuckList` / `DuckListHeader` | `columns: { key, label, width?, sortable? }[]`, `sort: { key, direction: ascending \| descending }`, `onSortChange`, `header`. `DuckList` writes the shared track list once as `--duck-list-cols`; the header and every `DuckListRow` with `cells` read it, so a column width is never copied onto a row. Widths must size without content (`1fr`, `rem`, `%`). Plain divs, no table roles — row selection, resizable columns or a caption mean a real `<table>` |
 | `DuckListRow` | `index`, `title`, `description`, `meta`, `trailing`, `cells: ReactNode[]`, `asChild`. Journal or changelog row: one hairline, a leading rule that grows in on hover, `asChild` for a whole-row link. `cells` switches it onto the shared column contract under a `DuckListHeader`, first column being the index / title / description block |
+| `DuckSectionMarker` | `index` (a string, so `"03"` keeps its zero), `align: left \| center`. The label at the top of a section: index, name, and a rule that bleeds out to nothing. A rule with an end divides two things; a rule that dissolves annotates the one below it. The dot answers to the section, so put `group` there for it to wake on hover |
+| `DuckScrollRail` | `side: top \| right`, `thickness` (px, default `2`). How far down the page you are, as one lime hairline. `aria-hidden` and transform-only, and it stays under reduced motion — a readout, not an animation |
+| `DuckChart` | `labels: string[]`, `series: { name, values, color? }[]` (colours default to `--chart-1` through `--chart-5` by position), `type: bar \| line \| area`, `title`, `height`, `max`, `grid`, `xAxis`, `legend`, `format`. Bars, lines and areas drawn straight into SVG from the chart tokens, no charting dependency. The SVG is `aria-hidden` and the same numbers are emitted as a visually hidden table. Not a charting library — no zoom, no brush, no pointer tooltip, no time axis; reach for recharts when the chart is the product |
 | `GlowInput` / `GlowTextarea` / `GlowField` / `GlowFieldset` | `GlowField` takes `label`, `helper`, `error`, `required` and wraps one control; `GlowFieldset` takes `legend` instead of `label` and wraps a group, because `GlowField` clones a single child to inject the id and a pair has nothing to clone. The two controls take `frame` (default `true`) — pass `frame={false}` inside a surface that is already the frame, since `.sticker` lands after Tailwind's utilities and `border-0` at the call site cannot beat it |
 | `GlowSearch` | `value` / `defaultValue` / `onChange`, `onSearch` (debounced), `debounce` (ms, default `250`), `kbd` (e.g. `⌘K`), `clearLabel`, `inputClassName`; `className` styles the frame and every other prop lands on the field. Typing debounces, Enter / Escape / clear flush; Escape only clears when there is a value, so an empty field lets the key reach the dialog above. The `kbd` is a hint, not a binding — no global listener lives here. Built as a `frame={false}` `GlowInput` inside one sticker edge, with native `type="search"` and the WebKit cancel button suppressed |
 | `DuckSwitch` | `size: sm \| default`, `children` as the label, plus native `checked` / `defaultChecked` / `onChange` |
@@ -91,6 +94,12 @@ All imports are `@/components/ui/<name>`, the hook is `@/hooks/use-holo-pointer`
 | `DuckThinking` | `label`, `showLabel`, `mark` (defaults to `DuckMark`; pass your own and the ripples stay) |
 | `StreamText` | `text` (types it out — demo), `streaming` + `active` (real tokens), `speed`, `onDone` |
 | `QuackBubble` | `from: assistant \| user`, `meta`, `mark` (the assistant's face, defaults to `DuckMark`) |
+| `DuckProse` | `measure: default \| wide \| full` (68ch, 76ch, no limit), `as: div \| article \| section \| main`. The long-form surface: styles markup it has never seen — bare headings, paragraphs, quotes, tables — from the theme tokens. Every rule ships inside `:where()` and is therefore zero specificity, so one utility on any child wins; that is what lets `HudCode` restyle inline code without `!important`. Tables are the exception it cannot fix from outside — wrap a wide one in `.duck-prose-scroll`. `@tailwindcss/typography` is not used and not wanted |
+| `StickerTooltip` (+ `Provider`, `Root`, `Trigger`, `Content`) | `content`, `side: top \| right \| bottom \| left`, `align: start \| center \| end`, `arrow`, `delay` (ms, default `250`), `children` as the trigger, so it must forward props. Radix Tooltip with the die-cut edge. Hover-only chrome: no touch, gone as soon as the pointer leaves, so use it for a label with nowhere else to live and never for anything the task needs — a shortcut goes inline in `StickerKbd`. The all-in-one brings its own provider; compose the parts when a row of controls should share one delay |
+| `DuckMarquee` | `duration` (seconds per pass, default `28`), `reverse`, `gap` (any CSS length), `pauseOnHover`, `fade`. Seamless strip for logos or a ticker; the children render twice and the duplicate is `aria-hidden`. Under reduced motion it becomes a plain horizontal scroller rather than a frozen strip clipping half its content. Decoration — nothing that exists only inside it is discoverable |
+| `DuckReveal` / `DuckSplitReveal` | `delay`, `duration`, `distance` (px), `direction: up \| down \| left \| right \| in`, `repeat`; the split takes `text` (a string, because it has to be split), `by: word \| char`, `stagger`. Sections arrive as the reader gets to them and headlines assemble a word at a time. Reduced motion renders the final state, not no state. Split is for a headline only, and its pieces are `aria-hidden` behind the whole line |
+| `DuckTimeline` / `DuckTimelineItem` | item takes `when`, `title`, `active`. A vertical spine that draws itself on scroll, one node per entry. Progress is measured across the list rather than the window, so the line completes at the last node instead of a screen later; under reduced motion it is drawn in full |
+| `DuckStatGrid` / `DuckStat` | grid takes `cols: 2 \| 3 \| 4` (always one below `sm`), `bordered`; stat takes `label`, `value`, `hint`. The hairline grid: one `--border` background showing through a 1px gap with the cells painted on top, so shared edges never double. Cells are `--background` rather than `--card` on purpose — pass `bg-card` for floating panels. A definition list, so the label is announced before the value |
 | `useHoloPointer` | `tilt`, `magnet`, `reset`, `disabled`; returns a ref |
 
 ## Blocks
@@ -102,6 +111,8 @@ Whole sections rather than single controls. Same CLI, but the file lands in `com
 | `DuckHero` | `@/components/blocks/duck-hero` | `eyebrow: { text, tag?, href? }`, `title`, `description`, `primaryAction: { label, href }`, `secondaryAction`, `terminal: TerminalLine[]`, `aside` (replaces the terminal), `proof` |
 | `DuckPricing` | `@/components/blocks/duck-pricing` | `title`, `description`, `tiers: { name, description?, monthly, yearly?, features, action?, featured?, badge? }[]`, `currency`, `billingSwitch`, `yearlyNote`, `yearly` + `onYearlyChange` for controlled billing |
 | `DuckDashboard` | `@/components/blocks/duck-dashboard` | `nav`, `footerNav`, `title`, `brand` / `brandLabel`, `user: { name, src?, fallback? }`, `onSearch` + `searchLabel`, `stats: { label, value, hint?, progress? }[]`, `actions`, `themeSwitcher`, `children` |
+| `DuckSiteHeader` | `@/components/blocks/duck-site-header` | `brand`, `brandHref`, `nav: { label, href, active?, external? }[]`, `cta: { label, href }`, `actions` (search, theme switcher — anything left of the CTA), `sticky`, `render: (item, className) => ReactNode` |
+| `DuckSiteFooter` | `@/components/blocks/duck-site-footer` | `brand`, `description`, `columns: { title, links: { label, href, external? }[] }[]`, `note`, `legal`, `headingLevel: h2 \| h3 \| p`, `render` |
 
 Rules that come with them:
 
@@ -109,7 +120,9 @@ Rules that come with them:
 - `DuckPricing` takes exactly one `featured` tier, and that tier's button stays lime — the holo is the card ring.
 - A yearly price is the per-month figure billed yearly, not the annual total.
 - `DuckDashboard` keeps holo out of the chrome; the page inside it spends the budget. Its theme switcher needs a next-themes provider, or pass `themeSwitcher={false}`.
-- Actions are plain `<a>` so the blocks stay framework-agnostic. Swap in the project's router link once the file is theirs.
+- `DuckSiteHeader`'s drawer is a second nav rather than the same one re-laid-out, so no hidden tab stop is left at the other width. It has no router: `active` is yours to pass.
+- `DuckSiteFooter` makes each column its own navigation landmark, named by its heading. Three or four columns — a footer with nine is a sitemap, and a sitemap is its own page.
+- Actions are plain `<a>` so the blocks stay framework-agnostic. Swap in the project's router link once the file is theirs; the two site blocks take a `render` prop for exactly that.
 
 ## Tokens
 
@@ -148,6 +161,7 @@ Keyframes: `holo-shift`, `duck-idle`, `duck-sheen`, `duck-squash`, `duck-pop`, `
 - `GlowField` wires `htmlFor`, `aria-describedby`, `aria-invalid` and `role="alert"` on errors.
 - Toasts never take focus and announce politely.
 - `DuckTabs` implements the tabs keyboard pattern: arrows, Home, End.
+- A live value inside a link or a button becomes part of that element's accessible name, and changes with it. Pass `aria-hidden` to any progressbar, timer or `aria-live` region nested in something focusable: a `StickerProgressTrack` laid along the bottom of a linked card is read out as the link's name otherwise. `StickerMediaCard` already does this to its own `progress`.
 
 ## Docs
 

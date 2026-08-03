@@ -20,9 +20,9 @@
 
 **Open code. AI ready. Quack.**
 
-32 components, one theme and one hook, all installed by the standard shadcn CLI under the `@duck`
-namespace. Nothing is wrapped, nothing is hidden behind a package — the files land in your repo and
-they are yours to edit.
+Everything installs through the standard shadcn CLI under the `@duck` namespace: the components and
+blocks listed below, two themes, one hook. Nothing is wrapped, nothing is hidden behind a package —
+the files land in your repo and they are yours to edit.
 
 ## Install (in your project)
 
@@ -36,9 +36,11 @@ npx shadcn@latest add @duck/theme        # always first — restyles every shadc
 npx shadcn@latest add @duck/quack-button @duck/holo-avatar @duck/sticker-card
 ```
 
-`@duck/theme` ships the light and dark token sets, the utility classes and the keyframes; every
-component assumes it is there. Registry dependencies resolve on their own — `@duck/quack-button`
-pulls `@duck/duck-spinner` and `@duck/use-holo-pointer` without being asked.
+`@duck/theme` ships the light and dark token sets, the utility classes, the keyframes and a print
+layer; every component assumes it is there. `@duck/theme-noir` is the alternative — the same token
+contract with the sticker vocabulary dialled to zero, dark in both modes — and it proves the point:
+an identity swap touches no component markup. Registry dependencies resolve on their own —
+`@duck/quack-button` pulls `@duck/duck-spinner` and `@duck/use-holo-pointer` without being asked.
 
 Working with an AI assistant? Point it at [`/llms.txt`](https://duckui.davideghiotto.it/llms.txt), or install the
 skill: `skills add dacoder/duck-ui`.
@@ -47,13 +49,15 @@ skill: `skills add dacoder/duck-ui`.
 
 | Group | Components |
 |---|---|
-| Actions | `quack-button`, `holo-button`, `copy-button` |
-| Surfaces | `sticker-card`, `code-window`, `code-snippet`, `terminal`, `sticker-sheet`, `video-card`, `quack-bubble` |
-| Display | `holo-avatar`, `holo-badge`, `announcement`, `duck-spinner`, `holo-separator`, `duck-mark`, `sticker-kbd`, `stream-text` |
-| Inputs | `glow-input`, `duck-switch`, `sticker-checkbox`, `sticker-radio-group`, `duck-slider`, `sticker-otp`, `sticker-drop` |
-| Navigation | `duck-tabs`, `theme-switcher` |
-| Feedback | `quack-toast`, `sticker-skeleton`, `sticker-progress`, `empty-pond`, `duck-thinking` |
-| Foundation | `theme`, `use-holo-pointer` |
+| Actions | `quack-button`, `holo-button`, `copy-button`, `hud-chip`, `duck-button-group` |
+| Surfaces | `sticker-card`, `sticker-media-card`, `code-window`, `code-snippet`, `terminal`, `sticker-sheet`, `sticker-dialog`, `sticker-drawer`, `sticker-popover`, `video-card`, `quack-bubble`, `duck-viewport` |
+| Display | `holo-avatar`, `holo-badge`, `hud-label`, `hud-code`, `announcement`, `duck-spinner`, `holo-separator`, `duck-mark`, `sticker-kbd`, `stream-text`, `duck-prose`, `duck-marquee`, `duck-reveal`, `duck-timeline`, `duck-stat-grid`, `duck-section-marker`, `duck-chart` |
+| Inputs | `glow-input`, `glow-search`, `duck-switch`, `sticker-checkbox`, `sticker-radio-group`, `sticker-toggle-group`, `duck-slider`, `duck-media-slider`, `duck-volume`, `duck-audio-player`, `sticker-otp`, `sticker-drop` |
+| Navigation | `sticker-carousel`, `duck-tabs`, `theme-switcher`, `duck-list-header`, `duck-list-row`, `duck-scroll-rail`, `duck-command` |
+| Feedback | `quack-toast`, `sticker-skeleton`, `sticker-progress`, `empty-pond`, `duck-thinking`, `sticker-tooltip` |
+| Foundation | `theme`, `theme-noir`, `use-holo-pointer` |
+
+This table is hand-kept. `registry.json` and `/llms-full.txt` are generated, so they cannot drift.
 
 ## Blocks
 
@@ -65,15 +69,23 @@ pulls in every component it renders.
 | `duck-hero` | Announcement pill, display headline, two actions, self-typing terminal |
 | `duck-pricing` | Tier grid with a monthly / yearly switch and one featured tier |
 | `duck-dashboard` | App shell: sidebar drawer, sticky top bar, stat row, your page as children |
+| `duck-site-header` | Content-site top bar: identity, anchors, one action, a real drawer below `lg` |
+| `duck-site-footer` | Content-site bottom: identity and a sentence, link columns, a hairline, the small print |
 
 ```bash
 npx shadcn@latest add @duck/duck-hero
 ```
 
-duck/ui is additive. For a dialog, a dropdown, a table or a tooltip, use standard shadcn/ui — the
-theme already styles it. Tooltips are deliberately not here: a hover-only hint is invisible on touch
-and to the keyboard, so for shortcuts print the key inline with `sticker-kbd` and reach for shadcn's
-`tooltip` only when the label genuinely has nowhere else to live.
+duck/ui is additive. There is no table, menu, select or combobox here — add the standard shadcn/ui
+ones and the theme styles them on sight. The overlays duck does ship are the ones its edge changes:
+`sticker-dialog`, `sticker-drawer`, `sticker-popover`, `sticker-tooltip` and `duck-command`. Colour,
+radius and type carry over to a stock overlay on their own; the 3px edge does not, so paste
+`STICKER_SURFACE` from `@duck/sticker-popover` onto a `DropdownMenuContent` or `SelectContent` that
+opens next to a sticker surface.
+
+A tooltip is still the weakest place to put anything: hover-only chrome, absent on touch, gone the
+moment the pointer leaves. Use it for a label with nowhere else to live — an icon-only control, a
+truncated value — and print shortcuts inline with `sticker-kbd`, where every user can see them.
 
 ## Design rules
 
@@ -122,8 +134,8 @@ origin.
 |---|---|
 | `app/` | duckui.davideghiotto.it: landing, docs, theme editor, `llms.txt` routes |
 | `registry.json` | Registry index: shadcn schema, `@duck` namespace, dependencies |
-| `registry/duck/ui/` | The 32 components. Source of truth. |
-| `registry/duck/blocks/` | The 3 blocks: whole sections composed from the components |
+| `registry/duck/ui/` | The components. Source of truth. |
+| `registry/duck/blocks/` | The blocks: whole sections composed from the components |
 | `registry/duck/hooks/` | `use-holo-pointer` |
 | `components/previews/` | One live example per component (blocks under `previews/blocks/`), rendered *and* printed on its docs page |
 | `components/site/`, `components/docs/` | The site itself — not part of the registry |
