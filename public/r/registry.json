@@ -7,7 +7,7 @@
       "name": "theme",
       "type": "registry:theme",
       "title": "Duck Theme",
-      "description": "duck/ui theme: dark-first canvas, duck-lime primary, holographic accents. Installs the full shadcn CSS-variable contract plus the holo utilities, the display scale, the control-typography tokens and the motion vocabulary, so every existing shadcn component is duck-styled with no markup changes — and so a different theme can undo the duck styling without touching any.",
+      "description": "duck/ui theme: dark-first canvas, duck-lime primary, holographic accents. Installs the full shadcn CSS-variable contract plus the holo utilities, the display scale, the control-typography tokens, the motion vocabulary and a print layer that re-asserts the light palette on paper, so every existing shadcn component is duck-styled with no markup changes — and so a different theme can undo the duck styling without touching any.",
       "cssVars": {
         "theme": {
           "radius": "0.75rem",
@@ -241,6 +241,9 @@
         "@utility duck-glow-primary": {
           "box-shadow": "var(--glow-primary)"
         },
+        "@utility duck-stream-edge": {
+          "mask-image": "linear-gradient(to bottom, #000 calc(100% - 1.4em), transparent)"
+        },
         "@keyframes holo-shift": {
           "0%, 100%": {
             "background-position": "0% 0%, 0% 50%"
@@ -412,6 +415,62 @@
           },
           ".tilt": {
             "transform": "none !important"
+          },
+          ".duck-stream-edge": {
+            "mask-image": "none !important"
+          }
+        },
+        "@media print": {
+          ":root, .dark": {
+            "--background": "oklch(1 0 0)",
+            "--foreground": "oklch(0.18 0.012 285)",
+            "--card": "oklch(0.985 0.004 285)",
+            "--card-foreground": "oklch(0.18 0.012 285)",
+            "--popover": "oklch(1 0 0)",
+            "--popover-foreground": "oklch(0.18 0.012 285)",
+            "--secondary": "oklch(0.945 0.006 285)",
+            "--secondary-foreground": "oklch(0.25 0.012 285)",
+            "--muted": "oklch(0.955 0.005 285)",
+            "--muted-foreground": "oklch(0.48 0.012 285)",
+            "--accent-foreground": "oklch(0.25 0.05 220)",
+            "--destructive": "oklch(0.58 0.22 27)",
+            "--border": "oklch(0.895 0.006 285)",
+            "--input": "oklch(0.895 0.006 285)",
+            "--primary": "oklch(0.62 0.14 115)",
+            "--primary-foreground": "oklch(1 0 0)",
+            "--ring": "oklch(0.62 0.14 115)",
+            "--glow": "none",
+            "--glow-primary": "none",
+            "--sticker-border": "1px",
+            "--sheet": "oklch(1 0 0)",
+            "--sheet-line": "oklch(0.895 0.006 285)",
+            "--cut": "oklch(0.78 0.01 285)",
+            "--vinyl": "oklch(1 0 0)"
+          },
+          "html, body": {
+            "background": "var(--background) !important",
+            "color": "var(--foreground) !important"
+          },
+          ".holo-border, .holo-border-animated, .foil, .sheen": {
+            "background": "none !important",
+            "border-color": "var(--border) !important"
+          },
+          ".holo-text": {
+            "background": "none !important",
+            "-webkit-text-fill-color": "var(--foreground) !important",
+            "color": "var(--foreground) !important"
+          },
+          ":where(.duck-prose)": {
+            "max-width": "none"
+          },
+          ":where(.duck-prose) :is(pre, code, blockquote, mark)": {
+            "background": "none"
+          },
+          ":where(.duck-prose) :is(figure, blockquote, pre, table, li)": {
+            "break-inside": "avoid"
+          },
+          ":where(.duck-prose) :is(h2, h3, h4)": {
+            "break-after": "avoid"
           }
         }
       }
@@ -419,6 +478,36 @@
     {
       "name": "theme-noir",
       "type": "registry:theme",
+      "css": {
+        "@media print": {
+          ":root, .dark": {
+            "--background": "oklch(1 0 0)",
+            "--foreground": "oklch(0.16 0.004 264)",
+            "--card": "oklch(1 0 0)",
+            "--card-foreground": "oklch(0.16 0.004 264)",
+            "--popover": "oklch(1 0 0)",
+            "--popover-foreground": "oklch(0.16 0.004 264)",
+            "--secondary": "oklch(0.96 0.002 264)",
+            "--secondary-foreground": "oklch(0.24 0.004 264)",
+            "--muted": "oklch(0.965 0.002 264)",
+            "--muted-foreground": "oklch(0.46 0.006 264)",
+            "--primary": "oklch(0.52 0.15 135)",
+            "--primary-foreground": "oklch(1 0 0)",
+            "--accent": "oklch(0.52 0.15 135)",
+            "--accent-foreground": "oklch(0.16 0.004 264)",
+            "--border": "oklch(0.86 0.004 264)",
+            "--input": "oklch(0.86 0.004 264)",
+            "--ring": "oklch(0.52 0.15 135)",
+            "--surface": "oklch(1 0 0)",
+            "--surface-raised": "oklch(0.98 0.002 264)",
+            "--glass": "oklch(1 0 0)",
+            "--sheet": "oklch(1 0 0)",
+            "--sheet-line": "oklch(0.86 0.004 264)",
+            "--cut": "oklch(0.72 0.006 264)",
+            "--sheen": "transparent"
+          }
+        }
+      },
       "title": "Noir Theme",
       "description": "Terminal noir: near-black canvas, one lime accent, hairline 1px edges and square corners. Same token contract as the duck theme with the sticker vocabulary dialled to zero — iridescence flattened to lime, glow narrowed, radius collapsed. Proof that a duck/ui install can carry a completely different identity without touching component markup.",
       "registryDependencies": [
@@ -596,6 +685,26 @@
       ]
     },
     {
+      "name": "hud-chip",
+      "type": "registry:ui",
+      "title": "Hud Chip",
+      "description": "The interactive HUD label: nav items, row actions, a zoom cluster, retry, esc. Mono, uppercase and tracked like HudLabel, because a chip and a label in the same row must not drift apart, and a real button underneath. Variants outline, ghost, primary; active paints the current read and leaves the ARIA to the call site; asChild for a Link.",
+      "dependencies": [
+        "class-variance-authority",
+        "@radix-ui/react-slot"
+      ],
+      "registryDependencies": [
+        "@duck/theme",
+        "@duck/hud-label"
+      ],
+      "files": [
+        {
+          "path": "registry/duck/ui/hud-chip.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "sticker-card",
       "type": "registry:ui",
       "title": "Sticker Card",
@@ -725,7 +834,7 @@
       "name": "sticker-dialog",
       "type": "registry:ui",
       "title": "Sticker Dialog",
-      "description": "Modal dialog on Radix Dialog, so the focus trap, scroll lock, escape handling and aria wiring are real. duck supplies the frosted scrim, the die-cut edge and the rise into place.",
+      "description": "Modal dialog on Radix Dialog, so the focus trap, scroll lock, escape handling and aria wiring are real. duck supplies the frosted scrim, the die-cut edge and the rise into place. Width presets sm to lg, plus a full-bleed full that drops the centring translate and fades instead of rising.",
       "dependencies": [
         "@radix-ui/react-dialog",
         "lucide-react"
@@ -736,6 +845,72 @@
       "files": [
         {
           "path": "registry/duck/ui/sticker-dialog.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "sticker-drawer",
+      "type": "registry:ui",
+      "title": "Sticker Drawer",
+      "description": "Edge-anchored panel on the same Radix Dialog base as StickerDialog, so the focus trap, scroll lock, escape handling and aria wiring are real. Anchors to any of the four sides, slides from the edge it is anchored to, and carries the die-cut edge on the side facing the content only. Sizes sm to lg plus a full-bleed full.",
+      "dependencies": [
+        "class-variance-authority",
+        "@radix-ui/react-dialog",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@duck/theme"
+      ],
+      "css": {
+        "@layer utilities": {
+          ".holo-edge": {
+            "border-color": "transparent",
+            "background": "linear-gradient(var(--card), var(--card)) padding-box, var(--holo) border-box"
+          }
+        },
+        "@keyframes duck-drawer-in": {
+          "from": {
+            "opacity": "0",
+            "transform": "translate(var(--drawer-x, 0), var(--drawer-y, 0))"
+          },
+          "to": {
+            "opacity": "1",
+            "transform": "translate(0, 0)"
+          }
+        },
+        "@keyframes duck-drawer-out": {
+          "from": {
+            "opacity": "1",
+            "transform": "translate(0, 0)"
+          },
+          "to": {
+            "opacity": "0",
+            "transform": "translate(var(--drawer-x, 0), var(--drawer-y, 0))"
+          }
+        }
+      },
+      "files": [
+        {
+          "path": "registry/duck/ui/sticker-drawer.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "sticker-popover",
+      "type": "registry:ui",
+      "title": "Sticker Popover",
+      "description": "Panel anchored to its trigger, on Radix Popover, so focus return, escape, outside click and the aria wiring are real. duck supplies the 3px die-cut edge, the glow and the arrival, and exports STICKER_SURFACE — the class recipe that makes a stock shadcn menu or select match the same edge.",
+      "dependencies": [
+        "@radix-ui/react-popover"
+      ],
+      "registryDependencies": [
+        "@duck/theme"
+      ],
+      "files": [
+        {
+          "path": "registry/duck/ui/sticker-popover.tsx",
           "type": "registry:ui"
         }
       ]
@@ -799,7 +974,7 @@
       "name": "hud-label",
       "type": "registry:ui",
       "title": "Hud Label",
-      "description": "The instrument-panel label: tiny, mono, uppercase, tracked wide enough to read as machine output rather than prose. Tones muted, foreground, primary; optional lime status square. Ships a matching .hud utility for the many places the label is an attribute of an existing element rather than an element of its own.",
+      "description": "The instrument-panel label: tiny, mono, uppercase, tracked wide enough to read as machine output rather than prose. Tones muted, foreground, primary and accent; an optional status square that takes the label's own colour. Ships a matching .hud utility for the many places the label is an attribute of an existing element rather than an element of its own.",
       "dependencies": [
         "class-variance-authority"
       ],
@@ -830,6 +1005,24 @@
       "files": [
         {
           "path": "registry/duck/ui/hud-label.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "hud-code",
+      "type": "registry:ui",
+      "title": "Hud Code",
+      "description": "The inline citation chip: a monospace token inside a sentence, tinted with --primary so it reads as verifiable data rather than as a snippet of source. Renders a code element by default; interactive makes it a button and asChild takes a link, for the click-a-citation case. Sized and spaced so it cannot change the leading of the paragraph it sits in.",
+      "dependencies": [
+        "@radix-ui/react-slot"
+      ],
+      "registryDependencies": [
+        "@duck/theme"
+      ],
+      "files": [
+        {
+          "path": "registry/duck/ui/hud-code.tsx",
           "type": "registry:ui"
         }
       ]
@@ -892,13 +1085,33 @@
       "name": "glow-input",
       "type": "registry:ui",
       "title": "Glow Input",
-      "description": "Input, textarea and two field wrappers that wire up label, helper text, errors, aria-invalid and aria-describedby. GlowField wraps one control; GlowFieldset emits a real fieldset and legend for groups.",
+      "description": "Input, textarea and two field wrappers that wire up label, helper text, errors, aria-invalid and aria-describedby. GlowField wraps one control; GlowFieldset emits a real fieldset and legend for groups. frame={false} drops the sticker edge and the focus glow for a field inside a surface that is already the frame.",
       "registryDependencies": [
         "@duck/theme"
       ],
       "files": [
         {
           "path": "registry/duck/ui/glow-input.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "glow-search",
+      "type": "registry:ui",
+      "title": "Glow Search",
+      "description": "A search field rather than a text field: leading icon, a clear button that appears with the first character and returns focus to the input, an optional ⌘K keycap hint, and a debounced onSearch. Typing debounces; Enter, Escape and clear flush. The frame is on the wrapper and the field inside it is frame={false}, so one edge holds the lot. The hint is a hint — the shortcut belongs to DuckCommand.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@duck/theme",
+        "@duck/glow-input",
+        "@duck/sticker-kbd"
+      ],
+      "files": [
+        {
+          "path": "registry/duck/ui/glow-search.tsx",
           "type": "registry:ui"
         }
       ]
@@ -1070,6 +1283,27 @@
       ]
     },
     {
+      "name": "duck-audio-player",
+      "type": "registry:ui",
+      "title": "Duck Audio Player",
+      "description": "The themed replacement for a native <audio controls>: one audio element wired to DuckMediaSlider, DuckVolume and a QuackButton transport. Reads the buffered waterline out of the element's own TimeRanges, keeps duration null for a stream instead of pinning the bar, and has a compact single-row layout for dropping into a list.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@duck/theme",
+        "@duck/duck-media-slider",
+        "@duck/duck-volume",
+        "@duck/quack-button"
+      ],
+      "files": [
+        {
+          "path": "registry/duck/ui/duck-audio-player.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "sticker-otp",
       "type": "registry:ui",
       "title": "Sticker OTP",
@@ -1088,7 +1322,7 @@
       "name": "sticker-drop",
       "type": "registry:ui",
       "title": "Sticker Drop",
-      "description": "File dropzone built on the backing paper: the zone is the kiss-cut sheet, dragging lights the cut lines, and each accepted file lands as its own sticker. Wraps a clipped \u2014 not hidden \u2014 file input, so it stays keyboard operable.",
+      "description": "File dropzone built on the backing paper: the zone is the kiss-cut sheet, dragging lights the cut lines, and each accepted file lands as its own sticker. Wraps a clipped \u2014 not hidden \u2014 file input, so it stays keyboard operable. Controllable through files, so a submit can clear the sheet.",
       "dependencies": [
         "lucide-react"
       ],
@@ -1182,7 +1416,7 @@
       "name": "duck-thinking",
       "type": "registry:ui",
       "title": "Duck Thinking",
-      "description": "The wake without the duck going anywhere: the mark paddles in place while two rings spread out. A spinner sized and worded for a conversation.",
+      "description": "The wake without the duck going anywhere: the mark paddles in place while two rings spread out. A spinner sized and worded for a conversation; pass mark to paddle your own brand instead.",
       "registryDependencies": [
         "@duck/theme",
         "@duck/duck-mark"
@@ -1213,7 +1447,7 @@
       "name": "quack-bubble",
       "type": "registry:ui",
       "title": "Quack Bubble",
-      "description": "A message that has a voice. The assistant's bubble carries the mark and a squared corner on the side it speaks from; the user's is plain lime vinyl.",
+      "description": "A message that has a voice. The assistant's bubble carries the mark and a squared corner on the side it speaks from; the user's is plain lime vinyl. The mark is a prop, so the assistant can be anyone.",
       "registryDependencies": [
         "@duck/theme",
         "@duck/duck-mark"
@@ -1492,10 +1726,30 @@
       ]
     },
     {
+      "name": "duck-list-header",
+      "type": "registry:ui",
+      "title": "Duck List Header",
+      "description": "Column labels over a stack of DuckListRows, with a sort control and a column contract the header and the rows actually share. DuckList writes the track list once as --duck-list-cols, so a column width is declared in one place instead of copied onto every row. Plain divs, no table roles: the sort direction is announced in words. Row selection or resizable columns want a real <table> instead.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@duck/theme",
+        "@duck/hud-label",
+        "@duck/duck-list-row"
+      ],
+      "files": [
+        {
+          "path": "registry/duck/ui/duck-list-header.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "duck-list-row",
       "type": "registry:ui",
       "title": "Duck List Row",
-      "description": "The unit of a journal index, a project list, a changelog: HUD ordinal, title, meta, and a leading rule that grows in on hover while the row shifts to make room. asChild makes the whole row one link.",
+      "description": "The unit of a journal index, a project list, a changelog: HUD ordinal, title, meta, and a leading rule that grows in on hover while the row shifts to make room. asChild makes the whole row one link. Pass cells and the row lays itself out on the shared --duck-list-cols track list instead, for a column-aligned admin list under a DuckListHeader.",
       "registryDependencies": [
         "@duck/theme",
         "@duck/hud-label"
@@ -1553,6 +1807,66 @@
       "files": [
         {
           "path": "registry/duck/ui/duck-chart.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "duck-button-group",
+      "type": "registry:ui",
+      "title": "Duck Button Group",
+      "description": "Shared geometry for a cluster of buttons that act. Joined by default: children after the first pull back by --sticker-border so two edges land on each other and read as one divider, the outer radius stays on the ends only, and the focus ring is raised above the neighbour overlapping it. role=\"group\" with three tab stops, or role=\"toolbar\" with one tab stop and arrow keys on the axis it advertises. Styles whatever child it is handed.",
+      "dependencies": [
+        "class-variance-authority"
+      ],
+      "registryDependencies": [
+        "@duck/theme"
+      ],
+      "files": [
+        {
+          "path": "registry/duck/ui/duck-button-group.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "duck-viewport",
+      "type": "registry:ui",
+      "title": "Duck Viewport",
+      "description": "A pan and zoom container for somebody else's canvas: cursor-anchored wheel zoom, pointer-drag panning with capture, two-finger pinch, and the keyboard. The wheel listener is registered by hand with passive: false, because React's onWheel cannot preventDefault and the page scrolls out from under the zoom. The transform is written straight to element.style, so a pan costs no renders.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@duck/theme",
+        "@duck/quack-button",
+        "@duck/duck-button-group"
+      ],
+      "files": [
+        {
+          "path": "registry/duck/ui/duck-viewport.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "duck-command",
+      "type": "registry:ui",
+      "title": "Duck Command",
+      "description": "The ⌘K palette, built on StickerDialog and a filtered listbox rather than on cmdk. The input never loses focus: the arrow keys move aria-activedescendant through the results, Enter runs the active row, and the rows are options rather than tab stops. Takes a declarative items array, so filtering needs no DOM registry.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@duck/theme",
+        "@duck/sticker-dialog",
+        "@duck/glow-input",
+        "@duck/hud-label",
+        "@duck/sticker-kbd"
+      ],
+      "files": [
+        {
+          "path": "registry/duck/ui/duck-command.tsx",
           "type": "registry:ui"
         }
       ]

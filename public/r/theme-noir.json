@@ -102,5 +102,35 @@
       "cut": "oklch(0.337 0.01 253)"
     }
   },
+  "css": {
+    "@media print": {
+      ":root, .dark": {
+        "--background": "oklch(1 0 0)",
+        "--foreground": "oklch(0.16 0.004 264)",
+        "--card": "oklch(1 0 0)",
+        "--card-foreground": "oklch(0.16 0.004 264)",
+        "--popover": "oklch(1 0 0)",
+        "--popover-foreground": "oklch(0.16 0.004 264)",
+        "--secondary": "oklch(0.96 0.002 264)",
+        "--secondary-foreground": "oklch(0.24 0.004 264)",
+        "--muted": "oklch(0.965 0.002 264)",
+        "--muted-foreground": "oklch(0.46 0.006 264)",
+        "--primary": "oklch(0.52 0.15 135)",
+        "--primary-foreground": "oklch(1 0 0)",
+        "--accent": "oklch(0.52 0.15 135)",
+        "--accent-foreground": "oklch(0.16 0.004 264)",
+        "--border": "oklch(0.86 0.004 264)",
+        "--input": "oklch(0.86 0.004 264)",
+        "--ring": "oklch(0.52 0.15 135)",
+        "--surface": "oklch(1 0 0)",
+        "--surface-raised": "oklch(0.98 0.002 264)",
+        "--glass": "oklch(1 0 0)",
+        "--sheet": "oklch(1 0 0)",
+        "--sheet-line": "oklch(0.86 0.004 264)",
+        "--cut": "oklch(0.72 0.006 264)",
+        "--sheen": "transparent"
+      }
+    }
+  },
   "type": "registry:theme"
 }

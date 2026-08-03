@@ -23,7 +23,17 @@ const keyframes = [
   { name: "duck-rise", role: "Entrance from below. Toasts, tab panels." },
   { name: "duck-marquee", role: "Continuous horizontal travel." },
   { name: "duck-shimmer", role: "Skeleton placeholder sweep." },
+  { name: "duck-dialog-in", role: "Dialog arriving, centring translate carried through." },
+  { name: "duck-drawer-in", role: "Panel sliding from whichever edge anchors it." },
 ];
+
+const streamEdge = `/* @duck/theme */
+@utility duck-stream-edge {
+  mask-image: linear-gradient(to bottom, #000 calc(100% - 1.4em), transparent);
+}
+
+/* The last line of a growing block eases in instead of popping. */
+<div className="duck-prose duck-stream-edge">{answer}</div>`;
 
 const composed = `/* Hover lift, pointer magnetism and press squash all want the
    transform property. Composing them from variables means they
@@ -67,6 +77,7 @@ export default function MotionPage() {
       toc={[
         { id: "two-kinds", label: "Two kinds" },
         { id: "vocabulary", label: "Vocabulary" },
+        { id: "streaming", label: "Streaming edge" },
         { id: "composed", label: "Composed transforms" },
         { id: "pointer", label: "Pointer tracking" },
         { id: "reduced", label: "Reduced motion" },
@@ -111,6 +122,32 @@ export default function MotionPage() {
             </div>
           ))}
         </div>
+      </DocSection>
+
+      <DocSection
+        id="streaming"
+        title="Streaming edge"
+        description="Tokens arriving from a model are motion too, and the growing edge is where it shows."
+      >
+        <CodeBlock code={streamEdge} lang="css" />
+        <Prose>
+          <p>
+            <code>StreamText</code> animates the arrival of characters.{" "}
+            <code>duck-stream-edge</code> softens the arrival of{" "}
+            <em>lines</em>: it masks the bottom 1.4em of a block into
+            transparency, so a paragraph that is still being written fades out
+            at the waterline rather than snapping a full line into place. Put it
+            on whatever holds the text, usually the prose wrapper, and take it
+            off once the response is complete.
+          </p>
+          <p>
+            The mask stop is <code>#000</code>, which is an alpha value and not
+            a colour, so the utility needs no token and works on any surface in
+            either mode. Under reduced motion the theme switches it off
+            completely — a permanently faded last line is not a reduced
+            animation, it is missing text.
+          </p>
+        </Prose>
       </DocSection>
 
       <DocSection
