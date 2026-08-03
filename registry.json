@@ -1263,6 +1263,27 @@
       ]
     },
     {
+      "name": "duck-audio-player",
+      "type": "registry:ui",
+      "title": "Duck Audio Player",
+      "description": "The themed replacement for a native <audio controls>: one audio element wired to DuckMediaSlider, DuckVolume and a QuackButton transport. Reads the buffered waterline out of the element's own TimeRanges, keeps duration null for a stream instead of pinning the bar, and has a compact single-row layout for dropping into a list.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@duck/theme",
+        "@duck/duck-media-slider",
+        "@duck/duck-volume",
+        "@duck/quack-button"
+      ],
+      "files": [
+        {
+          "path": "registry/duck/ui/duck-audio-player.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "sticker-otp",
       "type": "registry:ui",
       "title": "Sticker OTP",

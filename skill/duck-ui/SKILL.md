@@ -78,6 +78,7 @@ All imports are `@/components/ui/<name>`, the hook is `@/hooks/use-holo-pointer`
 | `DuckSlider` | `value`, `defaultValue`, `min`, `max`, `step`, `formatValue`, `showValue`. Single value, no range |
 | `DuckMediaSlider` | `value`, `defaultValue`, `buffered` (0–1 fraction of the track), `preview: (value) => ReactNode`, `dense`, `onScrub` (live), `onSeek` (commit), `formatValue`. Seek bar: holds the value while dragging so `timeupdate` cannot fight the thumb; also exports `formatTimecode` |
 | `DuckVolume` | `volume`, `defaultVolume`, `muted`, `defaultMuted`, `onVolumeChange`, `onMutedChange`, `collapsible`. Mute toggle plus a slider that collapses when idle; volume 0 reads as silence without flipping `muted` |
+| `DuckAudioPlayer` | `src`, `title`, `compact`, `defaultVolume`, `defaultMuted`, `skip` (default 15s, default layout only), plus native `loop` / `preload`. Wires one `<audio>` to `DuckMediaSlider` + `DuckVolume` + a `QuackButton` transport; `duration` stays `null` for a stream so the bar is disabled rather than pinned, `buffered` comes from the range holding the playhead, and `compact` is one frameless row for a list |
 | `StickerOtp` | `length`, `value`, `defaultValue`, `onValueChange`, `onComplete` |
 | `StickerDrop` | `accept`, `multiple`, `maxSize`, `files`, `onFilesChange`, `label`, `hint`. Pass `files` whenever a submit can clear the form: it makes the zone controlled, so `setFiles([])` empties the sheet with no remount |
 | `DuckTabs` (+ `List`, `Trigger`, `Content`) | `value`, `defaultValue`, `onValueChange` |

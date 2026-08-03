@@ -2,6 +2,7 @@ import AnnouncementDemo from "./announcement";
 import CodeSnippetDemo from "./code-snippet";
 import CodeWindowDemo from "./code-window";
 import CopyButtonDemo from "./copy-button";
+import DuckAudioPlayerDemo from "./duck-audio-player";
 import DuckButtonGroupDemo from "./duck-button-group";
 import DuckChartDemo from "./duck-chart";
 import DuckListRowDemo from "./duck-list-row";
@@ -60,6 +61,7 @@ export const previews = {
   "code-window": CodeWindowDemo,
   "code-snippet": CodeSnippetDemo,
   "copy-button": CopyButtonDemo,
+  "duck-audio-player": DuckAudioPlayerDemo,
   "duck-button-group": DuckButtonGroupDemo,
   "duck-chart": DuckChartDemo,
   "duck-list-row": DuckListRowDemo,

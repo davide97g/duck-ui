@@ -1568,6 +1568,72 @@ export const components: ComponentDoc[] = [
     ],
   },
   {
+    slug: "duck-audio-player",
+    title: "Duck Audio Player",
+    summary:
+      "The native audio bar, replaced: one <audio> element with the seek bar, the tap and a QuackButton transport wired to it, in a full card or a single compact row.",
+    category: "Inputs",
+    client: true,
+    dependencies: ["lucide-react"],
+    registryDependencies: [
+      "@duck/theme",
+      "@duck/duck-media-slider",
+      "@duck/duck-volume",
+      "@duck/quack-button",
+    ],
+    exports: ["DuckAudioPlayer"],
+    props: [
+      {
+        name: "src",
+        type: "string",
+        description:
+          "The audio. Changing it runs the element's load algorithm, which empties it — position, duration and buffered range all reset themselves from the events, with no remount needed.",
+      },
+      {
+        name: "title",
+        type: "string",
+        description:
+          "Shown in the default layout, and folded into the accessible name of every control. A string, not a node, for exactly that reason: four players on a page must not all have a button called Pause.",
+      },
+      {
+        name: "compact",
+        type: "boolean",
+        default: "false",
+        description:
+          "One row — play, timecode, seek, volume — with the dense 4px seek line and no frame of its own, for a list row that already has one. The default layout is a sticker card with the title, the skip pair and a full-width bar.",
+      },
+      {
+        name: "defaultVolume / defaultMuted",
+        type: "number / boolean",
+        default: "0.7 / false",
+        description:
+          "Starting level, applied to the element in an effect because volume and muted are properties rather than attributes. DuckVolume owns them from then on.",
+      },
+      {
+        name: "skip",
+        type: "number",
+        default: "15",
+        description:
+          "Seconds the back and forward buttons move. Default layout only, and disabled whenever the media is not seekable.",
+      },
+      {
+        name: "loop / preload",
+        type: "native",
+        default: 'false / "metadata"',
+        description:
+          "Passed straight to the element. Metadata by default so the duration is known before the first play and the bar does not appear from nowhere.",
+      },
+    ],
+    rules: [
+      "duration is null until the element knows, and stays null for anything with no finite length. NaN before metadata and Infinity on a live stream are the same fact — there is no bar to draw — so the slider is disabled, the read-out says --:-- and the status line says Live.",
+      "buffered is read from the range holding the playhead, not from the last range. A seek into fresh territory starts a new range and leaves a hole, and the slider draws one fill from zero.",
+      "The seek bar owns its value while you drag it, so timeupdate runs straight into state and currentTime is written once, on commit. Do not add a second source of position.",
+      "The loading read on the transport only claims the first load, before the element is playable at all. QuackButton disables itself while busy, and taking Pause away from someone waiting out a mid-track stall would be worse than saying nothing.",
+      "No controls on the element, so it has no box and no tab stop: one set of controls, nothing duplicated for a keyboard or a screen reader.",
+      "Compact draws no frame. It is meant to sit inside a row that has one, and two sticker edges nested inside one another read as a mistake.",
+    ],
+  },
+  {
     slug: "sticker-otp",
     title: "Sticker OTP",
     summary:
