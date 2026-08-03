@@ -198,12 +198,18 @@ export default function InstallationPage() {
             it from there, and the spinner renders as two empty rings.
           </p>
           <p>
-            duck/ui is additive, so there is no dialog, dropdown, table or
-            tooltip here — add the standard shadcn/ui ones and the theme styles
-            them on sight. Tooltips stay out on purpose: a hover-only hint reaches
-            neither touch nor the keyboard, so advertise shortcuts inline with{" "}
-            <code>@duck/sticker-kbd</code> and keep shadcn&apos;s{" "}
-            <code>tooltip</code> for labels with nowhere else to go.
+            duck/ui is additive, so there is no dropdown, table or combobox here
+            — add the standard shadcn/ui ones and the theme styles them on
+            sight. The overlays duck does ship are the ones it restyles heavily:{" "}
+            <code>@duck/sticker-dialog</code> and{" "}
+            <code>@duck/sticker-tooltip</code>, both on Radix.
+          </p>
+          <p>
+            A tooltip is still the weakest place to put anything. It is
+            hover-only chrome: absent on touch, gone the moment the pointer
+            leaves. Use it for a label with nowhere else to live — an icon-only
+            control, a truncated value — and advertise shortcuts inline with{" "}
+            <code>@duck/sticker-kbd</code>, where every user can see them.
           </p>
         </Prose>
       </DocSection>

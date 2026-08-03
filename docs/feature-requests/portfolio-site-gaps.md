@@ -21,6 +21,12 @@ earning their place.
 **Order below is the order worth implementing.** §1 is bugs that break or silently corrupt real
 installs; §2 is theming blockers; §3 is missing components; §4 is polish.
 
+> **Status: closed.** Everything below is implemented — §2 as tokens plus `data-variant`,
+> §3 as ten components and two blocks, §4 as four tokens and two props. Each item is annotated
+> with what shipped. The two departures from the request are noted where they occur: the chart
+> is dependency-free SVG rather than a recharts wrapper, and the tooltip landed with the
+> hover-only warning kept in the docs rather than dropped.
+
 ---
 
 ## 1. Bugs — fix first
@@ -91,7 +97,8 @@ duck-styled with no markup changes". The inverse does not hold: a *different* th
 duck styling without markup changes, because the sticker vocabulary lives in hardcoded class names
 rather than in tokens.
 
-Two of these were fixed while migrating (2.1, 2.2). The rest are open.
+Two of these were fixed while migrating (2.1, 2.2). The rest are fixed now; each section ends
+with what shipped.
 
 ### 2.1 `--radius` could not reach zero — fixed
 
@@ -110,7 +117,7 @@ Also a latent duck-side inconsistency: `StickerCard` swaps between `holo-border`
 border-border` (3px) on one boolean prop, so the card's edge visibly thinned whenever `holo` was
 set. All now read `var(--sticker-border)`.
 
-### 2.3 Button label typography is not themeable — open, highest value
+### 2.3 Button label typography is not themeable — fixed
 
 `holo-button.tsx`, `quack-button.tsx`
 
@@ -144,7 +151,19 @@ That split is invisible and nobody will guess it.
 3. At minimum, drop `text-base`/`text-sm` out of the variants and into a token, since those are the
    two that cannot be overridden from CSS at all.
 
-### 2.4 `HoloBadge` hardcodes `rounded-full` and `text-xs font-semibold` — open
+**Shipped:** option 1, and option 3 with it. `--font-button`, `--weight-button`,
+`--tracking-button`, `--case-button` and `--text-button` / `--text-button-sm` / `--text-button-lg`,
+read by rules in `@layer base`; `text-sm`, `text-base` and `font-semibold` are gone from both
+buttons' variants. Five badge equivalents do the same for `HoloBadge`.
+
+One correction to the plan: those rules cannot use `:where()`. Preflight declares
+`button { font: inherit }` in the same layer, and a `(0,0,1)` type selector beats `(0,0,0)` — every
+button inherited 16px/400 from the body. Plain attribute selectors are `(0,1,0)`: above preflight,
+still below every utility, which is the property that matters. Verified in a browser: default
+14px/600, `sm` 12px, `lg` 16px, `className="text-xs font-normal"` still wins at 12px/400, and the
+same button inside `.theme-noir` comes out mono uppercase 12px/500 at 0.16em.
+
+### 2.4 `HoloBadge` hardcodes `rounded-full` and `text-xs font-semibold` — fixed
 
 Same shape as 2.3. `rounded-full` is `9999px` and therefore immune to the radius scale, so a
 square-cornered theme cannot get a square badge from any token. The site's five tag call sites read:
@@ -157,7 +176,10 @@ square-cornered theme cannot get a square badge from any token. The site's five 
 Four of those five classes exist purely to undo the component's own base. `rounded-full` is right
 for a *status pill* and wrong for a *tag*; that is a shape variant, not a theme override.
 
-### 2.5 Variants are invisible to CSS — open
+**Shipped:** `shape="pill" | "tag"` — pill stays `rounded-full`, tag follows the radius scale — plus
+the badge token set, so all five of those undo classes go away.
+
+### 2.5 Variants are invisible to CSS — fixed
 
 No duck component emits `data-variant`. `data-slot="holo-button"` tells you it is a button but not
 whether it is primary or outline, so a theme cannot say "outline buttons get a faint fill on hover"
@@ -167,7 +189,12 @@ by hand only to the outline ones.
 **Fix:** emit `data-variant={variant}` and `data-size={size}` next to `data-slot`. One line per
 component, and it makes every component themeable from the stylesheet.
 
-### 2.6 `StickerCard` has no `asChild` — open
+**Shipped:** on `HoloButton`, `QuackButton`, `HoloBadge` (plus `data-shape`), `HoloAvatar`,
+`HudLabel`, `DuckSwitch`, `StickerProgress`, `StickerCard` and `VideoCard`. The variant props now
+carry their cva defaults at the destructure, so the attribute is present even when nothing was
+passed. `data-size` also selects the font-size step in 2.3, which is what ties the two together.
+
+### 2.6 `StickerCard` has no `asChild` — fixed
 
 `StickerMediaCard` has it. `StickerCard` does not, and the two are otherwise the same idea. Ten of
 the site's surfaces are whole-card links (`<a class="panel">`), which is not expressible:
@@ -178,7 +205,10 @@ the site's surfaces are whole-card links (`<a class="panel">`), which is not exp
 
 The site kept its `.panel` class for all ten. Add `asChild` for parity.
 
-### 2.7 The mascot is not swappable in `QuackButton` — open
+**Shipped:** `asChild` on `StickerCard`, using `Slottable` so the decorations land inside the
+consumer's `<a>` rather than beside it. `ticks` and `glass` from §4 landed on the same component.
+
+### 2.7 The mascot is not swappable in `QuackButton` — fixed
 
 `QuackButton state="loading"` renders `DuckGlyph`, and `markSrc` accepts **an image URL only**.
 A theme with no mascot has nowhere to put a plain spinner or a lucide icon, and the default
@@ -189,6 +219,9 @@ The site wanted QuackButton's state machine for the OTP submit and used `HoloBut
 
 **Fix:** let `markSrc` take `React.ReactNode`, or add a `loadingIndicator` prop. `EmptyPond` already
 gets this right with its `art` prop — that is the pattern to copy.
+
+**Shipped:** `loadingIndicator?: React.ReactNode`, which replaces the mark entirely. `markSrc` stays
+a string for the case where an image is what you want.
 
 ---
 
@@ -213,6 +246,27 @@ Listed by how much site code each would delete. Everything here stayed hand-roll
 | 13 | **Scroll progress rail** | `ScrollRail.tsx` | |
 | 14 | **Grain overlay** | `.grain` | duck-ui has `.grain` in its own `globals.css` but does not publish it in the theme item. One-line fix. |
 
+**Shipped: all fourteen.** As registry items: `@duck/duck-prose`, `@duck/sticker-tooltip`,
+`@duck/duck-marquee`, `@duck/duck-reveal`, `@duck/duck-timeline`, `@duck/duck-stat-grid`,
+`@duck/duck-list-row`, `@duck/duck-section-marker`, `@duck/duck-scroll-rail`, `@duck/duck-chart`,
+and two blocks, `@duck/duck-site-header` and `@duck/duck-site-footer`. Rows 9 and 14 belong to the
+theme rather than to a component: `.display-xl` / `-lg` / `-md` and `.grain` now ship in the theme
+item, the display classes declared through `:where()` so a page can still put `text-4xl` over them.
+
+Two notes on how they differ from the request:
+
+- **Chart (12).** Neither option in the report — the tokens are rendered, but by ~200 lines of SVG
+  with no charting dependency, and the numbers are also emitted as a visually hidden table. It is a
+  figure in a page, not a data product; the docs say to reach for recharts or visx when the chart
+  *is* the product.
+- **Tooltip (2).** The installation page used to say tooltips were out on purpose, because a
+  hover-only hint reaches neither touch nor the keyboard. Radix answers the keyboard half, so the
+  component shipped — but the warning stayed, moved onto the component page and reworded rather than
+  deleted. It is for a label with nowhere else to live.
+- **Reveal (4).** Published with the `prefers-reduced-motion` arm the report asked for: reduced
+  motion renders the *final* state rather than skipping the animation, which is the bug that leaves
+  a section invisible for good.
+
 ### 3.1 `VideoCard` cannot link out
 
 Worth calling out separately because the component exists but does not fit. `VideoCard` always
@@ -222,6 +276,9 @@ third-party player on a page with a strict consent banner.
 
 There is no `href` mode, so the eight cards stayed hand-rolled. Add `href` (mutually exclusive with
 the embed) and the component covers both.
+
+**Shipped:** `href`, plus `target`, `rel` and `onClick`. In link mode the play glyph becomes an out
+arrow and the rel is `noopener` without `noreferrer`, so the destination can still credit the visit.
 
 ---
 
@@ -246,6 +303,15 @@ the embed) and the component covers both.
   was `Unterminated string` deep in a Vite stack trace. Registry `css` blocks are JSON and safe, but
   any prose duck ships into a consumer's stylesheet should avoid the character.
 
+**Shipped:** `--sheen`; `ticks` and `glass` props on `StickerCard`, the latter reading `--glass` and
+`--glass-blur`; `--surface` / `--surface-raised` as a real third step. Two details worth recording:
+
+- Those surface tokens are spelled out per theme block rather than aliased as `var(--card)`. A custom
+  property is substituted where it is *declared*, so one alias in `:root` would hand the light card
+  to `.dark` and to every scoped theme.
+- The apostrophe trap is now in the theming docs, next to the `:where()` specificity trap, and every
+  apostrophe has been taken out of this repo's own CSS comments.
+
 ---
 
 ## Appendix: what the noir theme proves
@@ -256,5 +322,9 @@ left: square corners, hairline edges, holo flattened to a single lime gradient, 
 de-bounced.
 
 It is worth keeping as a permanent test. Every item in §2 was found by trying to express it, and the
-ones still open are precisely the places where a component ignores the theme. If a future component
-looks right in noir as well as in duck, its vibe is in its tokens where it belongs.
+ones that were open were precisely the places where a component ignored the theme. If a future
+component looks right in noir as well as in duck, its vibe is in its tokens where it belongs.
+
+Noir now also carries the control-typography and surface tokens, so its CTA vocabulary — mono,
+uppercase, 0.16em, weight 500, one size — is five declarations in a theme block instead of a class on
+every button. That is the shape the next theme should be able to copy.
