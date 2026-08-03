@@ -5,6 +5,7 @@ import CopyButtonDemo from "./copy-button";
 import DuckAudioPlayerDemo from "./duck-audio-player";
 import DuckButtonGroupDemo from "./duck-button-group";
 import DuckChartDemo from "./duck-chart";
+import DuckListHeaderDemo from "./duck-list-header";
 import DuckListRowDemo from "./duck-list-row";
 import DuckMarkDemo from "./duck-mark";
 import DuckMarqueeDemo from "./duck-marquee";
@@ -64,6 +65,7 @@ export const previews = {
   "duck-audio-player": DuckAudioPlayerDemo,
   "duck-button-group": DuckButtonGroupDemo,
   "duck-chart": DuckChartDemo,
+  "duck-list-header": DuckListHeaderDemo,
   "duck-list-row": DuckListRowDemo,
   "duck-mark": DuckMarkDemo,
   "duck-marquee": DuckMarqueeDemo,

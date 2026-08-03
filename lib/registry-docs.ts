@@ -2117,6 +2117,51 @@ export const components: ComponentDoc[] = [
     ],
   },
   {
+    slug: "duck-list-header",
+    title: "Duck List Header",
+    summary:
+      "Column labels over a stack of list rows, with a sort control and a column contract the header and the rows share.",
+    category: "Navigation",
+    dependencies: ["lucide-react"],
+    registryDependencies: ["@duck/theme", "@duck/hud-label", "@duck/duck-list-row"],
+    exports: ["DuckList", "DuckListHeader"],
+    props: [
+      {
+        name: "columns",
+        type: "{ key: string; label: React.ReactNode; width?: string; sortable?: boolean }[]",
+        description:
+          "The contract. key matches sort.key, width is any grid track that sizes without content (1fr, 8rem, 15%) and defaults to an even share, sortable draws the label as a button.",
+      },
+      {
+        name: "sort",
+        type: '{ key: string; direction: "ascending" | "descending" }',
+        description: "Which column the rows are ordered by. Controlled — sort your own data.",
+      },
+      {
+        name: "onSortChange",
+        type: "(sort: DuckListSort) => void",
+        description:
+          "The column clicked and the direction it wants next: ascending on a new column, flipped on the current one.",
+      },
+      {
+        name: "header",
+        type: "boolean",
+        default: "true",
+        description:
+          "On DuckList: set false for a column-aligned list that wants no labels over it.",
+      },
+    ],
+    rules: [
+      "DuckList writes the track list once as --duck-list-cols and every DuckListRow with cells reads it. A width class on a row is the bug this component exists to remove.",
+      "Tracks have to size without looking at content: 1fr, rem, %, minmax(). auto and max-content resolve per row, so the columns stop lining up — which is the whole point of the property.",
+      "A custom property rather than subgrid: subgrid needs every row to be a direct child of the grid, so it breaks the moment a row is wrapped in an <li>, a motion.div or a virtualiser. An inherited property survives any depth of nesting.",
+      'This is not a table. A sortable, column-aligned list is still a list: no role="table", no role="columnheader", and so no aria-sort, which is only defined on a columnheader. Half a table role is worse than plain divs, and the rows are usually anchors — role="row" on an <a> costs you the link.',
+      "Anything that needs row selection, resizable columns or a caption is a real <table>. Use shadcn's; the duck theme already styles it.",
+      'Sort direction is in the sort button\'s accessible name in words — "last seen, sorted descending" — because a chevron is not an announcement.',
+      "Alignment is deliberately not part of the contract. A right-aligned numeric column would need the same class on the header cell and on every row cell, which is the copying the contract exists to stop. If you need it, you need a table.",
+    ],
+  },
+  {
     slug: "duck-list-row",
     title: "Duck List Row",
     summary:
@@ -2131,6 +2176,12 @@ export const components: ComponentDoc[] = [
       { name: "meta", type: "React.ReactNode", description: "Date, tag, reading time — the quiet half of the row." },
       { name: "trailing", type: "React.ReactNode", description: "Right edge: a chevron, a value, a badge." },
       {
+        name: "cells",
+        type: "React.ReactNode[]",
+        description:
+          "One node per column after the first, in header order. The first column is always the index / title / description block, so a three-column header takes two cells. Passing this puts the row on the shared --duck-list-cols contract.",
+      },
+      {
         name: "asChild",
         type: "boolean",
         default: "false",
@@ -2141,6 +2192,8 @@ export const components: ComponentDoc[] = [
     rules: [
       "A row that is a link should be one anchor. Not an anchor around the title with a card around that — one focus stop, one hover target.",
       "The leading rule is a scaleY transform rather than a width, so the hover costs a composited property and nothing on the main thread.",
+      "With cells the row is a grid on the track list DuckList writes, so no row carries a width of its own. Without a DuckList above it, it falls back to an even split weighted towards the title.",
+      "A column row does not shift right on hover the way a feed row does: columns that jump out of line with their header read as a bug rather than as a response. It still grows the leading rule, and reserves the gutter for it permanently.",
     ],
   },
   {

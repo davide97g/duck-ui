@@ -1706,10 +1706,30 @@
       ]
     },
     {
+      "name": "duck-list-header",
+      "type": "registry:ui",
+      "title": "Duck List Header",
+      "description": "Column labels over a stack of DuckListRows, with a sort control and a column contract the header and the rows actually share. DuckList writes the track list once as --duck-list-cols, so a column width is declared in one place instead of copied onto every row. Plain divs, no table roles: the sort direction is announced in words. Row selection or resizable columns want a real <table> instead.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@duck/theme",
+        "@duck/hud-label",
+        "@duck/duck-list-row"
+      ],
+      "files": [
+        {
+          "path": "registry/duck/ui/duck-list-header.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "duck-list-row",
       "type": "registry:ui",
       "title": "Duck List Row",
-      "description": "The unit of a journal index, a project list, a changelog: HUD ordinal, title, meta, and a leading rule that grows in on hover while the row shifts to make room. asChild makes the whole row one link.",
+      "description": "The unit of a journal index, a project list, a changelog: HUD ordinal, title, meta, and a leading rule that grows in on hover while the row shifts to make room. asChild makes the whole row one link. Pass cells and the row lays itself out on the shared --duck-list-cols track list instead, for a column-aligned admin list under a DuckListHeader.",
       "registryDependencies": [
         "@duck/theme",
         "@duck/hud-label"
