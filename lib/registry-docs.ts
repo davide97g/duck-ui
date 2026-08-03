@@ -2144,6 +2144,154 @@ export const components: ComponentDoc[] = [
       "The theme has shipped --chart-1 through --chart-5 since the first release. This is what renders them.",
     ],
   },
+  {
+    slug: "duck-button-group",
+    title: "Duck Button Group",
+    summary:
+      "Shared geometry for a cluster of buttons that act: one seam instead of two borders, outer corners on the ends only, and a choice between three tab stops and one.",
+    category: "Actions",
+    client: true,
+    dependencies: ["class-variance-authority"],
+    registryDependencies: ["@duck/theme"],
+    exports: ["DuckButtonGroup", "duckButtonGroupVariants"],
+    props: [
+      {
+        name: "orientation",
+        type: '"horizontal" | "vertical"',
+        default: '"horizontal"',
+        description:
+          "Which way the cluster runs. It also picks the seam edge, which corners the ends keep, and — for a toolbar — which two arrow keys move focus.",
+      },
+      {
+        name: "joined",
+        type: "boolean",
+        default: "true",
+        description:
+          "Collapse the shared edges so the cluster reads as one control with dividers. False leaves each child its own border and a gap-2 between them; override the gap with a gap-* class.",
+      },
+      {
+        name: "toolbar",
+        type: "boolean",
+        default: "false",
+        description:
+          'role="toolbar" plus a roving tabindex: one tab stop for the whole cluster, arrows inside it, Home and End to the ends, both wrapping. Off, it is a role="group" and every button keeps its own stop.',
+      },
+      {
+        name: "aria-label / aria-labelledby",
+        type: "string",
+        description:
+          "One of the two is required by the types. A group or a toolbar with no name is announced as an unnamed container.",
+      },
+      {
+        name: "className",
+        type: "string",
+        description:
+          "Merged over the group. A rounded-* class here changes the cluster's outer corners — the end children inherit the group's radius rather than carrying their own.",
+      },
+    ],
+    rules: [
+      "Joined is for buttons doing one job — zoom in, zoom out, reset. Unjoined is for separate actions that merely travel together; a fused Save and Delete reads as one control and invites the wrong press.",
+      'role="group" is the default because three buttons are expected to cost three Tabs. Set toolbar when the cluster is the screen\'s controls rather than part of a form: an icon-only canvas cluster, or anything past about four buttons.',
+      'No size prop. Children carry their own size — QuackButton size="icon" for a canvas cluster — and the group only shares geometry.',
+      "Style the group, not the children. The [&>*] rules reach a plain button or an anchor exactly as they reach a QuackButton, so nothing has to be a duck component to sit in here.",
+      "Never put overflow-hidden on the group. The overlap means a middle child's focus ring is already sitting over its neighbour; clipping it is the bug this component exists to avoid.",
+      "A toolbar button that disables itself while focused takes the focus with it. Clamp the action instead — arrows skip disabled items, so a permanently disabled one is fine and a self-disabling one is not.",
+    ],
+  },
+  {
+    slug: "duck-viewport",
+    title: "Duck Viewport",
+    summary:
+      "A pan and zoom container: the point under the pointer stays under the pointer, a drag that leaves the element keeps following, and the transform goes straight to the DOM so a pan costs no renders.",
+    category: "Surfaces",
+    client: true,
+    dependencies: ["lucide-react"],
+    registryDependencies: ["@duck/theme", "@duck/quack-button", "@duck/duck-button-group"],
+    exports: ["DuckViewport", "DuckViewportControls"],
+    props: [
+      {
+        name: "min / max",
+        type: "number",
+        default: "0.25 / 4",
+        description:
+          "Scale limits. Every path clamps to them — wheel, pinch, keys and the ref alike.",
+      },
+      {
+        name: "initial",
+        type: "Partial<{ x: number; y: number; scale: number }>",
+        default: "{ x: 0, y: 0, scale: 1 }",
+        description:
+          "Starting transform, read once on mount, and where reset goes back to. Uncontrolled, like defaultValue — changing it later does nothing.",
+      },
+      {
+        name: "zoomStep",
+        type: "number",
+        default: "1.25",
+        description:
+          "Multiplier for zoomIn, zoomOut and the + / - keys. The wheel is continuous and does not use it.",
+      },
+      {
+        name: "panStep",
+        type: "number",
+        default: "48",
+        description: "Pixels an arrow key moves the view. Shift multiplies it by three.",
+      },
+      {
+        name: "wheelZoom",
+        type: "boolean",
+        default: "true",
+        description:
+          "Turn the wheel handler off where the page needs to scroll through the viewport. Drag, pinch and the keys still work.",
+      },
+      {
+        name: "onTransformChange",
+        type: "(transform: { x: number; y: number; scale: number }) => void",
+        description:
+          "Fires at most once per frame, after the DOM has already moved. For a zoom read-out or a persisted view — not for driving the transform.",
+      },
+      {
+        name: "ref",
+        type: "Ref<DuckViewportHandle>",
+        description:
+          "getTransform, zoomIn, zoomOut, zoomTo(scale, anchor?), panBy(dx, dy), reset. Programmatic moves ease; under prefers-reduced-motion they snap.",
+      },
+      {
+        name: "viewport",
+        type: "RefObject<DuckViewportHandle | null>",
+        description:
+          "DuckViewportControls only. The ref you gave the viewport. The cluster is a sibling, so it is passed rather than found.",
+      },
+      {
+        name: "orientation",
+        type: '"vertical" | "horizontal"',
+        default: '"vertical"',
+        description: "DuckViewportControls only. Stacking direction of the three buttons.",
+      },
+      {
+        name: "zoomInLabel / zoomOutLabel / resetLabel",
+        type: "string",
+        default: '"Zoom in" / "Zoom out" / "Reset view"',
+        description:
+          "DuckViewportControls only. The buttons are icon-only, so these are their accessible names.",
+      },
+      {
+        name: "aria-label",
+        type: "string",
+        default: '"View controls"',
+        description:
+          "DuckViewportControls only. It renders a DuckButtonGroup toolbar, and a toolbar needs a name.",
+      },
+    ],
+    rules: [
+      "It is a viewport, not a graph renderer. It never looks at its children: a knowledge graph, an image lightbox, a zoomable diagram and the canvas of an editor are all the same interaction, and everything that knows about nodes and edges stays in the application.",
+      "The wheel listener is registered through addEventListener with passive: false. React's onWheel is delegated and passive, so preventDefault() inside it is ignored and the page scrolls, or macOS runs its swipe-back, while you zoom. Never replace it with an onWheel prop.",
+      "No React state holds the transform. Read it with getTransform, or take onTransformChange, but do not try to drive the viewport from props — a pan writes element.style sixty times a second on purpose.",
+      "Give the host a height and an aria-label. It is focusable, and arrows, + / - and 0 are the whole keyboard story.",
+      "Chromeless by design: no border, no background. Put the sticker edge on the wrapper, and absolutely position DuckViewportControls inside that wrapper so it does not pan away with the content.",
+      "The cluster is a DuckButtonGroup toolbar: one tab stop, arrows inside it. A canvas already owns the arrow keys, so its controls should not also cost three Tabs.",
+      "The cluster's buttons never disable at the limits. Knowing when to would mean subscribing to the transform, which puts the pan back into React; clamping already makes the press a no-op.",
+    ],
+  },
 ];
 
 export function getComponent(slug: string) {

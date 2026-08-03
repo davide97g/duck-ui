@@ -1751,6 +1751,44 @@
       ]
     },
     {
+      "name": "duck-button-group",
+      "type": "registry:ui",
+      "title": "Duck Button Group",
+      "description": "Shared geometry for a cluster of buttons that act. Joined by default: children after the first pull back by --sticker-border so two edges land on each other and read as one divider, the outer radius stays on the ends only, and the focus ring is raised above the neighbour overlapping it. role=\"group\" with three tab stops, or role=\"toolbar\" with one tab stop and arrow keys on the axis it advertises. Styles whatever child it is handed.",
+      "dependencies": [
+        "class-variance-authority"
+      ],
+      "registryDependencies": [
+        "@duck/theme"
+      ],
+      "files": [
+        {
+          "path": "registry/duck/ui/duck-button-group.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "duck-viewport",
+      "type": "registry:ui",
+      "title": "Duck Viewport",
+      "description": "A pan and zoom container for somebody else's canvas: cursor-anchored wheel zoom, pointer-drag panning with capture, two-finger pinch, and the keyboard. The wheel listener is registered by hand with passive: false, because React's onWheel cannot preventDefault and the page scrolls out from under the zoom. The transform is written straight to element.style, so a pan costs no renders.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@duck/theme",
+        "@duck/quack-button",
+        "@duck/duck-button-group"
+      ],
+      "files": [
+        {
+          "path": "registry/duck/ui/duck-viewport.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "duck-hero",
       "type": "registry:block",
       "title": "Duck Hero",

@@ -2,6 +2,7 @@ import AnnouncementDemo from "./announcement";
 import CodeSnippetDemo from "./code-snippet";
 import CodeWindowDemo from "./code-window";
 import CopyButtonDemo from "./copy-button";
+import DuckButtonGroupDemo from "./duck-button-group";
 import DuckChartDemo from "./duck-chart";
 import DuckListRowDemo from "./duck-list-row";
 import DuckMarkDemo from "./duck-mark";
@@ -18,6 +19,7 @@ import DuckSwitchDemo from "./duck-switch";
 import DuckTabsDemo from "./duck-tabs";
 import DuckThinkingDemo from "./duck-thinking";
 import DuckTimelineDemo from "./duck-timeline";
+import DuckViewportDemo from "./duck-viewport";
 import DuckVolumeDemo from "./duck-volume";
 import EmptyPondDemo from "./empty-pond";
 import GlowInputDemo from "./glow-input";
@@ -58,6 +60,7 @@ export const previews = {
   "code-window": CodeWindowDemo,
   "code-snippet": CodeSnippetDemo,
   "copy-button": CopyButtonDemo,
+  "duck-button-group": DuckButtonGroupDemo,
   "duck-chart": DuckChartDemo,
   "duck-list-row": DuckListRowDemo,
   "duck-mark": DuckMarkDemo,
@@ -74,6 +77,7 @@ export const previews = {
   "duck-tabs": DuckTabsDemo,
   "duck-thinking": DuckThinkingDemo,
   "duck-timeline": DuckTimelineDemo,
+  "duck-viewport": DuckViewportDemo,
   "duck-volume": DuckVolumeDemo,
   "empty-pond": EmptyPondDemo,
   "glow-input": GlowInputDemo,
