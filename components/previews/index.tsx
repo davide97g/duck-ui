@@ -5,6 +5,7 @@ import CopyButtonDemo from "./copy-button";
 import DuckAudioPlayerDemo from "./duck-audio-player";
 import DuckButtonGroupDemo from "./duck-button-group";
 import DuckChartDemo from "./duck-chart";
+import DuckCommandDemo from "./duck-command";
 import DuckListHeaderDemo from "./duck-list-header";
 import DuckListRowDemo from "./duck-list-row";
 import DuckMarkDemo from "./duck-mark";
@@ -25,6 +26,7 @@ import DuckViewportDemo from "./duck-viewport";
 import DuckVolumeDemo from "./duck-volume";
 import EmptyPondDemo from "./empty-pond";
 import GlowInputDemo from "./glow-input";
+import GlowSearchDemo from "./glow-search";
 import HoloAvatarDemo from "./holo-avatar";
 import HoloBadgeDemo from "./holo-badge";
 import HoloButtonDemo from "./holo-button";
@@ -65,6 +67,7 @@ export const previews = {
   "duck-audio-player": DuckAudioPlayerDemo,
   "duck-button-group": DuckButtonGroupDemo,
   "duck-chart": DuckChartDemo,
+  "duck-command": DuckCommandDemo,
   "duck-list-header": DuckListHeaderDemo,
   "duck-list-row": DuckListRowDemo,
   "duck-mark": DuckMarkDemo,
@@ -85,6 +88,7 @@ export const previews = {
   "duck-volume": DuckVolumeDemo,
   "empty-pond": EmptyPondDemo,
   "glow-input": GlowInputDemo,
+  "glow-search": GlowSearchDemo,
   "holo-avatar": HoloAvatarDemo,
   "holo-badge": HoloBadgeDemo,
   "holo-button": HoloButtonDemo,

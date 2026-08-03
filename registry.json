@@ -1097,6 +1097,26 @@
       ]
     },
     {
+      "name": "glow-search",
+      "type": "registry:ui",
+      "title": "Glow Search",
+      "description": "A search field rather than a text field: leading icon, a clear button that appears with the first character and returns focus to the input, an optional ⌘K keycap hint, and a debounced onSearch. Typing debounces; Enter, Escape and clear flush. The frame is on the wrapper and the field inside it is frame={false}, so one edge holds the lot. The hint is a hint — the shortcut belongs to DuckCommand.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@duck/theme",
+        "@duck/glow-input",
+        "@duck/sticker-kbd"
+      ],
+      "files": [
+        {
+          "path": "registry/duck/ui/glow-search.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "duck-tabs",
       "type": "registry:ui",
       "title": "Duck Tabs",
@@ -1825,6 +1845,28 @@
       "files": [
         {
           "path": "registry/duck/ui/duck-viewport.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "duck-command",
+      "type": "registry:ui",
+      "title": "Duck Command",
+      "description": "The ⌘K palette, built on StickerDialog and a filtered listbox rather than on cmdk. The input never loses focus: the arrow keys move aria-activedescendant through the results, Enter runs the active row, and the rows are options rather than tab stops. Takes a declarative items array, so filtering needs no DOM registry.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@duck/theme",
+        "@duck/sticker-dialog",
+        "@duck/glow-input",
+        "@duck/hud-label",
+        "@duck/sticker-kbd"
+      ],
+      "files": [
+        {
+          "path": "registry/duck/ui/duck-command.tsx",
           "type": "registry:ui"
         }
       ]

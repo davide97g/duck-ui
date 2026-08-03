@@ -1201,6 +1201,81 @@ export const components: ComponentDoc[] = [
     ],
   },
   {
+    slug: "glow-search",
+    title: "Glow Search",
+    summary:
+      "A search field rather than a text field: leading icon, a clear button, a ⌘K hint and a debounced onSearch.",
+    category: "Inputs",
+    client: true,
+    dependencies: ["lucide-react"],
+    registryDependencies: ["@duck/theme", "@duck/glow-input", "@duck/sticker-kbd"],
+    exports: ["GlowSearch"],
+    props: [
+      {
+        name: "value",
+        type: "string",
+        description: "Controlled query. Pair with onChange, as with any input.",
+      },
+      {
+        name: "defaultValue",
+        type: "string",
+        default: '""',
+        description: "Uncontrolled starting query.",
+      },
+      {
+        name: "onSearch",
+        type: "(value: string) => void",
+        description:
+          "The debounced query, after the typing stops. Hang the fetch or the filter off this one; onChange still fires per keystroke.",
+      },
+      {
+        name: "debounce",
+        type: "number",
+        default: "250",
+        description: "Milliseconds of quiet before onSearch fires. 0 fires on every keystroke.",
+      },
+      {
+        name: "kbd",
+        type: "ReactNode",
+        description:
+          'Keycap hint drawn in a StickerKbd while the field is empty — "⌘K", "/". A hint, not a binding: nothing global is registered here.',
+      },
+      {
+        name: "placeholder",
+        type: "string",
+        default: '"Search"',
+        description: "Also the fallback accessible name when nothing else names the field.",
+      },
+      {
+        name: "clearLabel",
+        type: "string",
+        default: '"Clear search"',
+        description: "Accessible name of the clear button.",
+      },
+      {
+        name: "className",
+        type: "string",
+        description: "Styles the frame. Every other prop lands on the field.",
+      },
+      {
+        name: "inputClassName",
+        type: "string",
+        description:
+          "Styles the field inside the frame, for the rare case the type has to move.",
+      },
+    ],
+    rules: [
+      "onChange fires on every keystroke, onSearch once the typing stops. Put the query on onSearch — that is the whole reason the component exists.",
+      "Typing debounces; Enter, Escape and the clear button flush. All three are decisions rather than keystrokes on the way to one, and Enter fires even if the timer already ran.",
+      "Escape clears only when there is a value. On an empty field the key goes through to the dialog or palette above, so a search box inside one is never a trap.",
+      "The ⌘K hint is a hint. This component registers no global listener — bind the shortcut where the palette lives, and print the key the platform actually uses (⌘ on Apple, Ctrl elsewhere, decided at runtime).",
+      "The frame is on the wrapper and the field inside it is a frame={false} GlowInput, so the icon, the field and the clear button share one 3px edge and one focus glow. Do not nest it in another bordered box.",
+      'Native type="search" for the searchbox role and the search return key on mobile; the WebKit cancel button is suppressed because the component draws its own clear.',
+      'If this is the page\'s primary search, wrap it in a <search> element or a form with role="search". The component does not claim a landmark on its own — a filter box in a toolbar is not the site search.',
+      "The clear button clears by dispatching a real input event, so a controlled consumer needs nothing beyond the onChange it already has, and focus goes back to the field.",
+    ],
+  },
+  {
     slug: "duck-tabs",
     title: "Duck Tabs",
     summary:
@@ -2409,6 +2484,144 @@ export const components: ComponentDoc[] = [
       "Chromeless by design: no border, no background. Put the sticker edge on the wrapper, and absolutely position DuckViewportControls inside that wrapper so it does not pan away with the content.",
       "The cluster is a DuckButtonGroup toolbar: one tab stop, arrows inside it. A canvas already owns the arrow keys, so its controls should not also cost three Tabs.",
       "The cluster's buttons never disable at the limits. Knowing when to would mean subscribing to the transform, which puts the pan back into React; clamping already makes the press a no-op.",
+    ],
+  },
+  {
+    slug: "duck-command",
+    title: "Duck Command",
+    summary:
+      "The ⌘K palette on StickerDialog and a filtered listbox — no cmdk. The input keeps focus while the arrow keys move aria-activedescendant through the results, so a keystroke is never spent getting back to the field.",
+    category: "Navigation",
+    client: true,
+    dependencies: ["lucide-react"],
+    registryDependencies: [
+      "@duck/theme",
+      "@duck/sticker-dialog",
+      "@duck/glow-input",
+      "@duck/hud-label",
+      "@duck/sticker-kbd",
+    ],
+    exports: ["DuckCommand", "DuckCommandGroup", "DuckCommandItem", "DuckCommandEmpty"],
+    props: [
+      {
+        name: "items",
+        type: "(DuckCommandItemData | DuckCommandGroupData)[]",
+        description:
+          "The rows. An item is { value?, label, hint?, keywords?, icon?, shortcut?, disabled?, onSelect? }; a group is { heading?, items }. Mix them — consecutive bare items collect into one unheaded group.",
+      },
+      {
+        name: "open",
+        type: "boolean",
+        description: "Controlled. Leave it off and the palette runs on its own state.",
+      },
+      {
+        name: "defaultOpen",
+        type: "boolean",
+        default: "false",
+        description: "Uncontrolled start.",
+      },
+      {
+        name: "onOpenChange",
+        type: "(open: boolean) => void",
+        description:
+          "Fires on the shortcut, on Escape, on the scrim and after a selection.",
+      },
+      {
+        name: "onSelect",
+        type: "(value: string, item: DuckCommandItemData) => void",
+        description: "Runs after the item's own onSelect. value falls back to the label.",
+      },
+      {
+        name: "recent",
+        type: "DuckCommandItemData[]",
+        description:
+          "Shown instead of everything while the query is empty. Anything typed searches items.",
+      },
+      {
+        name: "recentLabel",
+        type: "string",
+        default: '"Recent"',
+        description: "Heading over recent.",
+      },
+      {
+        name: "placeholder",
+        type: "string",
+        default: '"Type a command or search…"',
+        description: "Input placeholder.",
+      },
+      {
+        name: "label",
+        type: "string",
+        default: '"Command palette"',
+        description:
+          "Names the dialog, the combobox and the listbox. Not drawn — the input is the only label a palette needs.",
+      },
+      {
+        name: "description",
+        type: "string",
+        description: "Replaces the default sr-only sentence describing the keys.",
+      },
+      {
+        name: "emptyMessage",
+        type: "React.ReactNode",
+        default: '"Nothing matches that."',
+        description: "Body of DuckCommandEmpty.",
+      },
+      {
+        name: "shortcut",
+        type: "boolean | string",
+        default: "true",
+        description:
+          'The global binding. true is Mod+K; a string is a key spec, either "mod+<key>" or a bare "<key>"; false binds nothing. Same keystroke closes what it opened.',
+      },
+      {
+        name: "filter",
+        type: "(item: DuckCommandItemData, query: string) => boolean",
+        description:
+          "Replace the match. The query arrives trimmed and lower-cased. The default is substring across label, hint and keywords, then subsequence across the label.",
+      },
+      {
+        name: "closeOnSelect",
+        type: "boolean",
+        default: "true",
+        description: "Turn off for a palette that stays open while it toggles things.",
+      },
+      {
+        name: "footer",
+        type: "React.ReactNode",
+        description: "A strip under the list, for key hints or a result count.",
+      },
+      {
+        name: "holo",
+        type: "boolean",
+        default: "false",
+        description:
+          "Iridescent ring instead of the die-cut edge. Forwarded to StickerDialogContent.",
+      },
+      {
+        name: "heading",
+        type: "string",
+        description:
+          "On DuckCommandGroup: the group's label, in .hud typography. Omit for a run of rows with no heading.",
+      },
+      {
+        name: "active",
+        type: "boolean",
+        default: "false",
+        description:
+          "On DuckCommandItem: this row is the activedescendant. Highlight and lime rail, not focus — focus stays in the input.",
+      },
+    ],
+    rules: [
+      'items is the API. Composed children are not accepted, because filtering children means a mount-order registry that watches the DOM to know which rows survived and whether "no results" is true — cmdk\'s whole architecture, and the thing this item exists to avoid. Palette rows come from a route table or a fetch anyway.',
+      "DuckCommandGroup, DuckCommandItem and DuckCommandEmpty are the pieces DuckCommand renders. Use them directly only if you are rebuilding the body, and then you own the filtering and the keyboard.",
+      "DuckDashboard's onSearch already binds Mod+K. Wire the palette to it and pass shortcut={false}, or drop onSearch and let the palette own the key — two handlers on one keystroke is the mistake to avoid here.",
+      'A bare-key shortcut (shortcut="/") is ignored while focus is in an input, textarea, select or contenteditable. The Mod+K form is taken everywhere, because ⌘K types no character.',
+      'Rows are role="option" divs, never buttons. A focusable row would put Tab into the results instead of out of the dialog.',
+      "Matches are filtered in place and never re-ranked. A palette whose rows rearrange between keystrokes has to be re-read on every keystroke. Order the array the way you want it read, and put synonyms in keywords.",
+      "Home and End move the active row rather than the caret. The query is a few characters; the list is the point.",
+      'A row\'s shortcut caps are aria-hidden — "command sign, K" read after every row is noise. If the keys matter to a screen reader, put them in hint.',
+      "The panel stays vertically centred. duck-dialog-in carries the centring translate through every frame, so moving top without rewriting those keyframes throws the palette across the viewport on arrival.",
     ],
   },
 ];
