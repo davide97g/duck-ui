@@ -25,6 +25,20 @@ had been faking.
 component file or remount it to work around; §2 is the missing components; §3 is the theme layer;
 §4 is polish and doc drift.
 
+> **Status: closed.** §1 shipped as six props across five components, §2 as ten registry items, §3
+> as a print layer and a mask utility, §4 as a docs pass — two of its four bullets turned out to be
+> true already when this report was filed. Each item below is annotated with what shipped. The
+> departures are recorded where they occur; the ones worth reading first are `StickerDrawer` gaining
+> a body part nobody asked for, `HudChip` being its own control rather than the cheaper prop on
+> `QuackButton`, `DuckCommand` accepting data and not children, and the print layer needing a second
+> block for `theme-noir` that this report did not consider.
+>
+> Two things to know before reading further. `GlowSearch` shipped without the results popover §2.8
+> asked for — results are `DuckCommand`'s job — and one existing default changed its rendering:
+> `HudLabel`'s dot. See §1.4.
+>
+> Released as [docs/releases/2026-08-03-application-layer.md](../releases/2026-08-03-application-layer.md).
+
 ---
 
 ## 1. Coupling — fix first
@@ -66,6 +80,12 @@ default.
 <DuckThinking label="Tuning in…" mark={<BrandMark />} />
 ```
 
+**Shipped:** exactly that — `mark?: React.ReactNode` on both, defaulting to the drawing, rendered
+default unchanged. One detail the sketch above hides: the mark is rendered as given, so
+`DuckThinking`'s default carries its own `[animation:duck-paddle…]` and a replacement opts into the
+paddle rather than inheriting it. Both wells are already `aria-hidden`, so a replacement needs no
+labelling. `DuckSpinner`'s `DUCK_MARK_SRC` is untouched — it was already the invited seam.
+
 ### 1.2 `GlowInput` cannot give up its frame — P1
 
 `registry/duck/ui/glow-input.tsx:5-12`
@@ -95,6 +115,21 @@ and `GlowTextarea`. `bare` drops `.sticker`, the background and the focus glow, 
 the caret, the placeholder and the selection colours. Nested inside a focused parent, the parent
 should carry the glow.
 
+**Shipped:** `frame`, not the variant, and the split is in the source: `fieldBase` now holds what is
+the field — type scale, caret, placeholder, selection, disabled — and `fieldFrame` holds what is the
+object. Both components emit `data-frame="sticker" | "bare"`, so a theme can reach the two cases
+separately. `frame={true}` is byte-for-byte the old class list.
+
+Two departures from the paragraph above. The padding goes with the frame: `px-3 py-2` is drawn by
+`fieldFrame`, because an inline field has to line up with whatever it sits beside rather than
+inside its own inset. And there is no border left to redden, so `aria-invalid` moves into the text
+and the caret (`aria-invalid:text-destructive aria-invalid:caret-destructive`) — a frameless field
+still has to read as wrong.
+
+The layer-order note this section asked for is in the theming docs, next to the `.hud` case that
+raises the same hazard from the other direction, with the general rule attached: a duck utility you
+find yourself stacking negations against probably has a prop.
+
 ### 1.3 `StickerDrop` is uncontrolled with no way to reset — P1
 
 `registry/duck/ui/sticker-drop.tsx:58`
@@ -121,6 +156,12 @@ That works, but a `key` bump to clear a form field is the kind of thing a review
 is the smaller change) or a `ref` exposing `clear()`. Controlled is preferable — every other input in
 the registry is controllable.
 
+**Shipped:** the controlled `files?: File[]`. Pass it and the zone keeps no list of its own, so
+`onFilesChange` becomes intent rather than a notification and `[]` empties the sheet. Uncontrolled
+behaviour is untouched. The live announcement fires either way — controlled or not, the files were
+read — and the focus recovery after a removal still runs on the next frame, so it queries the new
+list in both modes.
+
 ### 1.4 `HudLabel`'s dot is always lime, and there is no accent tone — P2
 
 `registry/duck/ui/hud-label.tsx:38-42` and `:97`
@@ -136,6 +177,16 @@ Two small things in one component:
 
 **Proposed:** add `accent` to `tone`; have the dot inherit the label's tone (`bg-current` plus the
 glow only for `primary`), or add `dotTone`.
+
+**Shipped:** all three — `accent` on `tone`, `bg-current` with the glow only on `primary`, and
+`dotTone` for the case where the dot is meant to disagree with the text. `dotTone` also accepts
+`destructive`, which is not a `tone`: the red dot on a muted row is the case that prompted the prop
+and it has no matching text colour.
+
+This is the one place in the report where an existing default changes what it draws. `<HudLabel dot>`
+inherits `tone="muted"`, so its dot was lime and glowing and is now `--muted-foreground` and flat.
+That is the fix working as asked, not a regression, but it is a visible change: pass
+`dotTone="primary"` to keep the old dot.
 
 ---
 
@@ -163,6 +214,21 @@ registry should have solved once.
 Writes the transform imperatively so a pan costs zero re-renders, exposes
 `zoomIn`/`zoomOut`/`reset` on a ref, and snaps rather than eases under
 `prefers-reduced-motion`.
+
+**Shipped**, with the controls, in one commit — see 2.7, which is where `DuckViewportControls`
+actually lives now. `min` (0.25), `max` (4), `initial`, `zoomStep` (1.25), `panStep` (48),
+`wheelZoom` and `onTransformChange`, throttled to a frame. The ref carries six methods rather than
+three: `getTransform`, `zoomIn`, `zoomOut`, `zoomTo`, `panBy`, `reset`. Pointer capture keeps a drag
+that leaves the element, two pointers pinch about their moving midpoint, and the keyboard is real —
+arrows pan, `+`/`-` zoom, `0` resets. No React state is involved at all.
+
+Two departures from the sketch. Cursor-anchored zoom is arithmetic rather than
+`getScreenCTM().inverse()`: `t' = p − (p − t)·k`, taken after the clamp, so the child can be any
+element and not only an `<svg>`. And `<DuckViewportControls />` takes `viewport={ref}` — it is
+always a sibling of the viewport, never a child, because a child would sit inside the transform and
+pan away with the content, and a context only reaches downward. The buttons also do not disable
+themselves at the scale limits: knowing when to would mean subscribing to the transform, which is
+the one thing this component exists not to do, and clamping already makes the press a no-op.
 
 ### 2.2 `StickerDrawer` — an edge-anchored dialog — P0
 
@@ -194,6 +260,32 @@ Same Radix Dialog base as `StickerDialog`, `side: left | right | top | bottom`, 
 die-cut edge on the side that faces the content, and the frosted scrim `StickerDialog` already has.
 A `size="full"` variant on `StickerDialog` would be worth having regardless.
 
+**Shipped:** `@duck/sticker-drawer`, on the same Radix Dialog base, with the four sides and
+`size: sm | default | lg | full`. `StickerDialogContent` gained `size` on the same scale, where
+`full` drops the centring translate for `inset-0`, owns its own scrolling and fades rather than
+rising — `duck-dialog-in` carries that translate through every frame, so a full-bleed panel would
+otherwise be thrown across the viewport. Default dialog output is unchanged.
+
+Four things the request did not say:
+
+- **`StickerDrawerBody` is a part, and it is not optional.** The panel is as tall as the viewport, so
+  the overflow has to belong to an element the header and the footer sit outside of. Scrolling
+  content goes there or the footer leaves the screen.
+- **`size` is a ceiling, not a height, on top and bottom** — `max-h-[35svh]`, `[50svh]`, `[80svh]`.
+  A filter sheet holding two rows should be two rows tall; only `full` commits to `h-svh`. On left
+  and right there is nothing to hug, so the preset is the width (`max-w-xs`, `-sm`, `-lg`).
+- **`size="full"` drops the inner radius as well.** The radius is on the two corners facing the
+  content and there is none against the viewport edge, because a rounded outer corner there shows the
+  page through the gap. Full-bleed has no inner corner left to round.
+- **One new utility and one keyframe pair.** `.holo-edge` is the iridescent finish for whichever
+  sides already carry a width, because `.holo-border` sets the width itself on all four, which is
+  right for a card and wrong for a panel with one edge. `duck-drawer-in` / `duck-drawer-out`
+  translate by `--drawer-x` / `--drawer-y`, which the side variant writes — two keyframes rather than
+  eight. All three ship with the item, not with `@duck/theme`.
+
+The scrim is a copy of the dialog's three declarations rather than an import of it: a project that
+only wants a drawer should not have to install a dialog to get one.
+
 ### 2.3 `StickerPopover` — P1
 
 The published rule — "for anything duck/ui does not ship, use standard shadcn; the theme already
@@ -204,6 +296,20 @@ theme-only there is a real seam. Channeling has two (a share menu, the mobile na
 
 **Proposed:** `StickerPopover` on Radix Popover, and either a `sticker` prop or a documented
 `className` recipe for shadcn's `DropdownMenuContent` / `SelectContent` so the two can match.
+
+**Shipped:** both halves, and the second one as code rather than as prose. `STICKER_SURFACE` is an
+exported constant — radius, fill, the 3px edge and the glow, no geometry, so padding and width stay
+with whatever is being restyled — and it is the string `StickerPopoverContent` itself wears. A recipe
+printed only in the docs drifts from the component the first time either changes; this one cannot.
+`cn(STICKER_SURFACE, "p-1")` on a stock `DropdownMenuContent` is the whole migration.
+
+The file also says out loud what a popover is not: no roving focus, no typeahead, no `menuitem`
+roles. For a real menu, shadcn's `DropdownMenu` plus the constant is still the answer.
+
+One departure: the arrival is `duck-rise` on the top and bottom sides and a plain fade on left and
+right. The theme has no horizontal-slide keyframe, and a panel rising beside a trigger reads as
+belonging to something else on the page. `holo` panels are also card-coloured rather than
+popover-coloured, because `.holo-border` fills its padding box with `--card`.
 
 ### 2.4 `HudChip` — the interactive HUD label — P1
 
@@ -227,6 +333,22 @@ export function Chip({ active, ...props }: QuackButtonProps & { active?: boolean
 **Proposed:** `HudChip` with `variant: outline | ghost | primary`, `active` for the current-route
 read, and an icon slot. Or — cheaper, since the token plumbing exists — a
 `typography?: "button" | "hud"` prop on `QuackButton`.
+
+**Shipped:** the first option. `HudChip` with `variant: outline | ghost | primary`,
+`size: sm | default`, `active` and `asChild`. `QuackButton` gained no `typography` prop, and the
+cheaper route was the wrong one: a chip that inherits the ripple, the magnet and the idle cycle only
+to suppress all three is more code than the chip is, and the chip needs different padding and
+different colours as well as different type.
+
+Its typography is the `.hud` utility that `@duck/hud-label` already ships, never a second copy — so a
+chip and a label in the same row cannot drift apart, which was the original complaint.
+
+Two departures. `active` paints the current read and emits `data-active` but claims **no ARIA**: the
+same highlight means `aria-current="page"` on a nav link, `aria-pressed` on a filter and
+`aria-selected` in a tablist, so a component that guessed would be wrong two times in three. The call
+site owns the semantics, and the docs say which to use when. And there is no icon slot — icons are
+children, because a slot needs a second slot the first time somebody wants a trailing chevron, and
+lucide children already size themselves here the way they do in every other duck control.
 
 ### 2.5 `HudCode` — the inline citation chip — P1
 
@@ -255,6 +377,23 @@ and therefore zero-specificity, one plain class beats it without `!important`.
 button-in-prose case), plus a "restyling prose internals" recipe in the `DuckProse` docs — the
 `:where()` decision is a feature and should be advertised.
 
+**Shipped:** both. The hand-written CSS above is reproduced through tokens — `bg-primary/10` and
+`border-primary/25` compile to the same `color-mix(in oklab, …)` expressions — so a theme that moves
+`--primary` moves every citation with it.
+
+The departure is what the interactive forms render. `interactive` and `asChild` **replace** the
+`<code>` element rather than wrapping one: a nested `<code>` inside the control would be caught by
+`DuckProse`'s own `code` rule and need three utilities to undo, and "button, tape at 12:04" is a more
+useful announcement than a wrapper most screen readers do not mention anyway. Non-interactive it is a
+real `<code>`.
+
+It also cannot change the leading of the paragraph it sits in, which is why the hover state is fill
+and border only: `transform` does not apply to an inline box, and going `inline-block` to allow one
+would let the padding into the line box.
+
+The `:where()` recipe is now in `HudCode`'s own rules rather than in the prose docs, since that is
+where somebody arrives asking the question, with the `react-markdown` one-liner beside it.
+
 ### 2.6 `DuckAudioPlayer` — P2
 
 `DuckMediaSlider` (with `buffered`, `preview`, `onScrub`/`onSeek` and `formatTimecode`) and
@@ -265,6 +404,26 @@ completely.
 **Proposed:** `DuckAudioPlayer` with `src`, `title`, `compact`, wiring `DuckMediaSlider` +
 `DuckVolume` + a play/pause `QuackButton` to one `<audio>` element.
 
+**Shipped:** exactly that, plus `defaultVolume` (0.7), `defaultMuted`, `loop`, `preload`
+(`"metadata"`, so the duration is known before the first play) and `skip` (15s, default layout only).
+The `<audio>` carries no `controls`, so there is no second set of buttons and no duplicate tab stop.
+
+The parts of a media element that are easy to get wrong come from its own events rather than being
+guessed at. `duration` is `null` until the element knows and stays `null` for anything with no finite
+length — `NaN` before metadata and `Infinity` on a live stream are the same fact, that there is no bar
+to draw — so the slider is disabled, the read-out shows `--:--` and the status line says Live.
+`buffered` is the end of the range holding the playhead rather than the last range, because a seek
+into fresh territory starts a new one and leaves a hole. The drag trap `DuckMediaSlider` already
+solves is respected: `onScrub` feeds only the read-out and `onSeek` is the single writer of
+`currentTime`.
+
+Two judgement calls. The loading state is claimed **only for the first unplayable load**, not for
+every `waiting`: `QuackButton` disables itself while busy, and taking Pause away from someone waiting
+out a mid-track stall is worse than saying nothing, so a later stall surfaces in the status line and
+in a buffered waterline that stops moving. And `compact` draws **no frame at all** rather than merely
+tightening the padding — it exists to sit in a list row that already has a sticker edge, and two of
+those nested reads as a mistake.
+
 ### 2.7 `DuckButtonGroup` / toolbar — P2
 
 Three `QuackButton size="icon"` stacked as a zoom cluster need shared geometry and, ideally, a joined
@@ -272,6 +431,21 @@ edge. Channeling keeps a local `ZOOM_BUTTON` class string. This is the grouping
 `StickerToggleGroup` already does, minus the selection semantics.
 
 **Proposed:** `orientation`, and a `joined` option that collapses shared borders.
+
+**Shipped:** `@duck/duck-button-group`, and this section is where §2.1 ended up — `DuckViewportControls`
+is one of these in `toolbar` mode, so the two arrived in the same commit and the zoom cluster is not a
+component of its own.
+
+Three departures. `joined` is **on by default**, because unjoined this is a flex row with a gap and
+nobody installs a component for that. The seam is an **overlap** — children after the first pull back
+by `--sticker-border` — not a border trim, which would shift content by 3px and destroy any child
+drawing its edge as a background; the focus ring is raised above the neighbour it overlaps, since a
+clipped ring is the bug the component exists to avoid, and the outer radius comes by inheritance, so
+one `rounded-*` on the group resizes the whole cluster. And there is a third prop the request did not
+ask for: `toolbar` swaps `role="group"` and three tab stops for `role="toolbar"`, one tab stop and
+arrow keys on the axis it advertises. That is what a canvas needs — it already owns the arrow keys, so
+its controls should cost one Tab — and an accessible name is required by the types either way, because
+an unnamed toolbar of icon buttons is announced as a container of nothing.
 
 ### 2.8 `GlowSearch`, and a command palette — P2
 
@@ -283,6 +457,38 @@ application-shaped registry arguably wants a palette too — `duck-dashboard` al
 **Proposed:** `GlowSearch` (leading icon, clear button, `⌘K` `StickerKbd`, debounced `onSearch`) and
 `DuckCommand` on the same primitives.
 
+**Shipped:** both, as two items. `GlowSearch` puts the frame on the wrapper and a `frame={false}`
+`GlowInput` inside it — §1.2's seam used for the case it was added for — so the icon, the field and
+the clear button live inside one 3px edge under one `focus-within` glow. Typing debounces
+(`debounce`, 250ms); Enter, Escape and the clear button flush, because all three are decisions
+rather than keystrokes on the way to one. Escape clears only when there is a value, so an empty
+search box inside a dialog is never a trap. The clear button dispatches a real input event, so a
+controlled consumer needs nothing beyond the `onChange` it already has.
+
+Three departures worth recording:
+
+- **No results popover.** This is the one affordance in the list above that did not ship. Results
+  belong to `DuckCommand`, and a field that owns a results panel owns a second focus model with it.
+- **The keycap is a `kbd` prop with no default**, drawn only while the field is empty and
+  `aria-hidden`. It is a hint: no global listener lives in the field, and announcing a binding it
+  does not have would be a lie.
+- **`DuckCommand` accepts only the `items` array — composed children are not accepted at all.**
+  Filtering children means a mount-order DOM registry to know which rows survived, which headings are
+  now empty and whether "no results" is true, which is precisely cmdk's architecture; and palette rows
+  come from a route table, a schema or a fetch rather than from JSX. There is no cmdk either, on the
+  same judgement `DuckChart` made about recharts: a copy-in registry item should not drag an
+  architecture in behind it.
+
+`DuckCommand` is `StickerDialog` plus a filtered listbox, and the interaction that had to be right is
+the combobox one: the input keeps focus at all times while the arrows move `aria-activedescendant`
+through `role="option"` rows, so a keystroke is never spent getting back to the field and Tab still
+leaves the dialog rather than walking the results. Matches are filtered in place and never re-ranked,
+because a list that rearranges between keystrokes has to be re-read on every keystroke.
+
+`duck-dashboard`'s `onSearch` now has something to open. It already binds Mod+K itself, so wire the
+two together with `shortcut={false}` — two handlers on one keystroke is the only mistake available
+here.
+
 ### 2.9 A header for `DuckListRow` — P3
 
 `DuckListRow` fits an admin row well, but there is no header: no column labels, no sort affordance,
@@ -292,6 +498,37 @@ hand with `w-32 sm:w-40` repeated per row.
 **Proposed:** `DuckListHeader` plus a `columns` contract the header and rows share — or an explicit
 docs note that `DuckListRow` is for label-less feeds and that a table is the right answer for
 tabular data.
+
+**Shipped:** the first option, and the second one kept rather than dropped. `DuckList` takes the
+column definitions once and renders the header itself — asking for the same array twice is how a
+header and its rows drift apart — and `DuckListHeader` is exported for the case where the header has
+to live somewhere else, such as sticky above a scroll container. The contract is `--duck-list-cols`,
+a `grid-template-columns` value written on the wrapper and read by the header and by every
+`DuckListRow` with `cells`. Feed rows are untouched.
+
+Subgrid is the obvious choice and is the wrong one: it needs rows to be direct grid children, so it
+dies the moment a row is wrapped in an `<li>`, a `motion.div` or a virtualiser, while an inherited
+property survives any nesting. The price is stated in the type — tracks must size without content, so
+`1fr`, `rem`, `%` and `minmax()` work and `auto` does not.
+
+Three departures:
+
+- **No table roles, and therefore no `aria-sort`**, which the proposal implied. `aria-sort` is only
+  defined on a `columnheader`, which needs a row inside a table, whose owned-element structure this
+  cannot guarantee — rows arrive as a separate component, they are usually anchors, and `role="row"`
+  on an `<a>` costs you the link. Half a table role is worse than plain divs. The sort affordance is a
+  real button per sortable column with the direction in its accessible name in words: "last seen,
+  sorted descending".
+- **The report's second option is kept as a rule.** A sortable, column-aligned list is still a list;
+  row selection, resizable columns or a caption mean a real `<table>`. That sentence is in the
+  component's rules, not deleted because the component shipped.
+- **A column row does not shift right on hover.** Columns jumping out of line with their header read
+  as a bug rather than as a response, so it reserves the 0.75rem gutter permanently and still grows
+  the leading rule. The header reserves the same gutter, or the labels sit left of the cells they
+  name.
+
+`meta` also moves inside the first cell in column mode, under the description: in a tabular row,
+anything that is not a column is a note about the item.
 
 ---
 
@@ -327,6 +564,31 @@ The printed page is then duck light mode and cannot drift from the theme. Worth 
 `:where(.duck-prose)` print rules: `background: none`, hairlines instead of glows,
 `break-inside: avoid` on figures and reference lists.
 
+**Shipped**, in `@duck/theme`, in the shape written above and with three additions.
+
+The hairlines are done through tokens rather than through a print rule per component: `--glow` and
+`--glow-primary` go to `none` and `--sticker-border` to `1px`, so every halo in the system becomes a
+hairline at once and a new component inherits the behaviour without being told. The token block is
+wider than the eight above — `--card-foreground`, `--popover`, `--secondary`, `--destructive`,
+`--input`, `--ring`, `--sheet`, `--sheet-line`, `--cut` and `--vinyl` are all re-asserted, because a
+half-converted palette prints worse than an unconverted one.
+
+The holographic finishes needed rules of their own: `.holo-border`, `.holo-border-animated`, `.foil`
+and `.sheen` are gradients on a surface, which print as a muddy rectangle, and `.holo-text` has no
+fill at all, so on paper it is invisible ink. Those four lose their background and `.holo-text` gets
+`-webkit-text-fill-color` back.
+
+**The addition this report did not consider is `theme-noir`.** It is deliberately dark in both modes
+and its tokens are declared *after* the base theme, so the block above cannot reach it: a noir install
+would have printed a black page. It has a second block of its own, kept in sync with the `theme-noir`
+item, and prints as ink while keeping its hairlines and its square corners. Any future theme that
+overrides the base palette needs the same treatment, which is the general lesson.
+
+The prose rules landed as asked: `background: none` on `pre`, `code`, `blockquote` and `mark`,
+`break-inside: avoid` on figures, blockquotes, code, tables and list items, and `break-after: avoid`
+on `h2`–`h4` so no page breaks directly after a heading. All still `:where()`, so a print-only
+utility at the call site still wins.
+
 ### 3.2 A streaming-edge mask utility — P2
 
 `StreamText` types text out (a demo affordance) and takes `streaming` + `active` for real tokens, but
@@ -341,6 +603,11 @@ text pops in instead of easing. Every LLM product needs this and it is three lin
 
 `#000` there is an alpha stop, not a colour, so it is token-free. Needs a
 `prefers-reduced-motion` reset alongside it.
+
+**Shipped** verbatim, in `@duck/theme`, with the reset — and the reset is a full `mask-image: none`
+rather than a shortened fade, because a permanently faded last line is not a reduced animation, it is
+missing text. It is documented on the motion page beside `StreamText`, which is where somebody looking
+for it will be: `StreamText` animates the arrival of characters and this softens the arrival of lines.
 
 ---
 
@@ -360,6 +627,27 @@ text pops in instead of easing. Every LLM product needs this and it is three lin
 - **`@duck/quack-button` and `@duck/quack-toast` pull in `duck-spinner`, which writes
   `public/duck.svg` into the consumer's repo root.** Expected once you know, surprising the first
   time — worth one line in the installation docs, since it is the only item that ships an asset.
+
+**Shipped**, though two of the four were already true when this report was filed and the other two
+belong to the docs pass alongside this series rather than to the component commits.
+
+- **The `StickerProgressTrack` note was already a rule**, not a prop-table aside: "Inside a link or a
+  button, pass `aria-hidden`…" has been in that component's rules list — the *Rules* section of its
+  page — since the media series. Nothing to promote. Worth recording that the report read it from the
+  prop table, which is where it also appears, and that both copies are correct.
+- **The `SKILL.md` table.** `DuckListRow` went in with §2.9's entry; `DuckSectionMarker`,
+  `DuckScrollRail`, `DuckChart`, `DuckSiteHeader` and `DuckSiteFooter` went in with the docs pass. The
+  table also gained an entry per new item in §2, and the token section gained `.holo-edge`,
+  `.duck-stream-edge`, the four dialog and drawer keyframes and a paragraph on the print layer.
+- **The README count.** Removed rather than corrected, in the docs pass. The number had been wrong
+  twice, so the README now points at the generated inventories — `registry.json` and `/llms-full.txt`,
+  which cannot drift — instead of restating a count by hand. Its component table was short by rather
+  more than this report knew, and the tooltip sentence went with the number. For the record, the
+  registry is 59 UI items and 5 blocks, which is what `scripts/check-registry-sync.mjs` reports.
+- **The `public/duck.svg` line was already in the installation page**, again since the media series.
+  The docs pass extended it rather than adding it: it now says the asset arrives because `quack-button`
+  and `quack-toast` depend on the spinner, and points at `src`, `markSrc` and `loadingIndicator` for a
+  project that wants no mascot at all.
 
 ---
 
@@ -383,3 +671,18 @@ Most of the surface area, and worth recording as the counterweight to the list a
 - The `--sticker-border` / `--radius` / `.duck-glow` vocabulary was coherent enough to replace a
   private one (7px corner-notch `clip-path` plus hard offset shadows) outright, across seven screens,
   without a single "keep the old look here" exception.
+
+---
+
+## What this one taught the theme
+
+The noir theme earned its keep again, and from an angle nobody had aimed at it. The print layer looked
+like a base-theme problem right up to the moment it printed a black page under `.theme-noir`, because
+a theme that overrides the palette is declared *after* the block re-asserting it. That is now a rule
+rather than a bug: a scoped theme owns its own print block, and the next one will be told so before it
+ships rather than after.
+
+The rest of §1 says the same thing in a smaller way. Every one of those four items was a place where a
+utility was correct and had no off switch, and in all four the fix was a prop rather than a rewrite. If
+a consumer is stacking negations against a duck utility, the component is missing an argument — that
+sentence is in the theming docs now, which is the only durable place for it.
