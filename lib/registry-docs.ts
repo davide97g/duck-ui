@@ -611,7 +611,7 @@ export const components: ComponentDoc[] = [
     slug: "sticker-dialog",
     title: "Sticker Dialog",
     summary:
-      "The sticker lifted off the page. Radix Dialog underneath, so the focus trap, scroll lock and aria wiring are real; duck supplies the frosted scrim and the rise into place.",
+      "The sticker lifted off the page. Radix Dialog underneath, so the focus trap, scroll lock and aria wiring are real; duck supplies the frosted scrim and the rise into place. Width presets up to a full-bleed full.",
     category: "Surfaces",
     client: true,
     dependencies: ["@radix-ui/react-dialog", "lucide-react"],
@@ -629,6 +629,13 @@ export const components: ComponentDoc[] = [
       "StickerDialogFooter",
     ],
     props: [
+      {
+        name: "size",
+        type: '"sm" | "default" | "lg" | "full"',
+        default: '"default"',
+        description:
+          "On StickerDialogContent: the width cap. full is a full-bleed panel — inset-0, no centring translate, and it scrolls itself.",
+      },
       {
         name: "holo",
         type: "boolean",
@@ -653,6 +660,79 @@ export const components: ComponentDoc[] = [
       "Always render a StickerDialogTitle. Radix warns without one, and a modal with no accessible name is announced as nothing.",
       "hideClose is for a blocking decision only — a dialog the user cannot leave except through your own buttons.",
       "No idle animation inside a dialog. It already interrupted the page; it does not also get to fidget.",
+      'size="full" is a full-screen dialog, not a panel. Anchor a panel to an edge with StickerDrawer rather than pushing full around with class overrides.',
+    ],
+  },
+  {
+    slug: "sticker-drawer",
+    title: "Sticker Drawer",
+    summary:
+      "The sticker slid in from the edge. Same Radix Dialog base as StickerDialog, anchored to any of the four sides, with the die-cut edge on the side that faces the content.",
+    category: "Surfaces",
+    client: true,
+    dependencies: ["class-variance-authority", "@radix-ui/react-dialog", "lucide-react"],
+    registryDependencies: ["@duck/theme"],
+    exports: [
+      "StickerDrawer",
+      "StickerDrawerTrigger",
+      "StickerDrawerClose",
+      "StickerDrawerPortal",
+      "StickerDrawerOverlay",
+      "StickerDrawerContent",
+      "StickerDrawerHeader",
+      "StickerDrawerTitle",
+      "StickerDrawerDescription",
+      "StickerDrawerBody",
+      "StickerDrawerFooter",
+      "stickerDrawerVariants",
+    ],
+    props: [
+      {
+        name: "side",
+        type: '"left" | "right" | "top" | "bottom"',
+        default: '"right"',
+        description:
+          "On StickerDrawerContent: the edge it is anchored to. The die-cut edge, the inner radius and the slide all follow it.",
+      },
+      {
+        name: "size",
+        type: '"sm" | "default" | "lg" | "full"',
+        default: '"default"',
+        description:
+          "Width on left and right; a ceiling on the height on top and bottom, so a short sheet stays short. full fills the axis and drops the radius.",
+      },
+      {
+        name: "holo",
+        type: "boolean",
+        default: "false",
+        description: "Iridescent edge instead of the solid die-cut one.",
+      },
+      {
+        name: "hideClose",
+        type: "boolean",
+        default: "false",
+        description:
+          "Drop the built-in close button. Escape and the scrim still dismiss unless you intercept them too.",
+      },
+      {
+        name: "closeLabel",
+        type: "string",
+        default: '"Close"',
+        description: "Accessible name for the close button.",
+      },
+      {
+        name: "open / onOpenChange",
+        type: "boolean / (open: boolean) => void",
+        description:
+          "On StickerDrawer. Radix Dialog props — a drawer opened from a list row is almost always controlled.",
+      },
+    ],
+    rules: [
+      "Always render a StickerDrawerTitle. Radix warns without one, and a modal with no accessible name is announced as nothing.",
+      "Put the scrolling content in StickerDrawerBody. The panel is as tall as the viewport, so the overflow has to belong to an element the header and footer sit outside of.",
+      "The edge is on the side facing the content, and there is no radius against the viewport edge. Do not add one back — a rounded outer corner shows the page through the gap.",
+      "Use a drawer for a place, a dialog for a decision. If the panel exists to ask one question, StickerDialog is the smaller thing.",
+      "Under reduced motion the theme collapses both animation durations, so the panel appears in place. Do not swap the keyframes for a transition to get that; it is already handled.",
     ],
   },
   {

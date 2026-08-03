@@ -19,6 +19,13 @@ import { cn } from "@/lib/utils";
  * lime — one motion, no bounce. Dialogs interrupt; they do not get to be
  * playful about it, so there is no squash here and no idle animation once it
  * has landed.
+ *
+ * `size` is the width cap, except at `full`, which is a different panel: it
+ * drops the centring translate for `inset-0` and fades instead of rising,
+ * because duck-dialog-in carries that translate through every frame and would
+ * otherwise throw a full-bleed panel across the viewport. Anchor a panel to an
+ * edge with StickerDrawer instead of pushing `full` around with class
+ * overrides.
  */
 
 const StickerDialog = DialogPrimitive.Root;
@@ -46,8 +53,19 @@ function StickerDialogOverlay({
   );
 }
 
+type StickerDialogSize = "sm" | "default" | "lg" | "full";
+
+const MAX_WIDTH: Record<StickerDialogSize, string> = {
+  sm: "max-w-sm",
+  default: "max-w-lg",
+  lg: "max-w-2xl",
+  full: "max-w-none",
+};
+
 export interface StickerDialogContentProps
   extends React.ComponentProps<typeof DialogPrimitive.Content> {
+  /** Width cap. `full` is a full-bleed panel edge to edge. */
+  size?: StickerDialogSize;
   /** Iridescent ring instead of the solid die-cut edge. */
   holo?: boolean;
   /**
@@ -63,6 +81,7 @@ export interface StickerDialogContentProps
 function StickerDialogContent({
   className,
   children,
+  size = "default",
   holo = false,
   hideClose = false,
   closeLabel = "Close",
@@ -73,14 +92,26 @@ function StickerDialogContent({
       <StickerDialogOverlay />
       <DialogPrimitive.Content
         data-slot="sticker-dialog-content"
+        data-size={size}
         className={cn(
-          "fixed top-1/2 left-1/2 z-50 flex w-[calc(100%-2rem)] max-w-lg -translate-x-1/2 -translate-y-1/2",
-          "flex-col gap-4 rounded-2xl bg-card p-6 text-card-foreground",
+          "fixed z-50 flex flex-col gap-4 bg-card p-6 text-card-foreground",
           holo ? "holo-border duck-glow" : "sticker border-border duck-glow-primary",
-          // Composed with the centring translate, so the rise has to be a
-          // keyframe of its own rather than a transform utility.
-          "data-[state=open]:[animation:duck-dialog-in_0.28s_var(--ease-duck)]",
-          "data-[state=closed]:[animation:duck-dialog-out_0.18s_var(--ease-duck)]",
+          MAX_WIDTH[size],
+          size === "full"
+            ? [
+                // Nothing to centre, so nothing to carry: a plain fade, and the
+                // panel owns its own scrolling because it is the viewport now.
+                "inset-0 overflow-y-auto rounded-none",
+                "data-[state=open]:[animation:duck-fade-in_0.24s_var(--ease-duck)]",
+                "data-[state=closed]:[animation:duck-fade-out_0.18s_var(--ease-duck)]",
+              ]
+            : [
+                "top-1/2 left-1/2 w-[calc(100%-2rem)] -translate-x-1/2 -translate-y-1/2 rounded-2xl",
+                // Composed with the centring translate, so the rise has to be a
+                // keyframe of its own rather than a transform utility.
+                "data-[state=open]:[animation:duck-dialog-in_0.28s_var(--ease-duck)]",
+                "data-[state=closed]:[animation:duck-dialog-out_0.18s_var(--ease-duck)]",
+              ],
           className
         )}
         {...props}

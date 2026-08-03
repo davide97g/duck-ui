@@ -51,6 +51,8 @@ All imports are `@/components/ui/<name>`, the hook is `@/hooks/use-holo-pointer`
 | `CodeSnippet` | `code`, `lang: auto \| tsx \| ts \| jsx \| js \| json \| jsonc \| css \| html \| bash \| python \| sql \| yaml \| diff \| text`, `title`, `scheme: duck \| pond \| sunset \| neon \| paper \| mono`, `frame: sticker \| holo \| plain`, `chrome: dots \| plain \| none`, `lineNumbers`, `startLine`, `highlight: "3,7-9" \| number[]`, `wrap`, `maxLines`, `copyable`, `exportable`, `schemePicker`, `wrapToggle`, `exportScale`, `exportBackdrop: holo \| scheme \| none`, `watermark`, `fileName`. Highlights itself and exports a PNG — no Shiki, no async theme load |
 | `Terminal` | `lines: { prompt?, text, output? }[]`, `title`, `prompt`, `speed`, `loop`, `holo` |
 | `StickerSheet` / `StickerSheetCell` | `label`; cell also takes `span: 1 \| 2 \| 3` |
+| `StickerDialog` (+ `Trigger`, `Content`, `Header`, `Title`, `Description`, `Footer`, `Close`) | content takes `size: sm \| default \| lg \| full`, `holo`, `hideClose`, `closeLabel`. Radix Dialog underneath, so the focus trap, scroll lock and Escape are real. Always render a `StickerDialogTitle`; `size="full"` is a full-screen dialog, and an edge-anchored panel is `StickerDrawer` instead |
+| `StickerDrawer` (+ `Trigger`, `Content`, `Header`, `Title`, `Description`, `Body`, `Footer`, `Close`) | content takes `side: left \| right \| top \| bottom`, `size: sm \| default \| lg \| full`, `holo`, `hideClose`, `closeLabel`. Same Radix base as the dialog; the die-cut edge sits on the side facing the content and the panel slides from the edge it is anchored to. `size` is the width on left and right and a ceiling on the height on top and bottom. Scrolling content goes in `StickerDrawerBody` |
 | `VideoCard` | `videoId`, `title`, `channel`, `duration`, `thumbnail`, `holo` |
 | `HoloAvatar` / `HoloAvatarGroup` | `src`, `alt`, `fallback`, `size: xs \| sm \| default \| lg \| xl`, `shape: circle \| sticker`, `ring: foil \| holo \| primary \| none`, `status: online \| away \| offline`; group takes `max` |
 | `HoloBadge` | `variant: holo \| primary \| outline \| muted \| success \| danger` |
@@ -111,13 +113,13 @@ Full shadcn contract, plus:
 - `--sheet`, `--sheet-line`, `--cut` sticker sheet backing
 - `--fx`, `--fy`, `--rx`, `--ry` pointer position, written by `useHoloPointer`
 
-Utility classes: `.holo-border`, `.holo-border-animated`, `.holo-text`, `.foil`, `.sheen`, `.tilt`, `.duck-glow`, `.duck-glow-primary`, `.duck-stream-edge`, `.sticker`, `.kiss-cut`, `.cut-line`.
+Utility classes: `.holo-border`, `.holo-border-animated`, `.holo-text`, `.foil`, `.sheen`, `.tilt`, `.duck-glow`, `.duck-glow-primary`, `.duck-stream-edge`, `.sticker`, `.holo-edge`, `.kiss-cut`, `.cut-line`.
 
 `.duck-stream-edge` masks the bottom 1.4em of a block into transparency, for the growing edge of streaming text. The mask stop is an alpha value, not a colour, so it needs no token and works on any surface; it is switched off under `prefers-reduced-motion`, because a permanently faded last line is missing text rather than reduced motion.
 
 **Print.** `@duck/theme` ships an `@media print` layer that re-asserts duck's light token values on `:root, .dark` — necessary because `.dark` sits on `<html>` and would otherwise win — then turns the glows off and the 3px sticker edge into a hairline. Print styling is therefore a token question, not a per-component one: a PDF export needs no hand-written palette, and `.duck-prose` already avoids breaking figures, tables and code across pages. `@duck/theme-noir` carries its own print block, since it is dark in both modes and is declared after the base theme.
 
-Keyframes: `holo-shift`, `duck-idle`, `duck-sheen`, `duck-squash`, `duck-pop`, `duck-ripple`, `duck-paddle`, `duck-float`, `duck-caret`, `duck-rise`, `duck-marquee`, `duck-shimmer`, `duck-waddle`.
+Keyframes: `holo-shift`, `duck-idle`, `duck-sheen`, `duck-squash`, `duck-pop`, `duck-ripple`, `duck-paddle`, `duck-float`, `duck-caret`, `duck-rise`, `duck-marquee`, `duck-shimmer`, `duck-waddle`, `duck-fade-in`, `duck-fade-out`, `duck-dialog-in`, `duck-dialog-out`, `duck-drawer-in`, `duck-drawer-out`.
 
 ## Composition patterns
 

@@ -289,6 +289,16 @@
       var(--holo) border-box;
   }
 
+  /* The holo finish for whichever sides already carry a border width.
+     `.holo-border` sets the width itself, on all four, which is right for a
+     card and wrong for a drawer with one edge. */
+  .holo-edge {
+    border-color: transparent;
+    background:
+      linear-gradient(var(--card), var(--card)) padding-box,
+      var(--holo) border-box;
+  }
+
   .holo-border-animated {
     border: var(--sticker-border) solid transparent;
     background:
@@ -992,6 +1002,33 @@
   to {
     opacity: 1;
     transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+/*
+ * One pair for all four sides. The drawer's side variant sets --drawer-x or
+ * --drawer-y to 100% or -100% of the panel's own size, so the offset is
+ * whichever edge it is anchored to and there is no keyframe per direction.
+ */
+@keyframes duck-drawer-in {
+  from {
+    opacity: 0;
+    transform: translate(var(--drawer-x, 0), var(--drawer-y, 0));
+  }
+  to {
+    opacity: 1;
+    transform: translate(0, 0);
+  }
+}
+
+@keyframes duck-drawer-out {
+  from {
+    opacity: 1;
+    transform: translate(0, 0);
+  }
+  to {
+    opacity: 0;
+    transform: translate(var(--drawer-x, 0), var(--drawer-y, 0));
   }
 }
 

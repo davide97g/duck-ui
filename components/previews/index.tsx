@@ -33,6 +33,7 @@ import StickerCardDemo from "./sticker-card";
 import StickerCarouselDemo from "./sticker-carousel";
 import StickerCheckboxDemo from "./sticker-checkbox";
 import StickerDialogDemo from "./sticker-dialog";
+import StickerDrawerDemo from "./sticker-drawer";
 import StickerDropDemo from "./sticker-drop";
 import StickerKbdDemo from "./sticker-kbd";
 import StickerMediaCardDemo from "./sticker-media-card";
@@ -85,6 +86,7 @@ export const previews = {
   "sticker-carousel": StickerCarouselDemo,
   "sticker-checkbox": StickerCheckboxDemo,
   "sticker-dialog": StickerDialogDemo,
+  "sticker-drawer": StickerDrawerDemo,
   "sticker-drop": StickerDropDemo,
   "sticker-kbd": StickerKbdDemo,
   "sticker-media-card": StickerMediaCardDemo,

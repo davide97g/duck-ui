@@ -814,7 +814,7 @@
       "name": "sticker-dialog",
       "type": "registry:ui",
       "title": "Sticker Dialog",
-      "description": "Modal dialog on Radix Dialog, so the focus trap, scroll lock, escape handling and aria wiring are real. duck supplies the frosted scrim, the die-cut edge and the rise into place.",
+      "description": "Modal dialog on Radix Dialog, so the focus trap, scroll lock, escape handling and aria wiring are real. duck supplies the frosted scrim, the die-cut edge and the rise into place. Width presets sm to lg, plus a full-bleed full that drops the centring translate and fades instead of rising.",
       "dependencies": [
         "@radix-ui/react-dialog",
         "lucide-react"
@@ -825,6 +825,54 @@
       "files": [
         {
           "path": "registry/duck/ui/sticker-dialog.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "sticker-drawer",
+      "type": "registry:ui",
+      "title": "Sticker Drawer",
+      "description": "Edge-anchored panel on the same Radix Dialog base as StickerDialog, so the focus trap, scroll lock, escape handling and aria wiring are real. Anchors to any of the four sides, slides from the edge it is anchored to, and carries the die-cut edge on the side facing the content only. Sizes sm to lg plus a full-bleed full.",
+      "dependencies": [
+        "class-variance-authority",
+        "@radix-ui/react-dialog",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@duck/theme"
+      ],
+      "css": {
+        "@layer utilities": {
+          ".holo-edge": {
+            "border-color": "transparent",
+            "background": "linear-gradient(var(--card), var(--card)) padding-box, var(--holo) border-box"
+          }
+        },
+        "@keyframes duck-drawer-in": {
+          "from": {
+            "opacity": "0",
+            "transform": "translate(var(--drawer-x, 0), var(--drawer-y, 0))"
+          },
+          "to": {
+            "opacity": "1",
+            "transform": "translate(0, 0)"
+          }
+        },
+        "@keyframes duck-drawer-out": {
+          "from": {
+            "opacity": "1",
+            "transform": "translate(0, 0)"
+          },
+          "to": {
+            "opacity": "0",
+            "transform": "translate(var(--drawer-x, 0), var(--drawer-y, 0))"
+          }
+        }
+      },
+      "files": [
+        {
+          "path": "registry/duck/ui/sticker-drawer.tsx",
           "type": "registry:ui"
         }
       ]
