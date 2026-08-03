@@ -1,3 +1,5 @@
+import { Orbit } from "lucide-react";
+
 import { QuackBubble } from "@/components/ui/quack-bubble";
 import { DuckThinking } from "@/components/ui/duck-thinking";
 
@@ -16,6 +18,12 @@ export default function QuackBubbleDemo() {
       </QuackBubble>
       <QuackBubble>
         <DuckThinking showLabel={false} />
+      </QuackBubble>
+      <QuackBubble
+        meta="another brand's assistant"
+        mark={<Orbit className="size-5 text-primary" />}
+      >
+        The mark is a prop. Pass your own and the rest of the bubble stays put.
       </QuackBubble>
     </div>
   );

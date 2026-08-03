@@ -17,6 +17,14 @@ import { cn } from "@/lib/utils";
  * where the extra width would push the layout around; anything standing alone
  * wants the default.
  *
+ * The dot follows the label rather than the theme's lime. A panel that reads
+ * teal for "live" and lime for "action" wants both dots to agree with the words
+ * beside them, and a red one is a state the label already has a colour for — so
+ * `bg-current` does the work and `dotTone` is there for the case where the dot
+ * disagrees with the text on purpose. Both beat reaching into the child with a
+ * `[&>span]` selector, which is application code compensating for a missing
+ * prop.
+ *
  * The item also installs a plain `.hud` utility (plus `.hud-sm` and
  * `.hud-tight`). Reach for that whenever the label is a property of an element
  * that already exists — a <dt>, a <figcaption>, a table header — because
@@ -40,6 +48,8 @@ const hudLabelVariants = cva(
         foreground: "text-foreground",
         /** The accent read: a live value, a section index, a status. */
         primary: "text-primary",
+        /** The cool read, for chrome that is the system talking about itself. */
+        accent: "text-accent-foreground",
       },
       size: {
         sm: "text-[10px]",
@@ -58,14 +68,24 @@ const hudLabelVariants = cva(
   }
 );
 
+const dotTones = {
+  muted: "bg-muted-foreground",
+  foreground: "bg-foreground",
+  primary: "bg-primary duck-glow-primary",
+  accent: "bg-accent-foreground",
+  destructive: "bg-destructive",
+} as const;
+
 export interface HudLabelProps
   extends React.ComponentProps<"span">,
     VariantProps<typeof hudLabelVariants> {
   /**
-   * Draw a lime status dot before the text. Decorative — if the state it
-   * stands for matters, keep it in the label's own words too.
+   * Draw a status dot before the text, in the label's own colour. Decorative —
+   * if the state it stands for matters, keep it in the label's words too.
    */
   dot?: boolean;
+  /** Colour the dot against the text, for the failing row in a muted list. */
+  dotTone?: keyof typeof dotTones;
 }
 
 function HudLabel({
@@ -74,6 +94,7 @@ function HudLabel({
   size = "default",
   tracking = "default",
   dot = false,
+  dotTone,
   children,
   ...props
 }: HudLabelProps) {
@@ -92,9 +113,16 @@ function HudLabel({
       {dot && (
         <span
           aria-hidden
-          // Square, not round: the rest of the HUD is drawn with straight
-          // edges, and a lone circle in it reads as a bullet point.
-          className="size-1.5 shrink-0 bg-primary duck-glow-primary"
+          className={cn(
+            // Square, not round: the rest of the HUD is drawn with straight
+            // edges, and a lone circle in it reads as a bullet point.
+            "size-1.5 shrink-0",
+            dotTone
+              ? dotTones[dotTone]
+              : // Lime is the only tone that glows. On anything else the halo
+                // reads as a second colour rather than as brightness.
+                cn("bg-current", tone === "primary" && "duck-glow-primary")
+          )}
         />
       )}
       {children}

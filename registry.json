@@ -799,7 +799,7 @@
       "name": "hud-label",
       "type": "registry:ui",
       "title": "Hud Label",
-      "description": "The instrument-panel label: tiny, mono, uppercase, tracked wide enough to read as machine output rather than prose. Tones muted, foreground, primary; optional lime status square. Ships a matching .hud utility for the many places the label is an attribute of an existing element rather than an element of its own.",
+      "description": "The instrument-panel label: tiny, mono, uppercase, tracked wide enough to read as machine output rather than prose. Tones muted, foreground, primary and accent; an optional status square that takes the label's own colour. Ships a matching .hud utility for the many places the label is an attribute of an existing element rather than an element of its own.",
       "dependencies": [
         "class-variance-authority"
       ],
@@ -892,7 +892,7 @@
       "name": "glow-input",
       "type": "registry:ui",
       "title": "Glow Input",
-      "description": "Input, textarea and two field wrappers that wire up label, helper text, errors, aria-invalid and aria-describedby. GlowField wraps one control; GlowFieldset emits a real fieldset and legend for groups.",
+      "description": "Input, textarea and two field wrappers that wire up label, helper text, errors, aria-invalid and aria-describedby. GlowField wraps one control; GlowFieldset emits a real fieldset and legend for groups. frame={false} drops the sticker edge and the focus glow for a field inside a surface that is already the frame.",
       "registryDependencies": [
         "@duck/theme"
       ],
@@ -1088,7 +1088,7 @@
       "name": "sticker-drop",
       "type": "registry:ui",
       "title": "Sticker Drop",
-      "description": "File dropzone built on the backing paper: the zone is the kiss-cut sheet, dragging lights the cut lines, and each accepted file lands as its own sticker. Wraps a clipped \u2014 not hidden \u2014 file input, so it stays keyboard operable.",
+      "description": "File dropzone built on the backing paper: the zone is the kiss-cut sheet, dragging lights the cut lines, and each accepted file lands as its own sticker. Wraps a clipped \u2014 not hidden \u2014 file input, so it stays keyboard operable. Controllable through files, so a submit can clear the sheet.",
       "dependencies": [
         "lucide-react"
       ],
@@ -1182,7 +1182,7 @@
       "name": "duck-thinking",
       "type": "registry:ui",
       "title": "Duck Thinking",
-      "description": "The wake without the duck going anywhere: the mark paddles in place while two rings spread out. A spinner sized and worded for a conversation.",
+      "description": "The wake without the duck going anywhere: the mark paddles in place while two rings spread out. A spinner sized and worded for a conversation; pass mark to paddle your own brand instead.",
       "registryDependencies": [
         "@duck/theme",
         "@duck/duck-mark"
@@ -1213,7 +1213,7 @@
       "name": "quack-bubble",
       "type": "registry:ui",
       "title": "Quack Bubble",
-      "description": "A message that has a voice. The assistant's bubble carries the mark and a squared corner on the side it speaks from; the user's is plain lime vinyl.",
+      "description": "A message that has a voice. The assistant's bubble carries the mark and a squared corner on the side it speaks from; the user's is plain lime vinyl. The mark is a prop, so the assistant can be anyone.",
       "registryDependencies": [
         "@duck/theme",
         "@duck/duck-mark"

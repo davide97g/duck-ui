@@ -793,9 +793,10 @@ export const components: ComponentDoc[] = [
     props: [
       {
         name: "tone",
-        type: '"muted" | "foreground" | "primary"',
+        type: '"muted" | "foreground" | "primary" | "accent"',
         default: '"muted"',
-        description: "Use primary for a live value, a section index or a status.",
+        description:
+          "Use primary for a live value, a section index or a status, and accent where the chrome is the system talking about itself.",
       },
       {
         name: "size",
@@ -815,12 +816,19 @@ export const components: ComponentDoc[] = [
         type: "boolean",
         default: "false",
         description:
-          "Lime status square before the text. Decorative — keep the state in the label's own words too.",
+          "Status square before the text, in the label's own colour. Decorative — keep the state in the label's own words too.",
+      },
+      {
+        name: "dotTone",
+        type: '"muted" | "foreground" | "primary" | "accent" | "destructive"',
+        description:
+          "Colour the dot against the text — a red dot on a muted row. Without it the dot follows the tone.",
       },
     ],
     rules: [
       "Label, not sentence. Two or three words; the tracking makes anything longer unreadable.",
       "The uppercase is a text-transform, so pass normal-case content and let the component shout.",
+      "Only primary glows. Use dotTone rather than a [&>span] selector at the call site — a child selector in application code is a missing prop.",
     ],
   },
   {
@@ -924,11 +932,20 @@ export const components: ComponentDoc[] = [
         default: "false",
         description: "Marks the control or group and adds the asterisk.",
       },
+      {
+        name: "frame",
+        type: "boolean",
+        default: "true",
+        description:
+          "On GlowInput and GlowTextarea: the sticker edge, the padding and the lime focus glow. Turn it off inside a surface that is already the frame — a composer, a toolbar search, an inline edit cell.",
+      },
     ],
     rules: [
       "Never use the placeholder as the label. GlowField exists so you do not have to.",
       "GlowField wraps one control. For anything plural — a radio group, a range, an OTP strip, a dropzone — use GlowFieldset, which emits a real fieldset and legend.",
       "The reason is mechanical: GlowField clones its single child to inject the id, so the child has to be one element that accepts one. A label beside a slider, or any pair, gives <label htmlFor> nothing to point at — that is GlowFieldset's legend.",
+      "frame={false} rather than border-0 at the call site: .sticker is declared in the theme's utilities layer, which lands after Tailwind's, so a border utility loses on order and the 3px edge stays.",
+      "A frameless field keeps the type, the caret, the placeholder and the selection colours, and shows aria-invalid in the text instead of a border it no longer has. Give the parent the focus-within glow.",
     ],
   },
   {
@@ -1341,13 +1358,20 @@ export const components: ComponentDoc[] = [
       { name: "multiple", type: "boolean", default: "false", description: "Keep more than one file." },
       { name: "maxSize", type: "number", description: "Largest file allowed, in bytes. Rejections say which file and why." },
       {
+        name: "files",
+        type: "File[]",
+        description:
+          "The list, held by you. Pass it and the zone draws yours instead of keeping its own — passing [] empties the sheet.",
+      },
+      {
         name: "onFilesChange",
         type: "(files: File[]) => void",
-        description: "Called with the full list every time it changes.",
+        description: "Called with the full list every time it changes. Intent, not notification, once files is set.",
       },
       { name: "label / hint", type: "string", description: "Zone copy. The hint is where the accepted types and size limit belong." },
     ],
     rules: [
+      "Control it whenever a submit can clear the form. Without files there is nothing to clear and remounting on a changed key is the only way out.",
       "The file input is clipped, never display:none — a hidden input cannot take focus and the zone stops being keyboard operable.",
       "Dragging is not the only way in. The picker is the single-pointer alternative WCAG 2.5.7 asks for, so say so in the label.",
       "The drag-active edge is lime, not a brighter --cut. Cut lines on the sheet are about 1.8:1 and cannot carry a status.",
@@ -1536,10 +1560,18 @@ export const components: ComponentDoc[] = [
         default: "true",
         description: "Hide the text and keep it for screen readers only — for use inside a bubble.",
       },
+      {
+        name: "mark",
+        type: "ReactNode",
+        default: "<DuckMark />",
+        description:
+          "What paddles at the centre of the ripples. Rendered as given, in a 2rem frame that is already aria-hidden, so a replacement sizes itself and opts into the paddle if it wants it.",
+      },
     ],
     rules: [
       "Say what is happening, not that something is. \"Reading the registry\" beats \"Loading\".",
       "The ripples are this view's idle animation while it is on screen.",
+      "The duck is the default, not the component. Pass mark to wait in your own brand and keep the ripples, the geometry and the live region.",
     ],
   },
   {
@@ -1588,10 +1620,18 @@ export const components: ComponentDoc[] = [
         description: "Which side speaks. Assistant gets the mark and the sticker edge.",
       },
       { name: "meta", type: "string", description: "Timestamp, model name, \"edited\" — whatever belongs under the message." },
+      {
+        name: "mark",
+        type: "ReactNode",
+        default: '<DuckMark className="size-5" />',
+        description:
+          "The assistant's face, in a 2rem well that is already aria-hidden. Rendered as given, so a replacement sizes itself — the mascot is 1.25rem.",
+      },
     ],
     rules: [
       "No CSS triangle tail. A drawn tail cannot survive a 3px sticker edge, and a clip-path notch would cut the edge open — the squared corner does the pointing.",
       "Only the assistant carries the mark. One voice in the conversation is a character; the other is a person.",
+      "Which character is your call. Pass mark and the duck steps aside — a transcript is the last place a design system should insist on its mascot.",
       "Compose it with StreamText for the message and DuckThinking for the wait.",
     ],
   },

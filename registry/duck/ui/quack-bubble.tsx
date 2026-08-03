@@ -14,17 +14,27 @@ import { DuckMark } from "@/components/ui/duck-mark";
  *
  * The user's bubble is plain lime vinyl with no mark. One voice in the
  * conversation is a character; the other is a person.
+ *
+ * Which character is the consumer's business, so the mark is a prop and the
+ * duck is only its default. A transcript is the last place a design system
+ * should insist on its own mascot.
  */
 export interface QuackBubbleProps extends React.ComponentProps<"div"> {
   from?: "assistant" | "user";
   /** Timestamp, model name, "edited" — whatever belongs under the message. */
   meta?: string;
+  /**
+   * The assistant's face, inside a 2rem well that is already aria-hidden.
+   * Rendered as given, so a replacement sizes itself — the mascot is 1.25rem.
+   */
+  mark?: React.ReactNode;
 }
 
 function QuackBubble({
   className,
   from = "assistant",
   meta,
+  mark = <DuckMark className="size-5" />,
   children,
   ...props
 }: QuackBubbleProps) {
@@ -46,7 +56,7 @@ function QuackBubble({
           aria-hidden
           className="mt-0.5 grid size-8 shrink-0 place-items-center rounded-full bg-secondary"
         >
-          <DuckMark className="size-5" />
+          {mark}
         </span>
       )}
 

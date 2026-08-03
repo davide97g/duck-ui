@@ -373,6 +373,20 @@ export default function ThemingPage() {
             otherwise, with no error anywhere.
           </p>
           <p>
+            The same order runs the other way at a call site.{" "}
+            <code>.sticker</code> sets a real{" "}
+            <code>border-width</code>, so{" "}
+            <code>&lt;GlowInput className=&quot;border-0&quot; /&gt;</code> loses
+            on order and the 3px edge stays — and the working incantation is six
+            overrides long. That is why a component that might have to give up
+            its frame or its mascot exposes a prop for it:{" "}
+            <code>frame</code> on <code>GlowInput</code>,{" "}
+            <code>art</code> on <code>EmptyPond</code>, <code>mark</code> on{" "}
+            <code>DuckThinking</code> and <code>QuackBubble</code>. If you find
+            yourself stacking negations against a duck utility, look for the prop
+            first.
+          </p>
+          <p>
             <strong>
               Tailwind v4&rsquo;s parser treats an apostrophe inside a comment as
               a string delimiter.

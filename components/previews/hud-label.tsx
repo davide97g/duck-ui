@@ -18,6 +18,18 @@ export default function HudLabelDemo() {
           2m ago
         </HudLabel>
       </div>
+
+      <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
+        <HudLabel dot tone="primary">
+          recording
+        </HudLabel>
+        <HudLabel dot tone="accent">
+          retrieval
+        </HudLabel>
+        <HudLabel dot dotTone="destructive" tone="foreground">
+          2 failed
+        </HudLabel>
+      </div>
     </div>
   );
 }

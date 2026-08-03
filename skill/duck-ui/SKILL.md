@@ -54,6 +54,7 @@ All imports are `@/components/ui/<name>`, the hook is `@/hooks/use-holo-pointer`
 | `VideoCard` | `videoId`, `title`, `channel`, `duration`, `thumbnail`, `holo` |
 | `HoloAvatar` / `HoloAvatarGroup` | `src`, `alt`, `fallback`, `size: xs \| sm \| default \| lg \| xl`, `shape: circle \| sticker`, `ring: foil \| holo \| primary \| none`, `status: online \| away \| offline`; group takes `max` |
 | `HoloBadge` | `variant: holo \| primary \| outline \| muted \| success \| danger` |
+| `HudLabel` | `tone: muted \| foreground \| primary \| accent`, `size: sm \| default`, `tracking: default \| tight`, `dot`, `dotTone: muted \| foreground \| primary \| accent \| destructive`. The dot takes the label's colour and only `primary` glows; use `dotTone` for a red dot on a muted row, never a `[&>span]` selector. Also ships a `.hud` utility for labels that are an attribute of an existing element |
 | `Announcement` | `tag`, `href`, `arrow` |
 | `DuckSpinner` | `size: sm \| default \| lg`, `motion: paddle \| spin`, `src` (any image URL, defaults to `/duck.svg`, which the item ships into your project-root `public/`), `label`; also exports `DuckGlyph` and `DUCK_MARK_SRC` |
 | `HoloSeparator` | `label`, `orientation`, `holo` |
@@ -62,7 +63,7 @@ All imports are `@/components/ui/<name>`, the hook is `@/hooks/use-holo-pointer`
 | `StickerSkeleton` / `StickerSkeletonText` | `shape: line \| title \| circle \| card \| poster \| video`, `delay`; text takes `lines`. `poster` and `video` carry their own ratio, so artwork needs no geometry at the call site |
 | `StickerProgress` / `StickerProgressTrack` | `value` (omit for indeterminate), `max`, `label`, `showValue`, `size: sm \| default`. `StickerProgressTrack` is the bar alone — no wrapper, no label row — for laying along the bottom edge of artwork. Nested inside a link or button, pass `aria-hidden`: a live progressbar there gets its `aria-valuenow` read into that element's accessible name |
 | `EmptyPond` | `title`, `hint`, `action`, `art`, `compact` |
-| `GlowInput` / `GlowTextarea` / `GlowField` / `GlowFieldset` | `GlowField` takes `label`, `helper`, `error`, `required` and wraps one control; `GlowFieldset` takes `legend` instead of `label` and wraps a group, because `GlowField` clones a single child to inject the id and a pair has nothing to clone |
+| `GlowInput` / `GlowTextarea` / `GlowField` / `GlowFieldset` | `GlowField` takes `label`, `helper`, `error`, `required` and wraps one control; `GlowFieldset` takes `legend` instead of `label` and wraps a group, because `GlowField` clones a single child to inject the id and a pair has nothing to clone. The two controls take `frame` (default `true`) — pass `frame={false}` inside a surface that is already the frame, since `.sticker` lands after Tailwind's utilities and `border-0` at the call site cannot beat it |
 | `DuckSwitch` | `size: sm \| default`, `children` as the label, plus native `checked` / `defaultChecked` / `onChange` |
 | `StickerCheckbox` | `indeterminate`, `children` as the label, plus native checkbox props |
 | `StickerRadioGroup` / `StickerRadio` | group takes `name`, `value`, `defaultValue`, `onValueChange`; radio takes `value` (required) and `description` |
@@ -71,13 +72,13 @@ All imports are `@/components/ui/<name>`, the hook is `@/hooks/use-holo-pointer`
 | `DuckMediaSlider` | `value`, `defaultValue`, `buffered` (0–1 fraction of the track), `preview: (value) => ReactNode`, `dense`, `onScrub` (live), `onSeek` (commit), `formatValue`. Seek bar: holds the value while dragging so `timeupdate` cannot fight the thumb; also exports `formatTimecode` |
 | `DuckVolume` | `volume`, `defaultVolume`, `muted`, `defaultMuted`, `onVolumeChange`, `onMutedChange`, `collapsible`. Mute toggle plus a slider that collapses when idle; volume 0 reads as silence without flipping `muted` |
 | `StickerOtp` | `length`, `value`, `defaultValue`, `onValueChange`, `onComplete` |
-| `StickerDrop` | `accept`, `multiple`, `maxSize`, `onFilesChange`, `label`, `hint` |
+| `StickerDrop` | `accept`, `multiple`, `maxSize`, `files`, `onFilesChange`, `label`, `hint`. Pass `files` whenever a submit can clear the form: it makes the zone controlled, so `setFiles([])` empties the sheet with no remount |
 | `DuckTabs` (+ `List`, `Trigger`, `Content`) | `value`, `defaultValue`, `onValueChange` |
 | `ThemeSwitcher` | none, needs a next-themes provider |
 | `QuackToastProvider` / `useQuackToast` | provider takes `max`; hook returns `toast`, `quack`, `dismiss` |
-| `DuckThinking` | `label`, `showLabel` |
+| `DuckThinking` | `label`, `showLabel`, `mark` (defaults to `DuckMark`; pass your own and the ripples stay) |
 | `StreamText` | `text` (types it out — demo), `streaming` + `active` (real tokens), `speed`, `onDone` |
-| `QuackBubble` | `from: assistant \| user`, `meta` |
+| `QuackBubble` | `from: assistant \| user`, `meta`, `mark` (the assistant's face, defaults to `DuckMark`) |
 | `useHoloPointer` | `tilt`, `magnet`, `reset`, `disabled`; returns a ref |
 
 ## Blocks

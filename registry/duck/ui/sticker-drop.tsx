@@ -14,6 +14,12 @@ import { cn } from "@/lib/utils";
  * that is clipped rather than hidden — it still takes focus, still opens the
  * picker on Enter, and still satisfies WCAG 2.5.7 by giving dragging a
  * single-pointer alternative.
+ *
+ * It keeps its own list until you pass `files`, at which point yours is the only
+ * one that counts. That seam exists for the moment after a successful submit:
+ * the form has let go of the file and the sheet is still showing it, and without
+ * a controlled list the only way to clear it is to remount the component with a
+ * changed `key` — which works, and which no reviewer should have to accept.
  */
 
 function formatSize(bytes: number) {
@@ -39,6 +45,12 @@ export interface StickerDropProps
   multiple?: boolean;
   /** Largest file allowed, in bytes. */
   maxSize?: number;
+  /**
+   * The list, held by you. Pass it and the zone stops keeping its own: it draws
+   * what you give it, `onFilesChange` becomes intent rather than a notification,
+   * and passing `[]` empties the sheet.
+   */
+  files?: File[];
   /** Called with the full list every time it changes. */
   onFilesChange?: (files: File[]) => void;
   label?: string;
@@ -50,12 +62,15 @@ function StickerDrop({
   accept,
   multiple = false,
   maxSize,
+  files,
   onFilesChange,
   label = "Drop files here",
   hint,
   ...props
 }: StickerDropProps) {
-  const [files, setFiles] = React.useState<File[]>([]);
+  const controlled = files !== undefined;
+  const [internal, setInternal] = React.useState<File[]>([]);
+  const current = controlled ? files : internal;
   const [dragging, setDragging] = React.useState(false);
   const [announcement, setAnnouncement] = React.useState("");
   // dragenter and dragleave fire for every child the pointer crosses. Counting
@@ -80,10 +95,11 @@ function StickerDrop({
         }
       }
 
-      const next = multiple ? [...files, ...accepted] : accepted.slice(0, 1);
-      setFiles(next);
+      const next = multiple ? [...current, ...accepted] : accepted.slice(0, 1);
+      if (!controlled) setInternal(next);
       onFilesChange?.(next);
 
+      // Announced either way. Controlled or not, the files were read.
       setAnnouncement(
         [
           accepted.length &&
@@ -94,18 +110,19 @@ function StickerDrop({
           .join(". ")
       );
     },
-    [accept, files, maxSize, multiple, onFilesChange]
+    [accept, controlled, current, maxSize, multiple, onFilesChange]
   );
 
   const remove = React.useCallback(
     (index: number) => {
-      const removed = files[index];
-      const next = files.filter((_, i) => i !== index);
-      setFiles(next);
+      const removed = current[index];
+      const next = current.filter((_, i) => i !== index);
+      if (!controlled) setInternal(next);
       onFilesChange?.(next);
       setAnnouncement(`${removed.name} removed`);
       // Focus would otherwise fall to <body> and the keyboard user would
-      // restart from the top of the page.
+      // restart from the top of the page. Runs after the parent's render in
+      // controlled mode, so the list it queries is the new one either way.
       requestAnimationFrame(() => {
         const buttons =
           listRef.current?.querySelectorAll<HTMLButtonElement>("button");
@@ -113,7 +130,7 @@ function StickerDrop({
           inputRef.current)?.focus();
       });
     },
-    [files, onFilesChange]
+    [controlled, current, onFilesChange]
   );
 
   return (
@@ -180,9 +197,9 @@ function StickerDrop({
         {hint && <span className="text-xs text-muted-foreground">{hint}</span>}
       </label>
 
-      {files.length > 0 && (
+      {current.length > 0 && (
         <ul ref={listRef} className="flex flex-wrap gap-2">
-          {files.map((file, index) => (
+          {current.map((file, index) => (
             <li
               key={`${file.name}-${index}`}
               className={cn(
