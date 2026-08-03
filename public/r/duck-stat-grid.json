@@ -1,0 +1,18 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "duck-stat-grid",
+  "title": "Duck Stat Grid",
+  "description": "The hairline grid: one border colour showing through a 1px gap. No doubled edges, no first-child resets, exactly one device pixel at any zoom. Cells are a definition list, so the label is read before the value.",
+  "registryDependencies": [
+    "@duck/theme",
+    "@duck/hud-label"
+  ],
+  "files": [
+    {
+      "path": "registry/duck/ui/duck-stat-grid.tsx",
+      "content": "import * as React from \"react\";\n\nimport { cn } from \"@/lib/utils\";\n\n/**\n * DuckStatGrid — the hairline grid: one border colour showing through a 1px\n * gap, with the cells painted on top.\n *\n * `gap-px` on a --border background is the whole trick. It beats a border per\n * cell because there is no doubling on shared edges, nothing to reset on the\n * first or last column, and the rules stay exactly one device pixel at any\n * radius or zoom. It is four lines of CSS and every site rebuilds it, which is\n * the argument for shipping it.\n *\n * The cells are --background rather than --card on purpose: the grid reads as\n * the canvas divided up, not as a row of floating panels. Pass bg-card on a\n * cell if a panel is what you want.\n */\n\nconst columns = {\n  2: \"sm:grid-cols-2\",\n  3: \"sm:grid-cols-2 lg:grid-cols-3\",\n  4: \"sm:grid-cols-2 lg:grid-cols-4\",\n} as const;\n\nfunction DuckStatGrid({\n  className,\n  cols = 3,\n  bordered = true,\n  children,\n  ...props\n}: React.ComponentProps<\"dl\"> & {\n  cols?: keyof typeof columns;\n  /** Draw the outer edge as well as the inner rules. */\n  bordered?: boolean;\n}) {\n  return (\n    <dl\n      data-slot=\"duck-stat-grid\"\n      className={cn(\n        \"grid grid-cols-1 gap-px overflow-hidden bg-border\",\n        columns[cols],\n        bordered && \"sticker rounded-xl border-border\",\n        className\n      )}\n      {...props}\n    >\n      {children}\n    </dl>\n  );\n}\n\nfunction DuckStat({\n  className,\n  label,\n  value,\n  hint,\n  children,\n  ...props\n}: Omit<React.ComponentProps<\"div\">, \"children\"> & {\n  label: React.ReactNode;\n  value: React.ReactNode;\n  /** A line under the value: a delta, a unit, a date. */\n  hint?: React.ReactNode;\n  /** Anything extra — a sparkline, a badge — under the hint. */\n  children?: React.ReactNode;\n}) {\n  return (\n    <div\n      data-slot=\"duck-stat\"\n      className={cn(\n        \"flex flex-col gap-1.5 bg-background p-5\",\n        \"transition-colors duration-300 ease-[var(--ease-duck)] hover:bg-muted/40\",\n        className\n      )}\n      {...props}\n    >\n      {/* dt before dd, and the label first in the DOM, because that is the\n          reading order a screen reader announces. Visually the value leads. */}\n      <dt className=\"hud hud-sm\">{label}</dt>\n      <dd className=\"flex flex-col gap-1\">\n        <span className=\"font-display text-2xl leading-none font-bold tabular-nums\">\n          {value}\n        </span>\n        {hint && <span className=\"text-xs text-muted-foreground\">{hint}</span>}\n        {children}\n      </dd>\n    </div>\n  );\n}\n\nexport { DuckStatGrid, DuckStat };\n",
+      "type": "registry:ui"
+    }
+  ],
+  "type": "registry:ui"
+}

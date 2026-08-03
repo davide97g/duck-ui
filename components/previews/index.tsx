@@ -2,13 +2,22 @@ import AnnouncementDemo from "./announcement";
 import CodeSnippetDemo from "./code-snippet";
 import CodeWindowDemo from "./code-window";
 import CopyButtonDemo from "./copy-button";
+import DuckChartDemo from "./duck-chart";
+import DuckListRowDemo from "./duck-list-row";
 import DuckMarkDemo from "./duck-mark";
+import DuckMarqueeDemo from "./duck-marquee";
 import DuckMediaSliderDemo from "./duck-media-slider";
+import DuckProseDemo from "./duck-prose";
+import DuckRevealDemo from "./duck-reveal";
+import DuckScrollRailDemo from "./duck-scroll-rail";
+import DuckSectionMarkerDemo from "./duck-section-marker";
 import DuckSliderDemo from "./duck-slider";
 import DuckSpinnerDemo from "./duck-spinner";
+import DuckStatGridDemo from "./duck-stat-grid";
 import DuckSwitchDemo from "./duck-switch";
 import DuckTabsDemo from "./duck-tabs";
 import DuckThinkingDemo from "./duck-thinking";
+import DuckTimelineDemo from "./duck-timeline";
 import DuckVolumeDemo from "./duck-volume";
 import EmptyPondDemo from "./empty-pond";
 import GlowInputDemo from "./glow-input";
@@ -33,6 +42,7 @@ import StickerRadioGroupDemo from "./sticker-radio-group";
 import StickerSheetDemo from "./sticker-sheet";
 import StickerSkeletonDemo from "./sticker-skeleton";
 import StickerToggleGroupDemo from "./sticker-toggle-group";
+import StickerTooltipDemo from "./sticker-tooltip";
 import StreamTextDemo from "./stream-text";
 import TerminalDemo from "./terminal";
 import ThemeSwitcherDemo from "./theme-switcher";
@@ -44,13 +54,22 @@ export const previews = {
   "code-window": CodeWindowDemo,
   "code-snippet": CodeSnippetDemo,
   "copy-button": CopyButtonDemo,
+  "duck-chart": DuckChartDemo,
+  "duck-list-row": DuckListRowDemo,
   "duck-mark": DuckMarkDemo,
+  "duck-marquee": DuckMarqueeDemo,
   "duck-media-slider": DuckMediaSliderDemo,
+  "duck-prose": DuckProseDemo,
+  "duck-reveal": DuckRevealDemo,
+  "duck-scroll-rail": DuckScrollRailDemo,
+  "duck-section-marker": DuckSectionMarkerDemo,
   "duck-slider": DuckSliderDemo,
   "duck-spinner": DuckSpinnerDemo,
+  "duck-stat-grid": DuckStatGridDemo,
   "duck-switch": DuckSwitchDemo,
   "duck-tabs": DuckTabsDemo,
   "duck-thinking": DuckThinkingDemo,
+  "duck-timeline": DuckTimelineDemo,
   "duck-volume": DuckVolumeDemo,
   "empty-pond": EmptyPondDemo,
   "glow-input": GlowInputDemo,
@@ -75,6 +94,7 @@ export const previews = {
   "sticker-sheet": StickerSheetDemo,
   "sticker-skeleton": StickerSkeletonDemo,
   "sticker-toggle-group": StickerToggleGroupDemo,
+  "sticker-tooltip": StickerTooltipDemo,
   "stream-text": StreamTextDemo,
   terminal: TerminalDemo,
   "theme-switcher": ThemeSwitcherDemo,

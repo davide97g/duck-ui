@@ -13,7 +13,7 @@ export default function DuckPricingDemo() {
           description: "For the side project that might become a company.",
           monthly: 0,
           yearly: 0,
-          features: ["All 31 components", "MIT licence", "Community support"],
+          features: ["All 49 components", "MIT licence", "Community support"],
           action: { label: "Start free", href: "#" },
         },
         {

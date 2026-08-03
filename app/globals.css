@@ -85,12 +85,12 @@
   --glass-blur: 12px;
 
   /* ---- control typography ----
-     A theme's label vocabulary: family, weight, tracking, case, size. These
-     exist because the alternative is a hardcoded `text-sm font-semibold` in a
+     The label vocabulary of a theme: family, weight, tracking, case, size.
+     These exist because the alternative is a hardcoded text-sm font-semibold in a
      cva base that no stylesheet can reach — a mono uppercase HUD button then
      needs a class on all 14 call sites, and the font-size half of it cannot be
-     overridden from CSS at all. Read by the zero-specificity rules at the end
-     of @layer base, so a single call site still wins with a plain utility. */
+     overridden from CSS at all. Read by the rules at the end of @layer base,
+     so a single call site still wins with a plain utility. */
   --font-button: var(--font-sans);
   --weight-button: 600;
   --tracking-button: normal;
@@ -191,7 +191,7 @@
   --color-cut: var(--cut);
   --color-vinyl: var(--vinyl);
 
-  /* Ratios, not pixel offsets. shadcn's default scale adds a fixed +10px at
+  /* Ratios, not pixel offsets. The default shadcn scale adds a fixed +10px at
      2xl, so a theme asking for square corners still renders a 10px card — the
      token is read, but it cannot reach zero. Multiplying leaves the duck scale
      bit-identical (0.75rem still yields 8/10/12/16/22px) and lets a hairline
@@ -228,32 +228,40 @@
   }
 
   /*
-   * Control typography, declared at zero specificity on purpose.
+   * Control typography, in @layer base on purpose.
    *
    * A theme retunes a whole button vocabulary from tokens; a single call site
    * still overrides any part of it with a plain utility, because @layer base
    * always loses to @layer utilities whatever the selectors say. Font size
    * lives here rather than in the size variant for exactly that reason — a
-   * `text-base` inside the variant is a utility, and no stylesheet can undo it.
+   * text-base inside the variant is a utility, and no stylesheet can undo it.
+   *
+   * The selectors are attribute selectors rather than :where(), which is the
+   * one place zero specificity is wrong: preflight declares
+   * `button { font: inherit }` in this same layer, and a (0,0,1) type selector
+   * beats (0,0,0) — every button would inherit 16px/400 from the body.
    *
    * Fallbacks are not decoration: a consumer who installed the components
    * before this token existed has no --font-button, and an unresolved var()
    * would drop the declaration rather than inherit the old look.
    */
-  :where([data-slot="holo-button"], [data-slot="quack-button"]) {
+  [data-slot="holo-button"],
+  [data-slot="quack-button"] {
     font-family: var(--font-button, var(--font-sans));
     font-size: var(--text-button, 0.875rem);
     font-weight: var(--weight-button, 600);
     letter-spacing: var(--tracking-button, normal);
     text-transform: var(--case-button, none);
   }
-  :where([data-slot="holo-button"], [data-slot="quack-button"])[data-size="sm"] {
+  [data-slot="holo-button"][data-size="sm"],
+  [data-slot="quack-button"][data-size="sm"] {
     font-size: var(--text-button-sm, 0.75rem);
   }
-  :where([data-slot="holo-button"], [data-slot="quack-button"])[data-size="lg"] {
+  [data-slot="holo-button"][data-size="lg"],
+  [data-slot="quack-button"][data-size="lg"] {
     font-size: var(--text-button-lg, 1rem);
   }
-  :where([data-slot="holo-badge"]) {
+  [data-slot="holo-badge"] {
     font-family: var(--font-badge, var(--font-sans));
     font-size: var(--text-badge, 0.75rem);
     font-weight: var(--weight-badge, 600);
@@ -272,7 +280,7 @@
   /* Iridescent gradient border (padding-box + border-box trick).
      Width comes from --sticker-border, not a literal: holo-border and
      `.sticker` are the same edge in two finishes, and StickerCard swaps
-     between them on one prop — a fixed 2px here made the card's border
+     between them on one prop — a fixed 2px here made the card border
      visibly thin out whenever `holo` was set. */
   .holo-border {
     border: var(--sticker-border) solid transparent;
@@ -394,6 +402,32 @@
     text-wrap: balance;
   }
 
+  /* ---- HUD label, the utility form ----
+     Shipped by @duck/hud-label for the many places the label is a property of
+     an element that already exists — a dt, a figcaption, a table header —
+     rather than an element of its own. Mirrored here because the components in
+     this repo use it too. The colour is declared through :where() at zero
+     specificity: a registry css block lands at the end of the utilities layer,
+     so a plain .hud { color } would outrank text-primary and quietly win.
+     Kept in sync with the hud-label item in registry.json. */
+  .hud {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    font-weight: 400;
+    letter-spacing: 0.3em;
+    line-height: 1;
+    text-transform: uppercase;
+  }
+  :where(.hud) {
+    color: var(--muted-foreground);
+  }
+  .hud-sm {
+    font-size: 0.625rem;
+  }
+  .hud-tight {
+    letter-spacing: 0.18em;
+  }
+
   /*
    * Display scale. --font-display gave every consumer the face and none of the
    * sizes, so each one invented its own clamp(). Zero specificity again: the
@@ -419,6 +453,193 @@
     font-weight: 700;
     line-height: 1.15;
     letter-spacing: -0.02em;
+  }
+
+  /* ================================================================
+     duck/ui — long-form
+     Shipped by @duck/duck-prose. Every selector is wrapped in :where()
+     so the whole set is zero specificity: prose styles markup it has
+     never seen, and a utility on any element inside it still wins.
+     Kept in sync with the duck-prose item in registry.json.
+     ================================================================ */
+
+  :where(.duck-prose) {
+    font-size: 1.0625rem;
+    line-height: 1.75;
+    color: var(--foreground);
+    overflow-wrap: break-word;
+  }
+  /* One flow rule instead of a margin on every element: the gap belongs to
+     the space between two blocks, not to either of them. */
+  :where(.duck-prose) > * + * {
+    margin-top: 1.25em;
+  }
+  :where(.duck-prose) > :first-child {
+    margin-top: 0;
+  }
+
+  :where(.duck-prose h2, .duck-prose h3, .duck-prose h4) {
+    font-family: var(--font-display);
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+    /* Anchor links land under a sticky header otherwise. */
+    scroll-margin-top: 6rem;
+  }
+  :where(.duck-prose) > :is(h2, h3, h4) + * {
+    margin-top: 0.75em;
+  }
+  :where(.duck-prose h2) {
+    font-size: 1.75rem;
+    margin-top: 2.25em;
+  }
+  :where(.duck-prose h3) {
+    font-size: 1.3125rem;
+    margin-top: 1.75em;
+  }
+  :where(.duck-prose h4) {
+    font-size: 1.0625rem;
+    margin-top: 1.5em;
+  }
+
+  :where(.duck-prose a) {
+    color: var(--primary);
+    text-decoration-line: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.2em;
+    text-decoration-color: color-mix(in oklab, var(--primary) 45%, transparent);
+    transition: text-decoration-color 0.2s var(--ease-duck);
+  }
+  :where(.duck-prose a:hover) {
+    text-decoration-color: var(--primary);
+  }
+
+  :where(.duck-prose strong) {
+    font-weight: 650;
+    color: var(--foreground);
+  }
+  :where(.duck-prose mark) {
+    background: color-mix(in oklab, var(--primary) 22%, transparent);
+    color: inherit;
+  }
+  :where(.duck-prose small) {
+    font-size: 0.875em;
+    color: var(--muted-foreground);
+  }
+
+  /* A rule, not a quote mark: the line does the work, and the text stays
+     upright so a long quotation is still readable. */
+  :where(.duck-prose blockquote) {
+    border-left: var(--sticker-border) solid var(--primary);
+    padding-left: 1.25em;
+    color: var(--muted-foreground);
+  }
+  :where(.duck-prose blockquote cite) {
+    display: block;
+    margin-top: 0.75em;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-style: normal;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  :where(.duck-prose ul, .duck-prose ol) {
+    padding-left: 1.5em;
+  }
+  :where(.duck-prose ul) {
+    list-style-type: disc;
+  }
+  :where(.duck-prose ol) {
+    list-style-type: decimal;
+  }
+  :where(.duck-prose li)::marker {
+    color: var(--primary);
+  }
+  :where(.duck-prose li + li) {
+    margin-top: 0.4em;
+  }
+  :where(.duck-prose li > ul, .duck-prose li > ol) {
+    margin-top: 0.4em;
+  }
+
+  :where(.duck-prose code) {
+    font-family: var(--font-mono);
+    font-size: 0.875em;
+    background: var(--muted);
+    border-radius: var(--radius-sm);
+    padding: 0.15em 0.4em;
+  }
+  :where(.duck-prose pre) {
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    line-height: 1.6;
+    background: var(--surface, var(--card));
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1rem 1.15rem;
+    overflow-x: auto;
+  }
+  :where(.duck-prose pre code) {
+    background: none;
+    padding: 0;
+    border-radius: 0;
+    font-size: inherit;
+  }
+
+  :where(.duck-prose hr) {
+    border: 0;
+    border-top: 1px solid var(--border);
+    margin-top: 2.5em;
+    margin-bottom: 2.5em;
+  }
+
+  :where(.duck-prose img, .duck-prose video) {
+    max-width: 100%;
+    height: auto;
+    border-radius: var(--radius-lg);
+  }
+  :where(.duck-prose figcaption) {
+    margin-top: 0.75em;
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted-foreground);
+  }
+
+  /* Tables are the one thing prose cannot fix from the outside: a table that
+     does not fit has to scroll in a box of its own, and CSS cannot add that
+     box. Wrap it — in MDX, map `table` once — and the rest is handled. */
+  :where(.duck-prose-scroll) {
+    max-width: 100%;
+    overflow-x: auto;
+  }
+  :where(.duck-prose table) {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9375rem;
+    text-align: left;
+  }
+  :where(.duck-prose th) {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    font-weight: 400;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted-foreground);
+    border-bottom: 1px solid var(--border);
+    padding: 0.6em 0.9em;
+    white-space: nowrap;
+  }
+  :where(.duck-prose td) {
+    border-bottom: 1px solid var(--border);
+    padding: 0.7em 0.9em;
+    vertical-align: top;
+  }
+  :where(.duck-prose tbody tr:last-child td) {
+    border-bottom: 0;
   }
 
   /*
@@ -499,7 +720,7 @@
       0 12px 40px -12px oklch(0.897 0.25 135 / 0.6);
     /* The sweep is the accent, not a white highlight. */
     --sheen: oklch(0.897 0.25 135 / 0.14);
-    /* Noir's CTA vocabulary: mono, uppercase, tracked, one size for every
+    /* The noir CTA vocabulary: mono, uppercase, tracked, one size for every
        button. This is the whole of §2.3 expressed as five declarations. */
     --font-button: var(--font-mono);
     --weight-button: 500;

@@ -1,0 +1,18 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "duck-section-marker",
+  "title": "Duck Section Marker",
+  "description": "The label at the top of a section: index, name, a status square that answers to the section, and a rule that bleeds out to nothing instead of stopping.",
+  "registryDependencies": [
+    "@duck/theme",
+    "@duck/hud-label"
+  ],
+  "files": [
+    {
+      "path": "registry/duck/ui/duck-section-marker.tsx",
+      "content": "import * as React from \"react\";\n\nimport { cn } from \"@/lib/utils\";\n\n/**\n * DuckSectionMarker — the label at the top of a section: an index, a name, and\n * a rule that bleeds out to nothing.\n *\n * The rule fading to transparent rather than stopping at a fixed width is the\n * whole detail. A rule with an end is a divider between two things; a rule that\n * dissolves is an annotation on the one below it.\n *\n * The dot answers to the section, not to itself: it scales up when anything\n * inside the section is hovered, which is why the section wants\n * `className=\"group/section\"` on it. Without that group the marker is simply\n * static, which is a fine place to start.\n */\nfunction DuckSectionMarker({\n  className,\n  index,\n  children,\n  align = \"left\",\n  ...props\n}: React.ComponentProps<\"div\"> & {\n  /** Section ordinal. A string, so \"03\" keeps its zero. */\n  index?: React.ReactNode;\n  /** Which side the rule runs to. */\n  align?: \"left\" | \"center\";\n}) {\n  return (\n    <div\n      data-slot=\"duck-section-marker\"\n      className={cn(\n        \"flex items-center gap-3\",\n        align === \"center\" && \"justify-center\",\n        className\n      )}\n      {...props}\n    >\n      <span\n        aria-hidden\n        className={cn(\n          \"size-1.5 shrink-0 bg-primary duck-glow-primary\",\n          \"transition-transform duration-500 ease-[var(--ease-duck)]\",\n          \"group-hover/section:scale-[1.6]\"\n        )}\n      />\n      {index !== undefined && (\n        <span className=\"hud hud-sm text-primary tabular-nums\">{index}</span>\n      )}\n      <span className=\"hud hud-tight\">{children}</span>\n      {/* One hairline, one direction, no end. */}\n      <span\n        aria-hidden\n        className=\"h-px min-w-6 flex-1 bg-[linear-gradient(to_right,var(--border),transparent)]\"\n      />\n    </div>\n  );\n}\n\nexport { DuckSectionMarker };\n",
+      "type": "registry:ui"
+    }
+  ],
+  "type": "registry:ui"
+}

@@ -1,0 +1,17 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "duck-marquee",
+  "title": "Duck Marquee",
+  "description": "A strip that runs: logos, tags, a ticker of shipped things. Seamless double track, pause on hover, edges fading into the background, and a plain scroller under reduced motion.",
+  "registryDependencies": [
+    "@duck/theme"
+  ],
+  "files": [
+    {
+      "path": "registry/duck/ui/duck-marquee.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\n\nimport { cn } from \"@/lib/utils\";\n\n/**\n * DuckMarquee — a strip that runs. Logos, tags, a ticker of shipped things.\n *\n * One animated track holding the children twice, translated by exactly -50%:\n * at the end of the pass the second copy sits where the first one started, so\n * the reset is invisible. That is also why each copy carries a trailing gap of\n * its own — two groups of equal width make -50% land on a seam instead of half\n * a gap past it.\n *\n * The duplicate is aria-hidden. A screen reader that reads the strip twice has\n * been handed the same list twice for no reason.\n *\n * Under reduced motion the animation stops and the strip becomes a plain\n * horizontal scroller: a frozen marquee that clips half its content is worse\n * than no marquee.\n */\nfunction DuckMarquee({\n  className,\n  children,\n  duration = 28,\n  reverse = false,\n  gap = \"2rem\",\n  pauseOnHover = true,\n  fade = true,\n  ...props\n}: React.ComponentProps<\"div\"> & {\n  /** Seconds for one full pass. */\n  duration?: number;\n  reverse?: boolean;\n  /** Space between items, any CSS length. */\n  gap?: string;\n  pauseOnHover?: boolean;\n  /** Fade the two edges into the background. */\n  fade?: boolean;\n}) {\n  const group = (\n    <div className=\"flex shrink-0 items-center gap-[var(--marquee-gap)] pr-[var(--marquee-gap)]\">\n      {children}\n    </div>\n  );\n\n  return (\n    <div\n      data-slot=\"duck-marquee\"\n      style={\n        {\n          \"--marquee-duration\": `${duration}s`,\n          \"--marquee-gap\": gap,\n        } as React.CSSProperties\n      }\n      className={cn(\n        \"group/marquee relative w-full overflow-hidden\",\n        \"motion-reduce:overflow-x-auto\",\n        fade &&\n          \"[mask-image:linear-gradient(to_right,transparent,black_8%,black_92%,transparent)]\",\n        className\n      )}\n      {...props}\n    >\n      <div\n        data-slot=\"duck-marquee-track\"\n        className={cn(\n          \"flex w-max [animation:duck-marquee_var(--marquee-duration)_linear_infinite]\",\n          reverse && \"[animation-direction:reverse]\",\n          pauseOnHover && \"group-hover/marquee:[animation-play-state:paused]\",\n          \"motion-reduce:animate-none\"\n        )}\n      >\n        {group}\n        <div aria-hidden className=\"contents motion-reduce:hidden\">\n          {group}\n        </div>\n      </div>\n    </div>\n  );\n}\n\nexport { DuckMarquee };\n",
+      "type": "registry:ui"
+    }
+  ],
+  "type": "registry:ui"
+}

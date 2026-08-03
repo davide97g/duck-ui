@@ -1,5 +1,5 @@
 import { site } from "@/lib/site";
-import { components } from "@/lib/registry-docs";
+import { blocks, components } from "@/lib/registry-docs";
 
 /**
  * One entry per registry people evaluate duck/ui against. Centralised on
@@ -135,7 +135,7 @@ export const comparisons: readonly Comparison[] = [
       {
         axis: "Coverage",
         them: "Broad animation catalogue",
-        duck: `${components.length} components, three blocks, one theme — additive to shadcn`,
+        duck: `${components.length} components, ${blocks.length} blocks, one theme — additive to shadcn`,
       },
     ],
     pickThem:
@@ -298,7 +298,7 @@ export const comparisons: readonly Comparison[] = [
       {
         axis: "Component complexity",
         them: "High — Gantt, Kanban, editor, chat",
-        duck: "Low to medium — controls, surfaces, feedback, three blocks",
+        duck: "Low to medium — controls, surfaces, feedback, five blocks",
       },
       {
         axis: "Visual stance",

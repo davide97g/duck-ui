@@ -7,7 +7,7 @@
       "name": "theme",
       "type": "registry:theme",
       "title": "Duck Theme",
-      "description": "duck/ui theme: dark-first canvas, duck-lime primary, holographic accents. Installs the full shadcn CSS-variable contract plus the holo utilities and the motion vocabulary, so every existing shadcn component is duck-styled with no markup changes.",
+      "description": "duck/ui theme: dark-first canvas, duck-lime primary, holographic accents. Installs the full shadcn CSS-variable contract plus the holo utilities, the display scale, the control-typography tokens and the motion vocabulary, so every existing shadcn component is duck-styled with no markup changes — and so a different theme can undo the duck styling without touching any.",
       "cssVars": {
         "theme": {
           "radius": "0.75rem",
@@ -214,20 +214,20 @@
           }
         },
         "@layer base": {
-          ":where([data-slot=\"holo-button\"], [data-slot=\"quack-button\"])": {
+          "[data-slot=\"holo-button\"], [data-slot=\"quack-button\"]": {
             "font-family": "var(--font-button, var(--font-sans))",
             "font-size": "var(--text-button, 0.875rem)",
             "font-weight": "var(--weight-button, 600)",
             "letter-spacing": "var(--tracking-button, normal)",
             "text-transform": "var(--case-button, none)"
           },
-          ":where([data-slot=\"holo-button\"], [data-slot=\"quack-button\"])[data-size=\"sm\"]": {
+          "[data-slot=\"holo-button\"][data-size=\"sm\"], [data-slot=\"quack-button\"][data-size=\"sm\"]": {
             "font-size": "var(--text-button-sm, 0.75rem)"
           },
-          ":where([data-slot=\"holo-button\"], [data-slot=\"quack-button\"])[data-size=\"lg\"]": {
+          "[data-slot=\"holo-button\"][data-size=\"lg\"], [data-slot=\"quack-button\"][data-size=\"lg\"]": {
             "font-size": "var(--text-button-lg, 1rem)"
           },
-          ":where([data-slot=\"holo-badge\"])": {
+          "[data-slot=\"holo-badge\"]": {
             "font-family": "var(--font-badge, var(--font-sans))",
             "font-size": "var(--text-badge, 0.75rem)",
             "font-weight": "var(--weight-badge, 600)",
@@ -540,7 +540,7 @@
       "name": "quack-button",
       "type": "registry:ui",
       "title": "Quack Button",
-      "description": "Button with a full motion cycle: an idle animation while it waits, magnetic pull toward the pointer, a squash on press, and animated loading, success and error states.",
+      "description": "Button with a full motion cycle: an idle animation while it waits, magnetic pull toward the pointer, a squash on press, and animated loading, success and error states. The loading mark is swappable, so a theme with no mascot can drop in a plain spinner.",
       "dependencies": [
         "class-variance-authority",
         "@radix-ui/react-slot",
@@ -1226,6 +1226,338 @@
       ]
     },
     {
+      "name": "duck-prose",
+      "type": "registry:ui",
+      "title": "Duck Prose",
+      "description": "The long-form surface: an article, a post, a changelog entry. Styles markup it has never seen — bare h2, p, blockquote, pre, table — from the theme tokens, at a 68ch measure. Every rule is wrapped in :where(), so a utility on any element inside still wins.",
+      "registryDependencies": [
+        "@duck/theme"
+      ],
+      "css": {
+        "@layer utilities": {
+          ":where(.duck-prose)": {
+            "font-size": "1.0625rem",
+            "line-height": "1.75",
+            "color": "var(--foreground)",
+            "overflow-wrap": "break-word"
+          },
+          ":where(.duck-prose) > * + *": {
+            "margin-top": "1.25em"
+          },
+          ":where(.duck-prose) > :first-child": {
+            "margin-top": "0"
+          },
+          ":where(.duck-prose h2, .duck-prose h3, .duck-prose h4)": {
+            "font-family": "var(--font-display)",
+            "font-weight": "700",
+            "line-height": "1.2",
+            "letter-spacing": "-0.02em",
+            "text-wrap": "balance",
+            "scroll-margin-top": "6rem"
+          },
+          ":where(.duck-prose) > :is(h2, h3, h4) + *": {
+            "margin-top": "0.75em"
+          },
+          ":where(.duck-prose h2)": {
+            "font-size": "1.75rem",
+            "margin-top": "2.25em"
+          },
+          ":where(.duck-prose h3)": {
+            "font-size": "1.3125rem",
+            "margin-top": "1.75em"
+          },
+          ":where(.duck-prose h4)": {
+            "font-size": "1.0625rem",
+            "margin-top": "1.5em"
+          },
+          ":where(.duck-prose a)": {
+            "color": "var(--primary)",
+            "text-decoration-line": "underline",
+            "text-decoration-thickness": "1px",
+            "text-underline-offset": "0.2em",
+            "text-decoration-color": "color-mix(in oklab, var(--primary) 45%, transparent)",
+            "transition": "text-decoration-color 0.2s var(--ease-duck)"
+          },
+          ":where(.duck-prose a:hover)": {
+            "text-decoration-color": "var(--primary)"
+          },
+          ":where(.duck-prose strong)": {
+            "font-weight": "650",
+            "color": "var(--foreground)"
+          },
+          ":where(.duck-prose mark)": {
+            "background": "color-mix(in oklab, var(--primary) 22%, transparent)",
+            "color": "inherit"
+          },
+          ":where(.duck-prose small)": {
+            "font-size": "0.875em",
+            "color": "var(--muted-foreground)"
+          },
+          ":where(.duck-prose blockquote)": {
+            "border-left": "var(--sticker-border) solid var(--primary)",
+            "padding-left": "1.25em",
+            "color": "var(--muted-foreground)"
+          },
+          ":where(.duck-prose blockquote cite)": {
+            "display": "block",
+            "margin-top": "0.75em",
+            "font-family": "var(--font-mono)",
+            "font-size": "0.75rem",
+            "font-style": "normal",
+            "letter-spacing": "0.14em",
+            "text-transform": "uppercase"
+          },
+          ":where(.duck-prose ul, .duck-prose ol)": {
+            "padding-left": "1.5em"
+          },
+          ":where(.duck-prose ul)": {
+            "list-style-type": "disc"
+          },
+          ":where(.duck-prose ol)": {
+            "list-style-type": "decimal"
+          },
+          ":where(.duck-prose li)::marker": {
+            "color": "var(--primary)"
+          },
+          ":where(.duck-prose li + li)": {
+            "margin-top": "0.4em"
+          },
+          ":where(.duck-prose li > ul, .duck-prose li > ol)": {
+            "margin-top": "0.4em"
+          },
+          ":where(.duck-prose code)": {
+            "font-family": "var(--font-mono)",
+            "font-size": "0.875em",
+            "background": "var(--muted)",
+            "border-radius": "var(--radius-sm)",
+            "padding": "0.15em 0.4em"
+          },
+          ":where(.duck-prose pre)": {
+            "font-family": "var(--font-mono)",
+            "font-size": "0.875rem",
+            "line-height": "1.6",
+            "background": "var(--surface, var(--card))",
+            "border": "1px solid var(--border)",
+            "border-radius": "var(--radius-lg)",
+            "padding": "1rem 1.15rem",
+            "overflow-x": "auto"
+          },
+          ":where(.duck-prose pre code)": {
+            "background": "none",
+            "padding": "0",
+            "border-radius": "0",
+            "font-size": "inherit"
+          },
+          ":where(.duck-prose hr)": {
+            "border": "0",
+            "border-top": "1px solid var(--border)",
+            "margin-top": "2.5em",
+            "margin-bottom": "2.5em"
+          },
+          ":where(.duck-prose img, .duck-prose video)": {
+            "max-width": "100%",
+            "height": "auto",
+            "border-radius": "var(--radius-lg)"
+          },
+          ":where(.duck-prose figcaption)": {
+            "margin-top": "0.75em",
+            "font-family": "var(--font-mono)",
+            "font-size": "0.6875rem",
+            "letter-spacing": "0.14em",
+            "text-transform": "uppercase",
+            "color": "var(--muted-foreground)"
+          },
+          ":where(.duck-prose-scroll)": {
+            "max-width": "100%",
+            "overflow-x": "auto"
+          },
+          ":where(.duck-prose table)": {
+            "width": "100%",
+            "border-collapse": "collapse",
+            "font-size": "0.9375rem",
+            "text-align": "left"
+          },
+          ":where(.duck-prose th)": {
+            "font-family": "var(--font-mono)",
+            "font-size": "0.6875rem",
+            "font-weight": "400",
+            "letter-spacing": "0.16em",
+            "text-transform": "uppercase",
+            "color": "var(--muted-foreground)",
+            "border-bottom": "1px solid var(--border)",
+            "padding": "0.6em 0.9em",
+            "white-space": "nowrap"
+          },
+          ":where(.duck-prose td)": {
+            "border-bottom": "1px solid var(--border)",
+            "padding": "0.7em 0.9em",
+            "vertical-align": "top"
+          },
+          ":where(.duck-prose tbody tr:last-child td)": {
+            "border-bottom": "0"
+          }
+        }
+      },
+      "files": [
+        {
+          "path": "registry/duck/ui/duck-prose.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "sticker-tooltip",
+      "type": "registry:ui",
+      "title": "Sticker Tooltip",
+      "description": "Hover and focus label on Radix Tooltip, so the focus behaviour, the escape handler and the aria wiring are real. duck supplies the die-cut edge and a 120ms arrival. For labels with nowhere else to live, never for information the task needs.",
+      "dependencies": [
+        "@radix-ui/react-tooltip"
+      ],
+      "registryDependencies": [
+        "@duck/theme"
+      ],
+      "files": [
+        {
+          "path": "registry/duck/ui/sticker-tooltip.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "duck-marquee",
+      "type": "registry:ui",
+      "title": "Duck Marquee",
+      "description": "A strip that runs: logos, tags, a ticker of shipped things. Seamless double track, pause on hover, edges fading into the background, and a plain scroller under reduced motion.",
+      "registryDependencies": [
+        "@duck/theme"
+      ],
+      "files": [
+        {
+          "path": "registry/duck/ui/duck-marquee.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "duck-reveal",
+      "type": "registry:ui",
+      "title": "Duck Reveal",
+      "description": "Sections arrive as the reader gets to them, and headlines assemble a word at a time. Reduced motion renders the final state rather than skipping the animation, so nothing is left invisible.",
+      "dependencies": [
+        "motion"
+      ],
+      "registryDependencies": [
+        "@duck/theme"
+      ],
+      "files": [
+        {
+          "path": "registry/duck/ui/duck-reveal.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "duck-timeline",
+      "type": "registry:ui",
+      "title": "Duck Timeline",
+      "description": "A vertical spine that draws itself on scroll, with a node per entry that lights on hover. Progress is measured across the list, not the window, so the line completes at the last node.",
+      "dependencies": [
+        "motion"
+      ],
+      "registryDependencies": [
+        "@duck/theme",
+        "@duck/hud-label"
+      ],
+      "files": [
+        {
+          "path": "registry/duck/ui/duck-timeline.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "duck-stat-grid",
+      "type": "registry:ui",
+      "title": "Duck Stat Grid",
+      "description": "The hairline grid: one border colour showing through a 1px gap. No doubled edges, no first-child resets, exactly one device pixel at any zoom. Cells are a definition list, so the label is read before the value.",
+      "registryDependencies": [
+        "@duck/theme",
+        "@duck/hud-label"
+      ],
+      "files": [
+        {
+          "path": "registry/duck/ui/duck-stat-grid.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "duck-list-row",
+      "type": "registry:ui",
+      "title": "Duck List Row",
+      "description": "The unit of a journal index, a project list, a changelog: HUD ordinal, title, meta, and a leading rule that grows in on hover while the row shifts to make room. asChild makes the whole row one link.",
+      "registryDependencies": [
+        "@duck/theme",
+        "@duck/hud-label"
+      ],
+      "files": [
+        {
+          "path": "registry/duck/ui/duck-list-row.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "duck-section-marker",
+      "type": "registry:ui",
+      "title": "Duck Section Marker",
+      "description": "The label at the top of a section: index, name, a status square that answers to the section, and a rule that bleeds out to nothing instead of stopping.",
+      "registryDependencies": [
+        "@duck/theme",
+        "@duck/hud-label"
+      ],
+      "files": [
+        {
+          "path": "registry/duck/ui/duck-section-marker.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "duck-scroll-rail",
+      "type": "registry:ui",
+      "title": "Duck Scroll Rail",
+      "description": "How far down the page you are, as one lime hairline along the top or the trailing edge. Transform-only and sprung, so a trackpad fling does not make it stutter.",
+      "dependencies": [
+        "motion"
+      ],
+      "registryDependencies": [
+        "@duck/theme"
+      ],
+      "files": [
+        {
+          "path": "registry/duck/ui/duck-scroll-rail.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "duck-chart",
+      "type": "registry:ui",
+      "title": "Duck Chart",
+      "description": "Bars, lines and areas drawn straight into SVG from the --chart-1 to --chart-5 tokens the theme has always shipped. No charting dependency. The same numbers are also emitted as a visually hidden table, because a chart nobody can read is a picture of data.",
+      "registryDependencies": [
+        "@duck/theme",
+        "@duck/hud-label"
+      ],
+      "files": [
+        {
+          "path": "registry/duck/ui/duck-chart.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "duck-hero",
       "type": "registry:block",
       "title": "Duck Hero",
@@ -1291,6 +1623,42 @@
           "path": "registry/duck/blocks/duck-dashboard.tsx",
           "type": "registry:block",
           "target": "components/blocks/duck-dashboard.tsx"
+        }
+      ]
+    },
+    {
+      "name": "duck-site-header",
+      "type": "registry:block",
+      "title": "Duck Site Header",
+      "description": "The top of a content site: identity, a handful of anchors, an optional action, and a real drawer below lg — escape closes it, and the mobile nav is a second landmark rather than a hidden tab stop. Pass render to swap the anchors for a framework link.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@duck/theme",
+        "@duck/holo-button"
+      ],
+      "files": [
+        {
+          "path": "registry/duck/blocks/duck-site-header.tsx",
+          "type": "registry:block",
+          "target": "components/blocks/duck-site-header.tsx"
+        }
+      ]
+    },
+    {
+      "name": "duck-site-footer",
+      "type": "registry:block",
+      "title": "Duck Site Footer",
+      "description": "The bottom of a content site: identity and one sentence, link columns that are each a named navigation landmark, then a hairline and the small print.",
+      "registryDependencies": [
+        "@duck/theme"
+      ],
+      "files": [
+        {
+          "path": "registry/duck/blocks/duck-site-footer.tsx",
+          "type": "registry:block",
+          "target": "components/blocks/duck-site-footer.tsx"
         }
       ]
     }

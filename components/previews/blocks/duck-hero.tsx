@@ -15,7 +15,7 @@ export default function DuckHeroDemo() {
       ]}
       proof={
         <p className="text-sm text-muted-foreground">
-          31 components · MIT · no runtime dependency
+          49 components · MIT · no runtime dependency
         </p>
       }
     />

@@ -1595,6 +1595,263 @@ export const components: ComponentDoc[] = [
       "Compose it with StreamText for the message and DuckThinking for the wait.",
     ],
   },
+  {
+    slug: "duck-prose",
+    title: "Duck Prose",
+    summary:
+      "The long-form surface. Styles markup it has never seen — bare headings, paragraphs, quotes, tables — from the theme tokens, at a measure that stays readable.",
+    category: "Display",
+    registryDependencies: ["@duck/theme"],
+    exports: ["DuckProse"],
+    props: [
+      {
+        name: "measure",
+        type: '"default" | "wide" | "full"',
+        default: '"default"',
+        description:
+          "68ch, 76ch, or no limit. 68 is where a line stops being pleasant to read; full is for a table-heavy page.",
+      },
+      {
+        name: "as",
+        type: '"div" | "article" | "section" | "main"',
+        default: '"div"',
+        description: "The element. A post is an article, not a div inside one.",
+      },
+    ],
+    rules: [
+      "Every rule ships inside :where(), so it is zero specificity: a utility on any element inside prose wins. That is deliberate — a prose wrapper that cannot be overridden is a cage.",
+      "Tables are the one thing prose cannot fix from outside: a wide table has to scroll in a box of its own, and CSS cannot add that box. Wrap it in .duck-prose-scroll — in MDX, map `table` once.",
+      "@tailwindcss/typography is not used and not needed here. It ships its own scale, greys and blockquote, none of which are a theme's.",
+    ],
+  },
+  {
+    slug: "sticker-tooltip",
+    title: "Sticker Tooltip",
+    summary:
+      "A hover and focus label on Radix Tooltip, with the die-cut edge and a 120ms arrival.",
+    category: "Feedback",
+    client: true,
+    dependencies: ["@radix-ui/react-tooltip"],
+    registryDependencies: ["@duck/theme"],
+    exports: [
+      "StickerTooltip",
+      "StickerTooltipProvider",
+      "StickerTooltipRoot",
+      "StickerTooltipTrigger",
+      "StickerTooltipContent",
+    ],
+    props: [
+      { name: "content", type: "React.ReactNode", description: "The label. A few words." },
+      {
+        name: "side",
+        type: '"top" | "right" | "bottom" | "left"',
+        default: '"top"',
+        description: "Preferred side. Radix flips it when there is no room.",
+      },
+      { name: "align", type: '"start" | "center" | "end"', default: '"center"', description: "Alignment along that side." },
+      { name: "arrow", type: "boolean", default: "true", description: "Draw the pointer." },
+      { name: "delay", type: "number", default: "250", description: "Milliseconds of hover before it opens." },
+      {
+        name: "children",
+        type: "React.ReactNode",
+        description: "The control being labelled. Rendered as the trigger, so it must forward props.",
+      },
+    ],
+    rules: [
+      "A tooltip is hover-only chrome: no touch, gone as soon as the pointer leaves. Use it for a label with nowhere else to live — an icon-only control, a truncated value — and never for information the task needs.",
+      "For a keyboard shortcut, print it inline with StickerKbd instead. Every user can see that one.",
+      "The all-in-one StickerTooltip brings its own provider. Compose the parts when a group of controls should share one delay.",
+    ],
+  },
+  {
+    slug: "duck-marquee",
+    title: "Duck Marquee",
+    summary:
+      "A strip that runs: logos, tags, a ticker of shipped things. Seamless loop, pause on hover, edges fading out.",
+    category: "Display",
+    client: true,
+    registryDependencies: ["@duck/theme"],
+    exports: ["DuckMarquee"],
+    props: [
+      { name: "duration", type: "number", default: "28", description: "Seconds for one full pass." },
+      { name: "reverse", type: "boolean", default: "false", description: "Run the other way." },
+      { name: "gap", type: "string", default: '"2rem"', description: "Space between items, any CSS length." },
+      { name: "pauseOnHover", type: "boolean", default: "true", description: "Stop while the pointer is on it." },
+      { name: "fade", type: "boolean", default: "true", description: "Mask the two edges into the background." },
+    ],
+    rules: [
+      "The children are rendered twice and the duplicate is aria-hidden. A screen reader that reads the strip twice has been handed the same list twice.",
+      "Under reduced motion the animation stops and the strip becomes a plain horizontal scroller. A frozen marquee that clips half its content is worse than no marquee.",
+      "It is decoration. Nothing that only exists inside a moving strip is discoverable.",
+    ],
+  },
+  {
+    slug: "duck-reveal",
+    title: "Duck Reveal",
+    summary:
+      "Sections arrive as the reader gets to them, and headlines assemble a word at a time.",
+    category: "Display",
+    client: true,
+    dependencies: ["motion"],
+    registryDependencies: ["@duck/theme"],
+    exports: ["DuckReveal", "DuckSplitReveal"],
+    props: [
+      { name: "delay", type: "number", default: "0", description: "Seconds before it starts, for staggering siblings." },
+      { name: "duration", type: "number", default: "0.65", description: "Seconds the move takes." },
+      { name: "distance", type: "number", default: "22", description: "Distance travelled, in px." },
+      {
+        name: "direction",
+        type: '"up" | "down" | "left" | "right" | "in"',
+        default: '"up"',
+        description: "Which way it comes from. in is opacity only.",
+      },
+      { name: "repeat", type: "boolean", default: "false", description: "Replay on every entry instead of once." },
+      { name: "text", type: "string", description: "On DuckSplitReveal: the line to split. A string, because it has to be split." },
+      { name: "by", type: '"word" | "char"', default: '"word"', description: "On DuckSplitReveal: piece size." },
+      { name: "stagger", type: "number", default: "0.045", description: "On DuckSplitReveal: seconds between two pieces." },
+    ],
+    rules: [
+      "Reduced motion renders the final state, not no state. Skipping the animation without setting the end leaves the element invisible for good — that is the bug this component exists to avoid.",
+      "SplitReveal is for a headline. A paragraph split into words is 200 animated elements and a line break that lands somewhere new on every reflow.",
+      "The split pieces are aria-hidden and the whole line is the accessible name, so a screen reader reads a sentence rather than a list of words.",
+    ],
+  },
+  {
+    slug: "duck-timeline",
+    title: "Duck Timeline",
+    summary:
+      "A vertical spine that draws itself on scroll, with a node per entry that lights on hover.",
+    category: "Display",
+    client: true,
+    dependencies: ["motion"],
+    registryDependencies: ["@duck/theme", "@duck/hud-label"],
+    exports: ["DuckTimeline", "DuckTimelineItem"],
+    props: [
+      { name: "when", type: "React.ReactNode", description: "On an item: the date, version or milestone it is pinned to." },
+      { name: "title", type: "React.ReactNode", description: "On an item: the headline." },
+      { name: "active", type: "boolean", default: "false", description: "On an item: keep the node lit. For the current entry." },
+    ],
+    rules: [
+      "Progress is measured across the list rather than the window, so the line completes at the last node instead of a screen later.",
+      "Under reduced motion the lime line is drawn in full. A spine that never fills reads as a broken component.",
+      "The spine is decorative — the list element already carries the order.",
+    ],
+  },
+  {
+    slug: "duck-stat-grid",
+    title: "Duck Stat Grid",
+    summary:
+      "The hairline grid: one border colour showing through a 1px gap, with the cells painted on top.",
+    category: "Display",
+    registryDependencies: ["@duck/theme", "@duck/hud-label"],
+    exports: ["DuckStatGrid", "DuckStat"],
+    props: [
+      { name: "cols", type: "2 | 3 | 4", default: "3", description: "Columns above the sm breakpoint. Always one below it." },
+      { name: "bordered", type: "boolean", default: "true", description: "Draw the outer edge as well as the inner rules." },
+      { name: "label", type: "React.ReactNode", description: "On a stat: the HUD label. Read before the value." },
+      { name: "value", type: "React.ReactNode", description: "On a stat: the number. Tabular figures." },
+      { name: "hint", type: "React.ReactNode", description: "On a stat: a delta, a unit, a date." },
+    ],
+    rules: [
+      "gap-px over a --border background beats a border per cell: no doubling on shared edges, nothing to reset on the first column, and exactly one device pixel at any zoom.",
+      "Cells are --background rather than --card on purpose — the grid reads as the canvas divided up, not as a row of floating panels. Pass bg-card on a cell if a panel is what you want.",
+      "It is a definition list, so the label is announced before the value even though the value leads visually.",
+    ],
+  },
+  {
+    slug: "duck-list-row",
+    title: "Duck List Row",
+    summary:
+      "The unit of a journal index, a project list, a changelog: ordinal, title, meta, and a rule that grows in on hover.",
+    category: "Navigation",
+    registryDependencies: ["@duck/theme", "@duck/hud-label"],
+    exports: ["DuckListRow"],
+    props: [
+      { name: "index", type: "React.ReactNode", description: 'Ordinal in the list. A string, so "01" keeps its zero.' },
+      { name: "title", type: "React.ReactNode", description: "The headline." },
+      { name: "description", type: "React.ReactNode", description: "A line under the title." },
+      { name: "meta", type: "React.ReactNode", description: "Date, tag, reading time — the quiet half of the row." },
+      { name: "trailing", type: "React.ReactNode", description: "Right edge: a chevron, a value, a badge." },
+      {
+        name: "asChild",
+        type: "boolean",
+        default: "false",
+        description:
+          "Render the child element as the row, for a whole-row link. The row supplies its own content, so the child is written bare: <a href=\"…\" />.",
+      },
+    ],
+    rules: [
+      "A row that is a link should be one anchor. Not an anchor around the title with a card around that — one focus stop, one hover target.",
+      "The leading rule is a scaleY transform rather than a width, so the hover costs a composited property and nothing on the main thread.",
+    ],
+  },
+  {
+    slug: "duck-section-marker",
+    title: "Duck Section Marker",
+    summary:
+      "The label at the top of a section: index, name, and a rule that bleeds out to nothing.",
+    category: "Display",
+    registryDependencies: ["@duck/theme", "@duck/hud-label"],
+    exports: ["DuckSectionMarker"],
+    props: [
+      { name: "index", type: "React.ReactNode", description: 'Section ordinal. A string, so "03" keeps its zero.' },
+      { name: "align", type: '"left" | "center"', default: '"left"', description: "Which side the rule runs to." },
+    ],
+    rules: [
+      "A rule with an end is a divider between two things. A rule that dissolves is an annotation on the one below it — that is the whole detail.",
+      "The dot answers to the section, not to itself: put group/section on the section for it to wake up on hover.",
+    ],
+  },
+  {
+    slug: "duck-scroll-rail",
+    title: "Duck Scroll Rail",
+    summary: "How far down the page you are, as one lime hairline.",
+    category: "Navigation",
+    client: true,
+    dependencies: ["motion"],
+    registryDependencies: ["@duck/theme"],
+    exports: ["DuckScrollRail"],
+    props: [
+      { name: "side", type: '"top" | "right"', default: '"top"', description: "Along the top of the viewport, or up its trailing edge." },
+      { name: "thickness", type: "number", default: "2", description: "Rail thickness in px." },
+    ],
+    rules: [
+      "It is aria-hidden. Scroll position is not information a screen reader is missing.",
+      "It does not hide under reduced motion: it is a readout, not an animation. It moves because the page moved.",
+      "Transform-only, so it costs nothing per frame even though it updates on every scroll event.",
+    ],
+  },
+  {
+    slug: "duck-chart",
+    title: "Duck Chart",
+    summary:
+      "Bars, lines and areas drawn straight into SVG from the chart tokens. No charting dependency.",
+    category: "Display",
+    client: true,
+    registryDependencies: ["@duck/theme", "@duck/hud-label"],
+    exports: ["DuckChart"],
+    props: [
+      { name: "labels", type: "string[]", description: "One per x position. Length sets the number of columns." },
+      {
+        name: "series",
+        type: "{ name: string; values: number[]; color?: string }[]",
+        description: "Colours default to --chart-1 through --chart-5 by position.",
+      },
+      { name: "type", type: '"bar" | "line" | "area"', default: '"bar"', description: "Shape." },
+      { name: "title", type: "string", description: "What the figure is. Used for the table caption." },
+      { name: "height", type: "number", default: "220", description: "Plot height in px. Width is always fluid." },
+      { name: "max", type: "number", description: "Fix the top of the scale. Defaults to the largest value, padded." },
+      { name: "grid", type: "boolean", default: "true", description: "Horizontal rules behind the plot." },
+      { name: "xAxis", type: "boolean", default: "true", description: "Print the x labels." },
+      { name: "legend", type: "boolean", description: "Series names above the plot. On by default past one series." },
+      { name: "format", type: "(value: number) => string", description: "Number formatter for the table." },
+    ],
+    rules: [
+      "The same numbers are emitted as a visually hidden table and the SVG is aria-hidden. A chart nobody can read is a picture of data.",
+      "This is not a charting library: no zoom, no brush, no pointer tooltip, no time axis. Reach for recharts or visx when the chart is the product; use this when the chart is a figure in a page.",
+      "The theme has shipped --chart-1 through --chart-5 since the first release. This is what renders them.",
+    ],
+  },
 ];
 
 export function getComponent(slug: string) {
@@ -1813,6 +2070,71 @@ export const blocks: BlockDoc[] = [
       "No holo in the chrome. The shell is on screen for the whole session; the one iridescent element belongs to the page inside it.",
       "The theme switcher needs a next-themes provider above the shell. Pass themeSwitcher={false} if the app has none.",
       "The shell measures itself, not the window: the sidebar is a drawer under 36rem of shell width and sticky above it, so an embedded shell behaves like a narrow one. Keep the nav to one screen — it does not scroll independently.",
+    ],
+  },
+  {
+    slug: "duck-site-header",
+    title: "Duck Site Header",
+    summary:
+      "The top of a content site: identity, a handful of anchors, one action, and a real drawer below lg.",
+    target: "components/blocks/duck-site-header.tsx",
+    dependencies: ["lucide-react"],
+    registryDependencies: ["@duck/theme", "@duck/holo-button"],
+    composes: ["holo-button"],
+    exports: ["DuckSiteHeader"],
+    props: [
+      { name: "brand", type: "React.ReactNode", description: "Wordmark, logo, or the site name as text." },
+      { name: "brandHref", type: "string", default: '"/"', description: "Where the brand links." },
+      {
+        name: "nav",
+        type: "DuckSiteHeaderItem[]",
+        description: "label, href, active, external. The block does not guess the current section from the URL.",
+      },
+      { name: "cta", type: "{ label: string; href: string }", description: "The one action on the right." },
+      { name: "actions", type: "React.ReactNode", description: "Search, theme switcher, language toggle — anything left of the CTA." },
+      { name: "sticky", type: "boolean", default: "true", description: "Stick to the top with a blurred backdrop." },
+      {
+        name: "render",
+        type: "(item, className) => React.ReactNode",
+        description: "Swap the plain anchors for a framework link, so client navigation works.",
+      },
+    ],
+    rules: [
+      "Links are anchors by default so the block works in any framework. Pass render for next/link or your router equivalent.",
+      "The drawer is a second nav rather than the same one re-laid-out: a menu that only exists at one width should not leave a hidden tab stop at the other.",
+      "Escape closes it, and the toggle owns aria-expanded and aria-controls. Active state is yours to pass — the block has no router.",
+    ],
+  },
+  {
+    slug: "duck-site-footer",
+    title: "Duck Site Footer",
+    summary:
+      "The bottom of a content site: identity and one sentence, link columns, a hairline, the small print.",
+    target: "components/blocks/duck-site-footer.tsx",
+    registryDependencies: ["@duck/theme"],
+    composes: [],
+    exports: ["DuckSiteFooter"],
+    props: [
+      { name: "brand", type: "React.ReactNode", description: "Mark, wordmark or site name." },
+      { name: "description", type: "React.ReactNode", description: "One sentence. Not a mission statement." },
+      {
+        name: "columns",
+        type: "DuckSiteFooterColumn[]",
+        description: "title plus links of label, href, external. Each column renders as its own navigation landmark.",
+      },
+      { name: "note", type: "React.ReactNode", description: "Bottom left: copyright, credit, a build note." },
+      { name: "legal", type: "DuckSiteFooterLink[]", description: "Bottom right: privacy, terms, licence." },
+      {
+        name: "headingLevel",
+        type: '"h2" | "h3" | "p"',
+        default: '"h2"',
+        description: "Column heading element. Drop it to p if the page already spends its heading levels.",
+      },
+      { name: "render", type: "(link, className) => React.ReactNode", description: "Framework link, as on the header." },
+    ],
+    rules: [
+      "Each column is a nav named by its own heading, because a footer is a navigation landmark and that is what a screen reader lands in it looking for.",
+      "Three or four columns. A footer with nine is a sitemap, and a sitemap belongs on its own page.",
     ],
   },
 ];

@@ -2,7 +2,7 @@
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "theme",
   "title": "Duck Theme",
-  "description": "duck/ui theme: dark-first canvas, duck-lime primary, holographic accents. Installs the full shadcn CSS-variable contract plus the holo utilities and the motion vocabulary, so every existing shadcn component is duck-styled with no markup changes.",
+  "description": "duck/ui theme: dark-first canvas, duck-lime primary, holographic accents. Installs the full shadcn CSS-variable contract plus the holo utilities, the display scale, the control-typography tokens and the motion vocabulary, so every existing shadcn component is duck-styled with no markup changes — and so a different theme can undo the duck styling without touching any.",
   "cssVars": {
     "theme": {
       "radius": "0.75rem",
@@ -209,20 +209,20 @@
       }
     },
     "@layer base": {
-      ":where([data-slot=\"holo-button\"], [data-slot=\"quack-button\"])": {
+      "[data-slot=\"holo-button\"], [data-slot=\"quack-button\"]": {
         "font-family": "var(--font-button, var(--font-sans))",
         "font-size": "var(--text-button, 0.875rem)",
         "font-weight": "var(--weight-button, 600)",
         "letter-spacing": "var(--tracking-button, normal)",
         "text-transform": "var(--case-button, none)"
       },
-      ":where([data-slot=\"holo-button\"], [data-slot=\"quack-button\"])[data-size=\"sm\"]": {
+      "[data-slot=\"holo-button\"][data-size=\"sm\"], [data-slot=\"quack-button\"][data-size=\"sm\"]": {
         "font-size": "var(--text-button-sm, 0.75rem)"
       },
-      ":where([data-slot=\"holo-button\"], [data-slot=\"quack-button\"])[data-size=\"lg\"]": {
+      "[data-slot=\"holo-button\"][data-size=\"lg\"], [data-slot=\"quack-button\"][data-size=\"lg\"]": {
         "font-size": "var(--text-button-lg, 1rem)"
       },
-      ":where([data-slot=\"holo-badge\"])": {
+      "[data-slot=\"holo-badge\"]": {
         "font-family": "var(--font-badge, var(--font-sans))",
         "font-size": "var(--text-badge, 0.75rem)",
         "font-weight": "var(--weight-badge, 600)",

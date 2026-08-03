@@ -1,4 +1,4 @@
-import { components } from "@/lib/registry-docs";
+import { blocks, components } from "@/lib/registry-docs";
 import { site } from "@/lib/site";
 
 /**
@@ -16,7 +16,7 @@ export interface FaqItem {
 export const faq: readonly FaqItem[] = [
   {
     question: "What is duck/ui?",
-    answer: `duck/ui is a dark-first component registry for shadcn/ui, distributed under the @duck namespace. It ships ${components.length} React components, three blocks, one theme and one hook, all installed by the standard shadcn CLI. The look is holographic accents and thick sticker borders on a near-black canvas.`,
+    answer: `duck/ui is a dark-first component registry for shadcn/ui, distributed under the @duck namespace. It ships ${components.length} React components, ${blocks.length} blocks, one theme and one hook, all installed by the standard shadcn CLI. The look is holographic accents and thick sticker borders on a near-black canvas.`,
   },
   {
     question: "How do I install duck/ui?",

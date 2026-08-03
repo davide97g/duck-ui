@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "duck-scroll-rail",
+  "title": "Duck Scroll Rail",
+  "description": "How far down the page you are, as one lime hairline along the top or the trailing edge. Transform-only and sprung, so a trackpad fling does not make it stutter.",
+  "dependencies": [
+    "motion"
+  ],
+  "registryDependencies": [
+    "@duck/theme"
+  ],
+  "files": [
+    {
+      "path": "registry/duck/ui/duck-scroll-rail.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\nimport { motion, useScroll, useSpring } from \"motion/react\";\n\nimport { cn } from \"@/lib/utils\";\n\n/**\n * DuckScrollRail — how far down the page you are, as one lime hairline.\n *\n * A progress bar for reading, so it is deliberately the quietest thing on the\n * screen: one pixel, no numbers, no label, `aria-hidden` because scroll\n * position is not information a screen reader is missing.\n *\n * Fixed and composited: transform-only, so it costs nothing per frame even\n * though it updates on every scroll event. The spring is there to keep a\n * trackpad fling from making the line stutter.\n *\n * The rail does not hide under reduced motion. It is a readout, not an\n * animation — it moves because the page moved.\n */\nfunction DuckScrollRail({\n  className,\n  side = \"top\",\n  thickness = 2,\n  ...props\n}: Omit<React.ComponentProps<typeof motion.div>, \"style\"> & {\n  /** Along the top of the viewport, or up its trailing edge. */\n  side?: \"top\" | \"right\";\n  /** Rail thickness in px. */\n  thickness?: number;\n}) {\n  const { scrollYProgress } = useScroll();\n  const progress = useSpring(scrollYProgress, {\n    stiffness: 140,\n    damping: 32,\n    restDelta: 0.0005,\n  });\n\n  const vertical = side === \"right\";\n\n  return (\n    <motion.div\n      aria-hidden\n      data-slot=\"duck-scroll-rail\"\n      style={{\n        ...(vertical\n          ? { scaleY: progress, width: thickness }\n          : { scaleX: progress, height: thickness }),\n      }}\n      className={cn(\n        \"pointer-events-none fixed z-50 bg-primary\",\n        vertical\n          ? \"top-0 right-0 h-full origin-top\"\n          : \"top-0 left-0 w-full origin-left\",\n        className\n      )}\n      {...props}\n    />\n  );\n}\n\nexport { DuckScrollRail };\n",
+      "type": "registry:ui"
+    }
+  ],
+  "type": "registry:ui"
+}

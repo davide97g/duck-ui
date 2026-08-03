@@ -112,8 +112,9 @@ export default function ComparePage() {
               unpick.
             </li>
             <li>
-              <strong>You need a board, a chart or an editor.</strong> duck/ui
-              stops at controls, surfaces, feedback and three blocks. Kibo UI
+              <strong>You need a board or an editor.</strong> duck/ui stops at
+              controls, surfaces, feedback, long-form and five blocks — the
+              chart it ships is a figure in a page, not a data product. Kibo UI
               and standard shadcn cover that ground and the theme styles both.
             </li>
             <li>

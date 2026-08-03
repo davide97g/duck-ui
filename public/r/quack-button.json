@@ -2,7 +2,7 @@
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "quack-button",
   "title": "Quack Button",
-  "description": "Button with a full motion cycle: an idle animation while it waits, magnetic pull toward the pointer, a squash on press, and animated loading, success and error states.",
+  "description": "Button with a full motion cycle: an idle animation while it waits, magnetic pull toward the pointer, a squash on press, and animated loading, success and error states. The loading mark is swappable, so a theme with no mascot can drop in a plain spinner.",
   "dependencies": [
     "class-variance-authority",
     "@radix-ui/react-slot",
