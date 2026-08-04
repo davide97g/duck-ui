@@ -3705,6 +3705,59 @@ export const blocks: BlockDoc[] = [
       "It sticks to the panel, not the viewport. A settings panel inside a dialog must not pin a bar over the page behind it.",
     ],
   },
+  {
+    slug: "duck-auth-card",
+    title: "Duck Auth Card",
+    summary:
+      "Sign in with a code — address, then digits — with the focus, the announcement, the autofill attributes and the resend cooldown already handled.",
+    target: "components/blocks/duck-auth-card.tsx",
+    client: true,
+    registryDependencies: [
+      "@duck/theme",
+      "@duck/glow-input",
+      "@duck/holo-separator",
+      "@duck/quack-button",
+      "@duck/sticker-card",
+      "@duck/sticker-otp",
+    ],
+    composes: ["sticker-card", "sticker-otp", "glow-input", "quack-button", "holo-separator"],
+    exports: ["DuckAuthCard"],
+    props: [
+      { name: "brand", type: "React.ReactNode", description: "Mark or wordmark above the title." },
+      { name: "title", type: "React.ReactNode", default: '"Sign in"', description: "The card's heading, rendered as the h1." },
+      { name: "description", type: "React.ReactNode", description: "One line under it." },
+      {
+        name: "onRequestCode",
+        type: "(email: string) => void | Promise<unknown>",
+        description: "Called with the address. Resolve to advance to the code step; reject to stay put with the message.",
+      },
+      {
+        name: "onVerify",
+        type: "(code: string, email: string) => void | Promise<unknown>",
+        description: "Called once per code, whether it arrived by typing, pasting or autofill.",
+      },
+      { name: "providers", type: "DuckAuthProvider[]", description: "label, icon, onSelect — OAuth buttons above the field." },
+      { name: "codeLength", type: "number", default: "6", description: "Digits in the code. Match whatever you send." },
+      { name: "resendIn", type: "number", default: "30", description: "Seconds before the resend button re-arms." },
+      {
+        name: "submitOnComplete",
+        type: "boolean",
+        default: "true",
+        description: "Verify as soon as the last digit lands. The button stays, for a paste that lands early.",
+      },
+      { name: "error", type: "string", description: "Server-side failure. Rendered in an alert region and kept until it changes." },
+      { name: "legal", type: "React.ReactNode", description: "Small print inside the card: terms, privacy." },
+      { name: "footer", type: "React.ReactNode", description: 'Under the card: "No account? Sign up".' },
+    ],
+    rules: [
+      "Focus follows the step. Swapping a form's contents leaves focus on a button that no longer exists, which drops a keyboard user at the top of the document and tells a screen-reader user nothing.",
+      "The step change is announced in a polite region. Nothing else in a two-step form says that the field under the caret is now a different one.",
+      "autoComplete=\"one-time-code\" on a single input is what makes iOS offer the SMS code. It works because StickerOtp is one real input under six cells, not six inputs.",
+      "One verification per code. A paste that completes the strip and a press of the button are the same intent, and firing twice is how a code gets consumed before it is checked.",
+      "Errors are announced, not just red, and a resubmit does not clear them silently.",
+      "The submit button is the screen's one holo element. A sign-in card has nothing else competing for it.",
+    ],
+  },
 ];
 
 export function getBlock(slug: string) {

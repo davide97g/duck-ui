@@ -2214,6 +2214,27 @@
           "target": "components/blocks/duck-settings-panel.tsx"
         }
       ]
+    },
+    {
+      "name": "duck-auth-card",
+      "type": "registry:block",
+      "title": "Duck Auth Card",
+      "description": "Sign in with a code: address first, digits second. Focus moves to the strip when the step does, the step change is announced, autoComplete=\"one-time-code\" makes iOS offer the SMS code, resend owns its cooldown, and one verification fires per code however it was entered.",
+      "registryDependencies": [
+        "@duck/theme",
+        "@duck/glow-input",
+        "@duck/holo-separator",
+        "@duck/quack-button",
+        "@duck/sticker-card",
+        "@duck/sticker-otp"
+      ],
+      "files": [
+        {
+          "path": "registry/duck/blocks/duck-auth-card.tsx",
+          "type": "registry:block",
+          "target": "components/blocks/duck-auth-card.tsx"
+        }
+      ]
     }
   ]
 }
