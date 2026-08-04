@@ -2151,6 +2151,28 @@
           "target": "components/blocks/duck-media-shelf.tsx"
         }
       ]
+    },
+    {
+      "name": "duck-player-bar",
+      "type": "registry:block",
+      "title": "Duck Player Bar",
+      "description": "The docked transport: a fixed middle column so the play button does not move when the track title does, an elapsed read-out that follows the drag rather than the playhead, digits for the eye and words for the ear, and opt-in shortcuts that leave a text field alone.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@duck/theme",
+        "@duck/duck-media-slider",
+        "@duck/duck-volume",
+        "@duck/quack-button"
+      ],
+      "files": [
+        {
+          "path": "registry/duck/blocks/duck-player-bar.tsx",
+          "type": "registry:block",
+          "target": "components/blocks/duck-player-bar.tsx"
+        }
+      ]
     }
   ]
 }

@@ -3534,6 +3534,61 @@ export const blocks: BlockDoc[] = [
       "The tile stays exactly one focusable link. Put a duration or a play badge in overlay, which takes no pointer events, rather than adding a control inside the frame.",
     ],
   },
+  {
+    slug: "duck-player-bar",
+    title: "Duck Player Bar",
+    summary:
+      "The docked transport: a play button that stays put, an elapsed read-out that follows the drag instead of the playhead, and a seek bar that speaks in words.",
+    target: "components/blocks/duck-player-bar.tsx",
+    client: true,
+    dependencies: ["lucide-react"],
+    registryDependencies: [
+      "@duck/theme",
+      "@duck/duck-media-slider",
+      "@duck/duck-volume",
+      "@duck/quack-button",
+    ],
+    composes: ["duck-media-slider", "duck-volume", "quack-button"],
+    exports: ["DuckPlayerBar", "clock"],
+    props: [
+      { name: "art", type: "React.ReactNode", description: "Artwork or mark beside the title." },
+      { name: "title", type: "React.ReactNode", description: "What is playing." },
+      { name: "subtitle", type: "React.ReactNode", description: "Artist, series, episode." },
+      {
+        name: "duration",
+        type: "number",
+        description:
+          "Seconds. Leave it undefined for a live stream — the bar disables the seek and prints live rather than 0:00.",
+      },
+      { name: "position", type: "number", default: "0", description: "Playhead in seconds." },
+      { name: "buffered", type: "number", description: "Fraction of the whole track that has loaded, 0 to 1." },
+      { name: "playing", type: "boolean", default: "false", description: "Drives the icon and the button's accessible name." },
+      { name: "onPlayingChange", type: "(playing: boolean) => void", description: "Fires from the button and from Space when shortcuts are on." },
+      { name: "onSeek", type: "(seconds: number) => void", description: "Once, on release. This is the one that seeks." },
+      { name: "onScrub", type: "(seconds: number) => void", description: "Every step of a drag, while it is still in flight." },
+      { name: "onPrevious", type: "() => void", description: "Renders the previous button when passed." },
+      { name: "onNext", type: "() => void", description: "Renders the next button when passed." },
+      { name: "volume", type: "number", description: "0 to 1, straight from video.volume." },
+      { name: "muted", type: "boolean", description: "Independent of volume, as in the media element." },
+      { name: "preview", type: "(seconds: number) => React.ReactNode", description: "Thumbnail or chapter name under the pointer, before commit." },
+      { name: "actions", type: "React.ReactNode", description: "Right of the volume: repeat, shuffle, queue, cast." },
+      {
+        name: "shortcuts",
+        type: "boolean",
+        default: "false",
+        description:
+          "Bind Space and the arrows globally. Off by default, and even on it ignores inputs, textareas and contenteditable.",
+      },
+      { name: "seekStep", type: "number", default: "10", description: "Seconds an arrow key jumps when shortcuts are on." },
+    ],
+    rules: [
+      "The transport sits in a fixed middle grid column. With justify-between the play button slides as the title changes length, and the target a reader aims at should not move between tracks.",
+      "The read-out follows the drag, not the playhead. DuckMediaSlider owns the value while a scrub is in flight, and digits that argue with the handle the reader is holding are worse than none.",
+      "Digits for the eye, words for the ear: the label shows 1:04 and aria-valuetext says \"1 minute 4 seconds of 3 minutes 20 seconds\".",
+      "Play is an action, not a toggle. One button whose icon and label swap, never aria-pressed — \"Pause, pressed\" tells a listener nothing they can act on.",
+      "Shortcuts are opt-in and never fire from a text field. A player docked under a page must not eat Space from the search box above it.",
+    ],
+  },
 ];
 
 export function getBlock(slug: string) {

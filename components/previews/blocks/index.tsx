@@ -5,6 +5,7 @@ import DuckFaqDemo from "./duck-faq";
 import DuckHeroDemo from "./duck-hero";
 import DuckLogoWallDemo from "./duck-logo-wall";
 import DuckMediaShelfDemo from "./duck-media-shelf";
+import DuckPlayerBarDemo from "./duck-player-bar";
 import DuckPricingDemo from "./duck-pricing";
 import DuckSiteFooterDemo from "./duck-site-footer";
 import DuckSiteHeaderDemo from "./duck-site-header";
@@ -19,6 +20,7 @@ export const blockPreviews = {
   "duck-hero": DuckHeroDemo,
   "duck-logo-wall": DuckLogoWallDemo,
   "duck-media-shelf": DuckMediaShelfDemo,
+  "duck-player-bar": DuckPlayerBarDemo,
   "duck-pricing": DuckPricingDemo,
   "duck-site-footer": DuckSiteFooterDemo,
   "duck-site-header": DuckSiteHeaderDemo,
