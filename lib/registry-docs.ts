@@ -3800,6 +3800,49 @@ export const blocks: BlockDoc[] = [
       "A queued row's bar is indeterminate. A bar sitting at 0% reads as a stall, which is a different state.",
     ],
   },
+  {
+    slug: "duck-changelog",
+    title: "Duck Changelog",
+    summary:
+      "Releases down the timeline spine, each an article with an anchor from its version, dates printed in UTC, and the body left as prose so MDX drops in.",
+    target: "components/blocks/duck-changelog.tsx",
+    registryDependencies: [
+      "@duck/theme",
+      "@duck/duck-prose",
+      "@duck/duck-section-marker",
+      "@duck/duck-timeline",
+      "@duck/holo-badge",
+    ],
+    composes: ["duck-timeline", "duck-prose", "duck-section-marker", "holo-badge"],
+    exports: ["DuckChangelog", "slugify"],
+    props: [
+      { name: "eyebrow", type: "React.ReactNode", description: "Section marker above the heading." },
+      { name: "title", type: "React.ReactNode", description: "Page heading, rendered as the h1." },
+      { name: "description", type: "React.ReactNode", description: "One line under it." },
+      {
+        name: "releases",
+        type: "DuckChangelogRelease[]",
+        description:
+          "version, date, title, tags, highlights, body. Newest first — the first entry is the one marked latest.",
+      },
+      { name: "idPrefix", type: "string", description: "Prefix for the anchors, when one page carries two changelogs." },
+      { name: "locale", type: "string", default: '"en-GB"', description: "Locale for the printed date. The time zone stays UTC." },
+      { name: "latestLabel", type: "string", default: '"latest"', description: "Badge on the newest release." },
+      {
+        name: "headingLevel",
+        type: '"h2" | "h3"',
+        default: '"h2"',
+        description: "Release heading level. Drop to h3 when this sits under an existing h2.",
+      },
+    ],
+    rules: [
+      "The anchor comes from the version, not from useId. The point of a changelog entry is that someone can send /changelog#1-2-0 and land on it.",
+      "Dates print in UTC. A formatter that follows the reader's zone renders one string on the server and another in the browser — a hydration mismatch that only appears for readers a day away from you.",
+      "Pass releases newest first. The first entry gets the lit node and the badge, and nothing else does: a list where every row is highlighted has highlighted nothing.",
+      "The body stays prose. A release note is written, so DuckProse styles whatever the MDX pipeline hands over; highlights carries the scannable half for the readers who want four lines instead of four paragraphs.",
+      "The block ships no client code of its own. A page of releases should be readable without JavaScript.",
+    ],
+  },
 ];
 
 export function getBlock(slug: string) {

@@ -2257,6 +2257,26 @@
           "target": "components/blocks/duck-upload.tsx"
         }
       ]
+    },
+    {
+      "name": "duck-changelog",
+      "type": "registry:block",
+      "title": "Duck Changelog",
+      "description": "Releases down the timeline spine, each one an article with an anchor derived from its version so it can be linked. Dates are machine-readable and printed in UTC to keep the server and the browser agreeing, one entry is the latest, and the body is prose so MDX output drops straight in.",
+      "registryDependencies": [
+        "@duck/theme",
+        "@duck/duck-prose",
+        "@duck/duck-section-marker",
+        "@duck/duck-timeline",
+        "@duck/holo-badge"
+      ],
+      "files": [
+        {
+          "path": "registry/duck/blocks/duck-changelog.tsx",
+          "type": "registry:block",
+          "target": "components/blocks/duck-changelog.tsx"
+        }
+      ]
     }
   ]
 }

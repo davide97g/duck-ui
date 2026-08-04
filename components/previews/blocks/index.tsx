@@ -1,4 +1,5 @@
 import DuckAuthCardDemo from "./duck-auth-card";
+import DuckChangelogDemo from "./duck-changelog";
 import DuckChatThreadDemo from "./duck-chat-thread";
 import DuckCtaBandDemo from "./duck-cta-band";
 import DuckDashboardDemo from "./duck-dashboard";
@@ -18,6 +19,7 @@ import DuckWorkbenchDemo from "./duck-workbench";
 /** Every block example, keyed by block slug. */
 export const blockPreviews = {
   "duck-auth-card": DuckAuthCardDemo,
+  "duck-changelog": DuckChangelogDemo,
   "duck-chat-thread": DuckChatThreadDemo,
   "duck-cta-band": DuckCtaBandDemo,
   "duck-dashboard": DuckDashboardDemo,
