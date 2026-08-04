@@ -3262,6 +3262,54 @@ export const blocks: BlockDoc[] = [
       "Write answers that survive being quoted alone: the claim first, the qualifier after, no pronoun that only resolves against the previous sentence.",
     ],
   },
+  {
+    slug: "duck-logo-wall",
+    title: "Duck Logo Wall",
+    summary:
+      "The proof strip — a static grid or a running marquee, with every logo sized by height alone and brand colours flattened until a reader looks at them.",
+    target: "components/blocks/duck-logo-wall.tsx",
+    registryDependencies: ["@duck/theme", "@duck/duck-marquee", "@duck/hud-label"],
+    composes: ["duck-marquee", "hud-label"],
+    exports: ["DuckLogoWall"],
+    props: [
+      { name: "eyebrow", type: "React.ReactNode", description: "Short line above the wall, set in HUD type." },
+      { name: "title", type: "React.ReactNode", description: "One sentence under the eyebrow." },
+      {
+        name: "logos",
+        type: "DuckLogoWallItem[]",
+        description:
+          "name, plus src, node or neither. name is the alt text, the accessible name of the link, and the wordmark fallback when there is no asset.",
+      },
+      {
+        name: "variant",
+        type: '"grid" | "marquee"',
+        default: '"grid"',
+        description: "A wall that holds still, or a strip that runs. Twelve logos and up want the marquee.",
+      },
+      {
+        name: "logoHeight",
+        type: "number",
+        default: "28",
+        description:
+          "Height in px for every logo, width auto. One number for the whole set is what makes a wordmark and a square mark carry the same weight.",
+      },
+      {
+        name: "tone",
+        type: '"mono" | "colour"',
+        default: '"mono"',
+        description:
+          "mono flattens the assets to the foreground and lifts each on hover. colour is a decision, not a default.",
+      },
+      { name: "duration", type: "number", default: "32", description: "Seconds for one marquee pass." },
+      { name: "footer", type: "React.ReactNode", description: "Under the wall: a case-study link, a count, a caveat." },
+    ],
+    rules: [
+      "Size logos by height, never by width. A wide wordmark set to the same width as a square mark reads twice as heavy, and no amount of gap fixes it.",
+      "Eight brand palettes at once is noise on a near-black canvas. Keep tone mono unless the logos are the content.",
+      "Give every item a name even when it has art. It is the alt text, the link's accessible name, and what renders when the asset is missing.",
+      "The marquee duplicates its track and hides the copy from assistive tech. Do not add list semantics around it — the duplicate would announce the same names twice.",
+    ],
+  },
 ];
 
 export function getBlock(slug: string) {

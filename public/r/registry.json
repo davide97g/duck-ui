@@ -2046,6 +2046,24 @@
           "target": "components/blocks/duck-faq.tsx"
         }
       ]
+    },
+    {
+      "name": "duck-logo-wall",
+      "type": "registry:block",
+      "title": "Duck Logo Wall",
+      "description": "The proof strip, as a static grid or a running marquee. Every logo is sized by height alone, which is the one rule that makes a mixed set of brand assets read as one line, and mono tone flattens eight competing brand colours into texture that lifts on hover.",
+      "registryDependencies": [
+        "@duck/theme",
+        "@duck/duck-marquee",
+        "@duck/hud-label"
+      ],
+      "files": [
+        {
+          "path": "registry/duck/blocks/duck-logo-wall.tsx",
+          "type": "registry:block",
+          "target": "components/blocks/duck-logo-wall.tsx"
+        }
+      ]
     }
   ]
 }
