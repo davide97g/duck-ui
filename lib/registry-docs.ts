@@ -3758,6 +3758,48 @@ export const blocks: BlockDoc[] = [
       "The submit button is the screen's one holo element. A sign-in card has nothing else competing for it.",
     ],
   },
+  {
+    slug: "duck-upload",
+    title: "Duck Upload",
+    summary:
+      "The queue behind the drop zone: concurrency, per-file progress, retry, cancel that aborts, and one announcement per outcome. You still own the transport.",
+    target: "components/blocks/duck-upload.tsx",
+    client: true,
+    dependencies: ["lucide-react"],
+    registryDependencies: [
+      "@duck/theme",
+      "@duck/quack-button",
+      "@duck/sticker-drop",
+      "@duck/sticker-progress",
+    ],
+    composes: ["sticker-drop", "sticker-progress", "quack-button"],
+    exports: ["DuckUpload"],
+    props: [
+      {
+        name: "onUpload",
+        type: "(file: File, ctx: { onProgress: (percent: number) => void; signal: AbortSignal }) => Promise<unknown>",
+        description:
+          "Sends one file. Report progress if the transport can, honour the signal if it can, and reject to fail the row with the message.",
+      },
+      { name: "onQueueChange", type: "(items: DuckUploadItem[]) => void", description: "A fresh list every time the queue changes." },
+      { name: "onSettled", type: "(items: DuckUploadItem[]) => void", description: "Fires on the edge, when nothing is left queued or uploading." },
+      { name: "concurrency", type: "number", default: "3", description: "Files in flight at once. Twelve files should not open twelve sockets." },
+      { name: "accept", type: "string", description: "Passed to the drop zone, which enforces it and announces rejections." },
+      { name: "multiple", type: "boolean", default: "true", description: "Accept more than one file per drop." },
+      { name: "maxSize", type: "number", description: "Largest file in bytes, enforced by the drop zone." },
+      { name: "label", type: "string", default: '"Drop files here"', description: "The zone's own label." },
+      { name: "hint", type: "string", description: "Second line in the zone: the accepted types, the size limit." },
+      { name: "clearDoneAfter", type: "number", description: "Milliseconds before finished rows drop off on their own." },
+    ],
+    rules: [
+      "The drop zone is kept controlled at files={[]}. Its sheet and the queue would otherwise show the same file twice, with two remove buttons and only one attached to an upload.",
+      "The block owns the queue; you own the transport. onProgress and an AbortSignal are the two things a transport has to be handed rather than asked for.",
+      "A row is only started once. An effect that runs twice — which in development it always does — must not upload the same file twice.",
+      "An abort is a decision, not a failure. The row says Canceled and offers retry rather than turning red.",
+      "Progress is a track, not an announcement. A value that moves sixty times per file is chrome; the announcement is \"uploaded\" or \"failed\", once each.",
+      "A queued row's bar is indeterminate. A bar sitting at 0% reads as a stall, which is a different state.",
+    ],
+  },
 ];
 
 export function getBlock(slug: string) {

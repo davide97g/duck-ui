@@ -2235,6 +2235,28 @@
           "target": "components/blocks/duck-auth-card.tsx"
         }
       ]
+    },
+    {
+      "name": "duck-upload",
+      "type": "registry:block",
+      "title": "Duck Upload",
+      "description": "The queue behind the drop zone: a concurrency limit, per-file progress, retry that reuses the same File, cancel that actually aborts, and one announcement per outcome. onUpload does the network and is handed an onProgress callback and an AbortSignal.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@duck/theme",
+        "@duck/quack-button",
+        "@duck/sticker-drop",
+        "@duck/sticker-progress"
+      ],
+      "files": [
+        {
+          "path": "registry/duck/blocks/duck-upload.tsx",
+          "type": "registry:block",
+          "target": "components/blocks/duck-upload.tsx"
+        }
+      ]
     }
   ]
 }

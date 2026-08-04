@@ -12,6 +12,7 @@ import DuckPricingDemo from "./duck-pricing";
 import DuckSettingsPanelDemo from "./duck-settings-panel";
 import DuckSiteFooterDemo from "./duck-site-footer";
 import DuckSiteHeaderDemo from "./duck-site-header";
+import DuckUploadDemo from "./duck-upload";
 import DuckWorkbenchDemo from "./duck-workbench";
 
 /** Every block example, keyed by block slug. */
@@ -30,5 +31,6 @@ export const blockPreviews = {
   "duck-settings-panel": DuckSettingsPanelDemo,
   "duck-site-footer": DuckSiteFooterDemo,
   "duck-site-header": DuckSiteHeaderDemo,
+  "duck-upload": DuckUploadDemo,
   "duck-workbench": DuckWorkbenchDemo,
 } as const;
