@@ -2173,6 +2173,28 @@
           "target": "components/blocks/duck-player-bar.tsx"
         }
       ]
+    },
+    {
+      "name": "duck-list-view",
+      "type": "registry:block",
+      "title": "Duck List View",
+      "description": "The admin list and the four states its data can be in: a debounced filter whose count announces once rather than per keystroke, in-memory sorting that compares values instead of cells, skeleton rows inside the real column tracks, and two different empty screens — an invitation when there is nothing, a way out when nothing matched.",
+      "registryDependencies": [
+        "@duck/theme",
+        "@duck/duck-list-header",
+        "@duck/duck-list-row",
+        "@duck/empty-pond",
+        "@duck/glow-search",
+        "@duck/quack-button",
+        "@duck/sticker-skeleton"
+      ],
+      "files": [
+        {
+          "path": "registry/duck/blocks/duck-list-view.tsx",
+          "type": "registry:block",
+          "target": "components/blocks/duck-list-view.tsx"
+        }
+      ]
     }
   ]
 }

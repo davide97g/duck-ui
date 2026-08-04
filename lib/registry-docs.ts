@@ -3589,6 +3589,72 @@ export const blocks: BlockDoc[] = [
       "Shortcuts are opt-in and never fire from a text field. A player docked under a page must not eat Space from the search box above it.",
     ],
   },
+  {
+    slug: "duck-list-view",
+    title: "Duck List View",
+    summary:
+      "The admin list with its state machine: a debounced filter, in-memory sorting, skeleton rows in the real column tracks, and two different empty screens.",
+    target: "components/blocks/duck-list-view.tsx",
+    client: true,
+    registryDependencies: [
+      "@duck/theme",
+      "@duck/duck-list-header",
+      "@duck/duck-list-row",
+      "@duck/empty-pond",
+      "@duck/glow-search",
+      "@duck/quack-button",
+      "@duck/sticker-skeleton",
+    ],
+    composes: ["duck-list-header", "duck-list-row", "glow-search", "sticker-skeleton", "empty-pond"],
+    exports: ["DuckListView"],
+    props: [
+      {
+        name: "columns",
+        type: "DuckListColumn[]",
+        description:
+          "key, label, width, sortable — DuckList's own column definitions. Widths must size without content, as there.",
+      },
+      {
+        name: "rows",
+        type: "DuckListViewRow[]",
+        description:
+          "id, title, description, meta, index, cells, values, href, trailing. values is the row as data: cells are nodes and cannot be sorted or matched.",
+      },
+      { name: "title", type: "React.ReactNode", description: "Heading above the list." },
+      { name: "actions", type: "React.ReactNode", description: "Beside the field: a filter, a New button, an export menu." },
+      { name: "search", type: "boolean", default: "true", description: "Drop the field for a list filtered from elsewhere." },
+      {
+        name: "onSearch",
+        type: "(query: string) => void",
+        description:
+          "Take the debounced query yourself. Passing it also switches the in-memory filter off, for a paged endpoint.",
+      },
+      { name: "sort", type: "DuckListSort", description: "Controlled sort — key plus direction." },
+      {
+        name: "onSortChange",
+        type: "(sort: DuckListSort) => void",
+        description: "Take sorting yourself. Passing it also switches the in-memory sort off.",
+      },
+      { name: "loading", type: "boolean", default: "false", description: "Skeleton rows inside the real column tracks." },
+      { name: "skeletonRows", type: "number", default: "6", description: "How many. Match your page size." },
+      { name: "empty", type: "React.ReactNode", description: "Shown when there are no rows at all. Give it an action." },
+      { name: "noMatchesTitle", type: "string", default: '"Nothing matched"', description: "Heading of the no-results state." },
+      { name: "showCount", type: "boolean", default: "true", description: 'Prints "12 of 48 shown" in a polite live region.' },
+      {
+        name: "render",
+        type: "(row: DuckListViewRow) => React.ReactElement",
+        description: "Return the framework's link element for a row. The row is cloned into it through asChild.",
+      },
+    ],
+    rules: [
+      "Empty and no-matches are two different screens. The first is an invitation and wants an action; the second is a dead end and wants the query cleared. Conflating them is how a list with 400 rows tells someone to create their first one.",
+      "The field keeps two states: what the reader typed, and the debounced query everything else reads. Filtering off the first runs six passes for six characters; driving the field off the second makes it lag the caret.",
+      "The count carries the live region, not the list. One announcement per settled query beats one per surviving row.",
+      "Sort against values, never cells. A cell can be a chip or a button, and comparing JSX silently sorts by nothing.",
+      "Skeleton rows go inside the same DuckList, so the tracks are the real ones and the header does not jump when the data lands.",
+      "The in-memory sort copies before sorting. The rows array belongs to the caller, and sorting it in place reorders their state behind their back.",
+    ],
+  },
 ];
 
 export function getBlock(slug: string) {
