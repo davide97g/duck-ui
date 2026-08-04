@@ -2064,6 +2064,26 @@
           "target": "components/blocks/duck-logo-wall.tsx"
         }
       ]
+    },
+    {
+      "name": "duck-cta-band",
+      "type": "registry:block",
+      "title": "Duck Cta Band",
+      "description": "The closing ask: one headline, one button, and an optional email row that is a plain form — a URL or a server function, no client code. The holo band forces its own button to lime, because an iridescent button inside an iridescent border reads as a rendering bug.",
+      "registryDependencies": [
+        "@duck/theme",
+        "@duck/glow-input",
+        "@duck/holo-button",
+        "@duck/hud-label",
+        "@duck/sticker-card"
+      ],
+      "files": [
+        {
+          "path": "registry/duck/blocks/duck-cta-band.tsx",
+          "type": "registry:block",
+          "target": "components/blocks/duck-cta-band.tsx"
+        }
+      ]
     }
   ]
 }

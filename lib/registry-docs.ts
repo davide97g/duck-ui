@@ -3310,6 +3310,59 @@ export const blocks: BlockDoc[] = [
       "The marquee duplicates its track and hides the copy from assistive tech. Do not add list semantics around it — the duplicate would announce the same names twice.",
     ],
   },
+  {
+    slug: "duck-cta-band",
+    title: "Duck Cta Band",
+    summary:
+      "The closing ask: one headline, one button, and an optional email row that is a plain form — a URL or a server function, and no client code either way.",
+    target: "components/blocks/duck-cta-band.tsx",
+    registryDependencies: [
+      "@duck/theme",
+      "@duck/glow-input",
+      "@duck/holo-button",
+      "@duck/hud-label",
+      "@duck/sticker-card",
+    ],
+    composes: ["sticker-card", "holo-button", "glow-input", "hud-label"],
+    exports: ["DuckCtaBand"],
+    props: [
+      { name: "eyebrow", type: "React.ReactNode", description: "HUD line above the headline." },
+      { name: "title", type: "React.ReactNode", description: "The ask. One sentence." },
+      { name: "description", type: "React.ReactNode", description: "The qualifier under it." },
+      {
+        name: "primaryAction",
+        type: "{ label: string; href: string }",
+        description:
+          "The button. It renders lime inside a holo band and holo inside a solid one, so the band carries exactly one iridescent element.",
+      },
+      { name: "secondaryAction", type: "{ label: string; href: string }", description: "Outline button beside it." },
+      {
+        name: "capture",
+        type: "DuckCtaBandCapture",
+        description:
+          "action, method, name, type, placeholder, label, buttonLabel. action takes a URL string or a server function, so the same block posts to an endpoint on Vite and to a server action on Next.",
+      },
+      { name: "note", type: "React.ReactNode", description: 'Small print under the actions — "no card", "unsubscribe in one click".' },
+      {
+        name: "variant",
+        type: '"holo" | "solid"',
+        default: '"holo"',
+        description: "The iridescent ring on the band, or a quiet card that gives the holo to its button instead.",
+      },
+      {
+        name: "align",
+        type: '"center" | "split"',
+        default: '"center"',
+        description: "Stacked and centred, or headline left and actions right once the container is wide enough.",
+      },
+    ],
+    rules: [
+      "The holo rule is per viewport, not per page. A band at the bottom may take the iridescent edge the hero already spent, because by then the hero is off screen.",
+      "Never holo on both the band and its button. The block enforces it by flipping the primary action to lime inside a holo band.",
+      "capture is a plain form and stays one. It has no state, no client code and no success message — a submitted form navigates or a server action re-renders, and both are the framework's job.",
+      "The capture label wraps its input rather than pointing at an id, so two bands on one page cannot ship a duplicate id.",
+    ],
+  },
 ];
 
 export function getBlock(slug: string) {
