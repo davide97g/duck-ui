@@ -1456,6 +1456,12 @@ export const components: ComponentDoc[] = [
           "The colour, always as #rrggbb. Fires for the swatch and for an eyedropper pick — wire this one.",
       },
       {
+        name: "onPick",
+        type: "(hex: string) => void",
+        description:
+          "Fires only for an eyedropper pick, after onValueChange. The clipboard write a hand-rolled eyedropper always had goes here — on onValueChange it would fire on every frame of a swatch drag.",
+      },
+      {
         name: "size",
         type: '"sm" | "default"',
         default: '"default"',
@@ -1488,6 +1494,7 @@ export const components: ComponentDoc[] = [
     ],
     rules: [
       "A picked colour has no DOM event behind it, so it reports through onValueChange. onChange stays the swatch's own native event, for a form that reads the input directly.",
+      "A pick also reports through onPick, which the swatch never fires. That is the difference the value stream cannot carry: a pick is one deliberate act, a swatch change is a frame of a drag. Copy, undo boundaries and history entries belong on onPick.",
       "Values are normalised to #rrggbb before they reach the input, because input[type=color] accepts nothing else and renders anything else as black — which is how a #fff default becomes a black swatch with no error anywhere.",
       "There is no alpha channel. An eighth and ninth hex digit are dropped rather than half-honoured; if opacity matters, keep it in a separate control.",
       "The eyedropper is Chromium-only and the component says so by rendering it from a mounted effect. Do not gate it on a user agent string, and do not assume it is there.",

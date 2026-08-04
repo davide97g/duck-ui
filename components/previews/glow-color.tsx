@@ -13,11 +13,46 @@ const DEFAULTS = { fill: "#c6f24e", stroke: "#0b0b0d" };
 export default function GlowColorDemo() {
   const [fill, setFill] = React.useState(DEFAULTS.fill);
   const [stroke, setStroke] = React.useState(DEFAULTS.stroke);
+  const [copied, setCopied] = React.useState<string | null>(null);
+  const timer = React.useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  React.useEffect(
+    () => () => {
+      if (timer.current) clearTimeout(timer.current);
+    },
+    []
+  );
+
+  /* The clipboard write belongs on onPick: a colour lifted off a reference is a
+     colour you are about to paste somewhere. On onValueChange it would fire on
+     every frame of a swatch drag. */
+  const copyPick = async (hex: string) => {
+    try {
+      await navigator.clipboard.writeText(hex);
+      setCopied(hex);
+      if (timer.current) clearTimeout(timer.current);
+      timer.current = setTimeout(() => setCopied(null), 1600);
+    } catch {
+      // A refused clipboard is not worth a broken swatch. The colour is set.
+    }
+  };
 
   return (
     <div className="flex w-full max-w-sm flex-col gap-5">
-      <GlowField label="Brand colour" helper="Used for the accent and the glow.">
-        <GlowColor value={fill} onValueChange={setFill} showValue />
+      <GlowField
+        label="Brand colour"
+        helper={
+          copied
+            ? `Copied ${copied.toUpperCase()} to the clipboard.`
+            : "Used for the accent and the glow. A picked colour is copied too."
+        }
+      >
+        <GlowColor
+          value={fill}
+          onValueChange={setFill}
+          onPick={copyPick}
+          showValue
+        />
       </GlowField>
 
       {/* The rail row every design tool has twenty of: label, swatch,

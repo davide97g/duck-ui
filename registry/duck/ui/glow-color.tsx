@@ -27,6 +27,12 @@ import {
  * `onValueChange` and not through `onChange`. Wire `onValueChange` if you use
  * the eyedropper at all; `onChange` stays the swatch's own native event, for a
  * form that reads the input directly.
+ *
+ * `onPick` fires *in addition* for a screen pick, and it is the one signal a
+ * call site cannot reconstruct: the value stream cannot tell a pick from a frame
+ * of a swatch drag. A pick is a deliberate single act, which makes it the place
+ * for the clipboard write a hand-rolled eyedropper always had, an undo boundary
+ * or a history entry.
  */
 
 /* The API is not in lib.dom yet. Two lines, and `open()` rejects on Escape. */
@@ -84,6 +90,12 @@ export interface GlowColorProps
   defaultValue?: string;
   /** Fires for the swatch and for an eyedropper pick, always as `#rrggbb`. */
   onValueChange?: (hex: string) => void;
+  /**
+   * Fires only for an eyedropper pick, after `onValueChange`. For the clipboard
+   * write, the undo boundary or the confirmation a pick deserves and a drag
+   * does not.
+   */
+  onPick?: (hex: string) => void;
   size?: keyof typeof swatchSizes;
   /** Offer the eyedropper where the browser has one. */
   eyedropper?: boolean;
@@ -99,6 +111,7 @@ function GlowColor({
   value,
   defaultValue = "#000000",
   onValueChange,
+  onPick,
   onChange,
   frame = true,
   size = "default",
@@ -127,6 +140,7 @@ function GlowColor({
       const next = normalizeHex(hex, current);
       if (!controlled) setInternal(next);
       onValueChange?.(next);
+      return next;
     },
     [controlled, current, onValueChange]
   );
@@ -136,7 +150,9 @@ function GlowColor({
     if (!Picker) return;
     try {
       const { sRGBHex } = await new Picker().open();
-      commit(sRGBHex);
+      // The pick reports twice, in this order: the value first, so a controlled
+      // parent has already re-rendered by the time the pick handler runs.
+      onPick?.(commit(sRGBHex));
     } catch {
       // Escape and a dismissed picker both reject. Neither is an error, and
       // neither should change the value.

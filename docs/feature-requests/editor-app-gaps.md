@@ -26,7 +26,7 @@ green. What did not land is below.
 hand-written UI to stay; §2 is sizing and API gaps on components that otherwise fit; §3 is the theme
 layer; §4 is smaller polish.
 
-> **Status: §1–§4 closed, §5 open.** §1 shipped as two registry items, §2 as eight prop and size
+> **Status: closed.** §1 shipped as two registry items, §2 as eight prop and size
 > additions across nine components plus one theme utility, §3 as a token removal and two docs passes,
 > §4 as one shape and two docs notes. Each item below is annotated with what shipped. **§5 was filed
 > afterwards**, from adopting the release in the app this report came from — one item, and the only
@@ -405,6 +405,11 @@ include the ones nobody had written down as a feature.
 One item, and it is the only place in that pass where the app lost behaviour it had.
 
 ### 5.1 `GlowColor` cannot tell an eyedropper pick from a swatch change
+
+> **Shipped as asked.** `onPick?: (hex: string) => void`, fired after `onValueChange` and only for a
+> screen pick, so a controlled parent has already re-rendered by the time the pick handler runs. The
+> existing signature is untouched. The component's own preview now copies a picked hex, which is the
+> behaviour the report lost.
 
 The hand-rolled eyedropper this app deleted did two things: it set the colour, and it wrote the picked
 hex to the clipboard. The second is a large part of why a design tool has an eyedropper at all — a
