@@ -3363,6 +3363,67 @@ export const blocks: BlockDoc[] = [
       "The capture label wraps its input rather than pointing at an id, so two bands on one page cannot ship a duplicate id.",
     ],
   },
+  {
+    slug: "duck-workbench",
+    title: "Duck Workbench",
+    summary:
+      "The editor shell: an icon tool rail, a pan-and-zoom canvas, an inspector that becomes an overlay when the container narrows, and a zoom read-out that costs no renders.",
+    target: "components/blocks/duck-workbench.tsx",
+    client: true,
+    dependencies: ["lucide-react"],
+    registryDependencies: [
+      "@duck/theme",
+      "@duck/duck-button-group",
+      "@duck/duck-viewport",
+      "@duck/hud-label",
+      "@duck/quack-button",
+    ],
+    composes: ["duck-viewport", "duck-button-group", "quack-button", "hud-label"],
+    exports: ["DuckWorkbench"],
+    props: [
+      { name: "title", type: "React.ReactNode", description: "Document name in the top bar." },
+      {
+        name: "tools",
+        type: "DuckWorkbenchTool[]",
+        description:
+          "icon, label, active, disabled, onSelect. Rendered icon-only on the left edge as one toolbar, so the whole rail costs one tab stop.",
+      },
+      { name: "actions", type: "React.ReactNode", description: "Top bar, right side: save, export, a theme switcher." },
+      {
+        name: "inspector",
+        type: "React.ReactNode",
+        description:
+          "The right rail's rows. A slot, not a schema — the controls are the application's own, on the instrument scale.",
+      },
+      { name: "inspectorLabel", type: "string", default: '"Inspector"', description: "Names the rail and its toggle." },
+      { name: "inspectorWidth", type: "number", default: "288", description: "Rail width in px, once it is permanent." },
+      { name: "status", type: "React.ReactNode", description: "Bottom strip, left side: selection, dimensions, a hint." },
+      {
+        name: "grid",
+        type: "boolean",
+        default: "true",
+        description: "Dot grid inside the transform, so the paper pans and scales with the artwork.",
+      },
+      {
+        name: "viewportProps",
+        type: 'Pick<DuckViewportProps, "min" | "max" | "initial" | "zoomStep" | "panStep" | "wheelZoom">',
+        description: "Passed straight to DuckViewport. initial.scale also seeds the zoom read-out's first paint.",
+      },
+      {
+        name: "viewportRef",
+        type: "React.RefObject<DuckViewportHandle | null>",
+        description: "Take the handle to drive zoom and pan from the application's own controls.",
+      },
+      { name: "children", type: "React.ReactNode", description: "The artwork. This is what gets translated and scaled." },
+    ],
+    rules: [
+      "The zoom controls are a sibling of the viewport, never a child. A child sits inside the transform and pans away with the content.",
+      "The read-out is written to the DOM, not rendered. Piping onTransformChange into setState re-renders the canvas sixty times a second to update two glyphs, which is exactly what DuckViewport avoids by writing the transform to element.style.",
+      "It is also aria-live=\"off\". A percentage that changes on every frame of a wheel gesture is noise, not an announcement.",
+      "The rails are chrome, so they carry no holo. The shell is on screen all session; spend the budget inside the canvas.",
+      "A tool is a state, not an action. The rail sets aria-pressed, which is the whole difference between draw and drawing.",
+    ],
+  },
 ];
 
 export function getBlock(slug: string) {

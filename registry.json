@@ -2084,6 +2084,29 @@
           "target": "components/blocks/duck-cta-band.tsx"
         }
       ]
+    },
+    {
+      "name": "duck-workbench",
+      "type": "registry:block",
+      "title": "Duck Workbench",
+      "description": "The shape a design tool is: an icon tool rail, a pan-and-zoom canvas with the controls as a sibling rather than a child, an inspector rail that becomes an overlay on a narrow container, and a status strip whose zoom read-out is written to the DOM instead of re-rendered.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@duck/theme",
+        "@duck/duck-button-group",
+        "@duck/duck-viewport",
+        "@duck/hud-label",
+        "@duck/quack-button"
+      ],
+      "files": [
+        {
+          "path": "registry/duck/blocks/duck-workbench.tsx",
+          "type": "registry:block",
+          "target": "components/blocks/duck-workbench.tsx"
+        }
+      ]
     }
   ]
 }
