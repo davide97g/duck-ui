@@ -2195,6 +2195,25 @@
           "target": "components/blocks/duck-list-view.tsx"
         }
       ]
+    },
+    {
+      "name": "duck-settings-panel",
+      "type": "registry:block",
+      "title": "Duck Settings Panel",
+      "description": "Sections of label-beside-control rows, and the save bar that appears only when there is something to save. A row is a label, so the block never mints an id for a control it does not own; a plural control becomes a named group instead, because a label may only point at one field.",
+      "registryDependencies": [
+        "@duck/theme",
+        "@duck/holo-separator",
+        "@duck/quack-button",
+        "@duck/sticker-card"
+      ],
+      "files": [
+        {
+          "path": "registry/duck/blocks/duck-settings-panel.tsx",
+          "type": "registry:block",
+          "target": "components/blocks/duck-settings-panel.tsx"
+        }
+      ]
     }
   ]
 }

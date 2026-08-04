@@ -8,6 +8,7 @@ import DuckLogoWallDemo from "./duck-logo-wall";
 import DuckMediaShelfDemo from "./duck-media-shelf";
 import DuckPlayerBarDemo from "./duck-player-bar";
 import DuckPricingDemo from "./duck-pricing";
+import DuckSettingsPanelDemo from "./duck-settings-panel";
 import DuckSiteFooterDemo from "./duck-site-footer";
 import DuckSiteHeaderDemo from "./duck-site-header";
 import DuckWorkbenchDemo from "./duck-workbench";
@@ -24,6 +25,7 @@ export const blockPreviews = {
   "duck-media-shelf": DuckMediaShelfDemo,
   "duck-player-bar": DuckPlayerBarDemo,
   "duck-pricing": DuckPricingDemo,
+  "duck-settings-panel": DuckSettingsPanelDemo,
   "duck-site-footer": DuckSiteFooterDemo,
   "duck-site-header": DuckSiteHeaderDemo,
   "duck-workbench": DuckWorkbenchDemo,

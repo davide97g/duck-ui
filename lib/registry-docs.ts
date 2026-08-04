@@ -3655,6 +3655,56 @@ export const blocks: BlockDoc[] = [
       "The in-memory sort copies before sorting. The rows array belongs to the caller, and sorting it in place reorders their state behind their back.",
     ],
   },
+  {
+    slug: "duck-settings-panel",
+    title: "Duck Settings Panel",
+    summary:
+      "Sections of label-beside-control rows, labelled without ever minting an id for a control it does not own, plus a save bar that appears only when there is something to save.",
+    target: "components/blocks/duck-settings-panel.tsx",
+    client: true,
+    registryDependencies: [
+      "@duck/theme",
+      "@duck/holo-separator",
+      "@duck/quack-button",
+      "@duck/sticker-card",
+    ],
+    composes: ["sticker-card", "holo-separator", "quack-button"],
+    exports: ["DuckSettingsPanel"],
+    props: [
+      { name: "title", type: "React.ReactNode", description: "Page heading above the sections." },
+      { name: "description", type: "React.ReactNode", description: "One paragraph under it." },
+      {
+        name: "sections",
+        type: "DuckSettingsSection[]",
+        description: "title, description, actions, rows. Sections are separated by a rule, or carded with variant.",
+      },
+      {
+        name: "dirty",
+        type: "boolean",
+        default: "false",
+        description:
+          "Reveals the save bar. The panel holds no values, so this is yours — compare against what you loaded.",
+      },
+      { name: "saving", type: "boolean", default: "false", description: "Disables both buttons and puts save into its loading state." },
+      { name: "onReset", type: "() => void", description: "Renders the reset button when passed." },
+      { name: "footer", type: "React.ReactNode", description: 'Left of the buttons: an error, a "saved 2 minutes ago".' },
+      {
+        name: "variant",
+        type: '"plain" | "cards"',
+        default: '"plain"',
+        description: "Sections divided by a hairline, or each one in its own sticker card.",
+      },
+      { name: "saveLabel", type: "string", default: '"Save changes"', description: "Submit button label." },
+      { name: "resetLabel", type: "string", default: '"Reset"', description: "Reset button label." },
+    ],
+    rules: [
+      "A row is a label, so the control is associated implicitly. The block never mints an id for a control it did not create — cloning props into an unknown element breaks the day someone passes a composed one.",
+      "A plural control takes labelling=\"group\": a radio group, an OTP strip or a slider pair cannot share one label, since a label may only point at one field.",
+      "The control column is a fixed width. Twenty rows that each size themselves against their own label do not line up.",
+      "The save bar appears only when dirty, inside a polite live region — its arrival is the feedback that an edit registered.",
+      "It sticks to the panel, not the viewport. A settings panel inside a dialog must not pin a bar over the page behind it.",
+    ],
+  },
 ];
 
 export function getBlock(slug: string) {
