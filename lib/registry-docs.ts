@@ -3204,6 +3204,64 @@ export const blocks: BlockDoc[] = [
       "Three or four columns. A footer with nine is a sitemap, and a sitemap belongs on its own page.",
     ],
   },
+  {
+    slug: "duck-faq",
+    title: "Duck Faq",
+    summary:
+      "The questions people ask before they install, plus the FAQPage JSON-LD that lets an answer engine quote them — both from one array.",
+    target: "components/blocks/duck-faq.tsx",
+    dependencies: ["lucide-react"],
+    registryDependencies: ["@duck/theme", "@duck/sticker-card"],
+    composes: ["sticker-card"],
+    exports: ["DuckFaq", "faqSchema"],
+    props: [
+      { name: "title", type: "React.ReactNode", description: "Section heading." },
+      { name: "description", type: "React.ReactNode", description: "Line under the heading." },
+      {
+        name: "items",
+        type: "DuckFaqItem[]",
+        description:
+          "question, answer, and answerText for the schema when the answer is a node rather than a string.",
+      },
+      {
+        name: "columns",
+        type: "1 | 2",
+        default: "2",
+        description: "One column reads as a list, two as a wall. Two suits eight questions or more.",
+      },
+      {
+        name: "collapsible",
+        type: "boolean",
+        default: "false",
+        description:
+          "Answers behind a native details element. They stay in the DOM open or closed, so ⌘F and a crawler still find them.",
+      },
+      {
+        name: "defaultOpen",
+        type: "number",
+        description: "With collapsible, the index that starts open.",
+      },
+      {
+        name: "jsonLd",
+        type: "boolean",
+        default: "true",
+        description: "Emit the FAQPage schema. Turn it off when the page already carries one.",
+      },
+      {
+        name: "url",
+        type: "string",
+        description:
+          "Absolute URL of the page carrying the schema. It becomes the @id, which is what stops two sections claiming the same FAQPage.",
+      },
+      { name: "footer", type: "React.ReactNode", description: "Under the grid: a support link, a mail-to." },
+    ],
+    rules: [
+      "One FAQPage per URL. Two on a page is a structured-data error, so a second DuckFaq takes jsonLd={false}.",
+      "acceptedAnswer is plain text. An answer written as a node needs answerText beside it, or the item is left out of the schema rather than serialised as [object Object].",
+      "Answers are never hidden from the document, only from the reader. That is why collapsible is native details and not a JS panel that renders on open.",
+      "Write answers that survive being quoted alone: the claim first, the qualifier after, no pronoun that only resolves against the previous sentence.",
+    ],
+  },
 ];
 
 export function getBlock(slug: string) {

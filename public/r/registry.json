@@ -2026,6 +2026,26 @@
           "target": "components/blocks/duck-site-footer.tsx"
         }
       ]
+    },
+    {
+      "name": "duck-faq",
+      "type": "registry:block",
+      "title": "Duck Faq",
+      "description": "An FAQ section and its FAQPage JSON-LD emitted from one array, so the markup and the structured data cannot drift. Answers sit in cards or behind native details, which keeps them in the DOM for a crawler either way, and the block ships no client code.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@duck/theme",
+        "@duck/sticker-card"
+      ],
+      "files": [
+        {
+          "path": "registry/duck/blocks/duck-faq.tsx",
+          "type": "registry:block",
+          "target": "components/blocks/duck-faq.tsx"
+        }
+      ]
     }
   ]
 }
