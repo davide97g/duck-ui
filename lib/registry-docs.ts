@@ -3424,6 +3424,58 @@ export const blocks: BlockDoc[] = [
       "A tool is a state, not an action. The rail sets aria-pressed, which is the whole difference between draw and drawing.",
     ],
   },
+  {
+    slug: "duck-chat-thread",
+    title: "Duck Chat Thread",
+    summary:
+      "The transcript, the wait state and the composer joined — following the stream only while the reader is at the bottom, and keeping tokens out of the live region.",
+    target: "components/blocks/duck-chat-thread.tsx",
+    client: true,
+    dependencies: ["lucide-react"],
+    registryDependencies: [
+      "@duck/theme",
+      "@duck/duck-thinking",
+      "@duck/glow-input",
+      "@duck/quack-bubble",
+      "@duck/quack-button",
+      "@duck/stream-text",
+    ],
+    composes: ["quack-bubble", "duck-thinking", "stream-text", "glow-input", "quack-button"],
+    exports: ["DuckChatThread"],
+    props: [
+      {
+        name: "messages",
+        type: "DuckChatMessage[]",
+        description:
+          "id, from, content, meta, streaming. A streaming message's content must be a string — it goes through StreamText with the caret lit and the growing edge softened.",
+      },
+      { name: "header", type: "React.ReactNode", description: "Above the transcript: a title row, a model picker, a clear button." },
+      { name: "empty", type: "React.ReactNode", description: "Rendered when there are no messages. An EmptyPond fits here." },
+      { name: "thinking", type: "boolean", default: "false", description: "The wait before the first token." },
+      { name: "thinkingLabel", type: "string", default: '"Thinking"', description: "Read out, and shown beside the mark." },
+      {
+        name: "mark",
+        type: "React.ReactNode",
+        description:
+          "The assistant's face, for the bubbles and the wait state alike. A transcript is the last place a design system should insist on its own mascot.",
+      },
+      { name: "onSend", type: "(text: string) => void", description: "Fires with the trimmed text. The block clears and refocuses the field itself." },
+      { name: "busy", type: "boolean", default: "false", description: "Blocks the composer while a turn is in flight." },
+      { name: "composerActions", type: "React.ReactNode", description: "Inside the field, left of send: attach, model, voice." },
+      { name: "note", type: "React.ReactNode", description: 'Under the composer: the "can be wrong" line, a token count.' },
+      { name: "placeholder", type: "string", default: '"Ask something…"', description: "Also the composer's accessible name." },
+      { name: "sendLabel", type: "string", default: '"Send"', description: "Accessible name of the send button." },
+      { name: "jumpLabel", type: "string", default: '"Jump to latest"', description: "The way back once the reader has left the stream." },
+      { name: "maxRows", type: "number", default: "8", description: "Rows the composer grows to before it scrolls." },
+    ],
+    rules: [
+      "The thread follows the stream only while the reader is already at the bottom. Always scrolling makes it unreadable while it streams; never scrolling makes the reader chase it. That is why there is a jump button and not a timer.",
+      "A token stream must not sit in a live region. The transcript is a polite role=log so a finished message announces once; the streaming bubble is aria-live=\"off\" and aria-busy, because a live region re-announces the whole message on every token.",
+      "Pass a streaming message as a string and flip streaming off when the turn ends. The finished message then re-renders as ordinary content, which is what the log announces.",
+      "The composer is one surface: the textarea takes frame={false} and the row carries the edge and the focus glow. Without that prop the call site fights .sticker and loses on order.",
+      "Enter sends by asking the form to submit, so the key and the button run the same path. Shift+Enter breaks the line.",
+    ],
+  },
 ];
 
 export function getBlock(slug: string) {

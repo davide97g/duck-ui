@@ -2107,6 +2107,30 @@
           "target": "components/blocks/duck-workbench.tsx"
         }
       ]
+    },
+    {
+      "name": "duck-chat-thread",
+      "type": "registry:block",
+      "title": "Duck Chat Thread",
+      "description": "The transcript, the wait state and the composer as one surface. Follows the stream only while the reader is at the bottom, keeps a token stream out of the live region so a screen reader is not handed the whole message on every token, and puts the send button inside the field rather than beside a second box.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@duck/theme",
+        "@duck/duck-thinking",
+        "@duck/glow-input",
+        "@duck/quack-bubble",
+        "@duck/quack-button",
+        "@duck/stream-text"
+      ],
+      "files": [
+        {
+          "path": "registry/duck/blocks/duck-chat-thread.tsx",
+          "type": "registry:block",
+          "target": "components/blocks/duck-chat-thread.tsx"
+        }
+      ]
     }
   ]
 }
