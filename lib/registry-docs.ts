@@ -3476,6 +3476,64 @@ export const blocks: BlockDoc[] = [
       "Enter sends by asking the form to submit, so the key and the button run the same path. Shift+Enter breaks the line.",
     ],
   },
+  {
+    slug: "duck-media-shelf",
+    title: "Duck Media Shelf",
+    summary:
+      "Rows of artwork from one array, with one tile width for the whole wall, skeletons in the tiles' own ratio, and an empty state for the library and for a single row.",
+    target: "components/blocks/duck-media-shelf.tsx",
+    client: true,
+    registryDependencies: [
+      "@duck/theme",
+      "@duck/empty-pond",
+      "@duck/sticker-carousel",
+      "@duck/sticker-media-card",
+      "@duck/sticker-skeleton",
+    ],
+    composes: ["sticker-carousel", "sticker-media-card", "sticker-skeleton", "empty-pond"],
+    exports: ["DuckMediaShelf"],
+    props: [
+      {
+        name: "rows",
+        type: "DuckMediaShelfRow[]",
+        description:
+          "title, description, actions, items, and per-row aspect, tileWidth, loading and emptyHint. Each row is a StickerCarousel.",
+      },
+      {
+        name: "aspect",
+        type: '"2/3" | "16/9" | "1/1" | number',
+        default: '"2/3"',
+        description: "Tile ratio for every row that does not override it.",
+      },
+      {
+        name: "tileWidth",
+        type: "number",
+        default: "168",
+        description:
+          "Tile width in px, published as a CSS variable on the shelf. One number for the whole wall is what keeps two rows from drifting apart.",
+      },
+      {
+        name: "skeletonCount",
+        type: "number",
+        default: "6",
+        description: "Placeholder tiles per loading row. Match the page size you fetch.",
+      },
+      { name: "empty", type: "React.ReactNode", description: "Replaces the default EmptyPond when every row is empty." },
+      {
+        name: "render",
+        type: "(item: DuckMediaShelfItem) => React.ReactElement",
+        description:
+          "Return the framework's link element with no children. The tile is cloned into it through asChild, so the frame lands inside the anchor.",
+      },
+    ],
+    rules: [
+      "One tile width for the wall. A row that sizes slides with a basis per breakpoint drifts from the row under it the first time someone edits one of them.",
+      "A skeleton takes the tile's ratio, not shape=\"poster\". The ratio is a runtime value here, and a placeholder in the wrong shape moves the page when the artwork lands.",
+      "Loading is aria-busy on the row, not a spinner. The row is already the shape it will be.",
+      "An empty library gets the pond; an empty row gets one line of muted text. Four ducks on one screen is what happens when a row reuses the big empty state.",
+      "The tile stays exactly one focusable link. Put a duration or a play badge in overlay, which takes no pointer events, rather than adding a control inside the frame.",
+    ],
+  },
 ];
 
 export function getBlock(slug: string) {

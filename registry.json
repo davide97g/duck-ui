@@ -2131,6 +2131,26 @@
           "target": "components/blocks/duck-chat-thread.tsx"
         }
       ]
+    },
+    {
+      "name": "duck-media-shelf",
+      "type": "registry:block",
+      "title": "Duck Media Shelf",
+      "description": "Rows of artwork from one array: a single tile width for the whole wall, skeletons that take the tiles' own ratio so nothing moves when the posters land, and two empty states — a pond for an empty library, one line of text for an empty row.",
+      "registryDependencies": [
+        "@duck/theme",
+        "@duck/empty-pond",
+        "@duck/sticker-carousel",
+        "@duck/sticker-media-card",
+        "@duck/sticker-skeleton"
+      ],
+      "files": [
+        {
+          "path": "registry/duck/blocks/duck-media-shelf.tsx",
+          "type": "registry:block",
+          "target": "components/blocks/duck-media-shelf.tsx"
+        }
+      ]
     }
   ]
 }
