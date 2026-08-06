@@ -14,7 +14,6 @@ npm-debug.log*
 tsconfig.tsbuildinfo
 README.md
 docs
-preview.html
 .vscode
 .idea
 .claude
