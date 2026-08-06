@@ -8,7 +8,7 @@ duck/ui is a free MIT developer tool, not a SaaS. Most of the generic directory 
 
 ## Readiness
 
-Directories are the *source* of link equity. They need destinations worth landing on. State as of 2026-07-31:
+Directories are the *source* of link equity. They need destinations worth landing on. State as of 2026-08-06:
 
 | Requirement | State |
 |---|---|
@@ -22,13 +22,13 @@ Directories are the *source* of link equity. They need destinations worth landin
 | Comparison pages | Done — `/compare` plus five `/compare/[slug]` pages |
 | `llms.txt` + `llms-full.txt` | Done, now including FAQ and comparisons |
 | AI crawlers explicitly allowed | Done — `app/robots.ts` |
-| Logo: PNG, SVG, 1024 square, favicon | **PNG and favicon only.** SVG and a 1024×1024 square are missing |
+| Logo: PNG, SVG, 1024 square, favicon | Done except the square — `public/duck.svg`, `public/duck.png` (512), favicon and apple icon. A 1024×1024 export is still missing |
 | 5–8 real screenshots at 1920×1080 | **Missing.** Needed by Product Hunt, Peerlist, most galleries |
 | 60–90s demo video | **Missing.** The channel is the natural place for it; a cut of the theme editor is the obvious take |
 | Use-case pages (`/for/...`) | **Missing.** Lower priority than screenshots |
-| Analytics + referrer tracking | **Missing.** Submitting before this means no way to tell which listing worked |
+| Analytics + referrer tracking | Built, not running. `lib/analytics.ts` and the three events ship; the Umami instance and the two build arguments do not exist yet — see [analytics.md](analytics.md) |
 
-**Hard blocks before Tier 1:** screenshots, demo video, analytics. Everything else can ship after.
+**Hard blocks before Tier 1:** screenshots, demo video, and standing up Umami. Everything else can ship after.
 
 ---
 
@@ -102,7 +102,7 @@ Sticker energy on shadcn rails.
 Dark-first shadcn registry with holographic sticker components.
 
 **Ecosystem surfaces — lead with the install path**
-> A shadcn component registry under the `@duck` namespace. One command installs a dark-first theme that restyles the shadcn components you already have, then 31 signature components, 3 blocks and a hook install the same way. Files land in your repo under MIT — no package, no runtime dependency.
+> A shadcn component registry under the `@duck` namespace. One command installs a dark-first theme that restyles the shadcn components you already have, then 61 signature components, 17 blocks and a hook install the same way. Files land in your repo under MIT — no package, no runtime dependency.
 
 **Launch surfaces — lead with the problem**
 > Every shadcn app looks like every other shadcn app. duck/ui is a registry that fixes that with one install: a dark-first token set with holographic accents and thick sticker borders, plus the components shadcn doesn't ship. Tune it live in the theme editor, export the CSS, own every file.

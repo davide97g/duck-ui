@@ -1,7 +1,7 @@
 # Product Marketing Context
 
 **Document version:** v1
-**Last updated:** 2026-07-31
+**Last updated:** 2026-08-06
 
 > Drafted from the repo (README, `app/page.tsx`, `lib/site.ts`, `docs/PLAN.md`, `skill/duck-ui/SKILL.md`).
 > Sections marked **[assumption]** are inferred, not confirmed — correct them.
@@ -9,7 +9,7 @@
 ## Product Overview
 **One-liner:** A dark-first shadcn component registry with holographic accents and thick sticker borders.
 
-**What it does:** Ships 31 components, 3 blocks, one theme and one hook through the standard shadcn CLI under the `@duck` namespace. `@duck/theme` restyles every shadcn component a project already has — the rest is additive. Source files land in the consumer's repo; nothing is wrapped in a package or hidden behind a runtime dependency.
+**What it does:** Ships 61 components, 17 blocks, two themes and one hook through the standard shadcn CLI under the `@duck` namespace. `@duck/theme` restyles every shadcn component a project already has — the rest is additive. Source files land in the consumer's repo; nothing is wrapped in a package or hidden behind a runtime dependency.
 
 **Product category:** shadcn registry / third-party component registry. Adjacent shelves buyers browse: "shadcn component library", "React UI kit", "Tailwind design system", "shadcn theme".
 
@@ -32,7 +32,7 @@
 **Use cases:**
 - Restyle an existing shadcn app: install `@duck/theme`, existing components inherit the tokens, markup unchanged.
 - Green-field side project / hackathon build that needs personality on day one.
-- Landing page or dashboard assembled from blocks (`duck-hero`, `duck-pricing`, `duck-dashboard`).
+- Landing page assembled from blocks (`duck-hero`, `duck-pricing`, `duck-faq`, `duck-cta-band`), or a whole application shell (`duck-dashboard`, `duck-workbench`, `duck-list-view`, `duck-chat-thread`).
 - Agent-driven build: assistant reads `llms.txt` or the shadcn MCP server, installs and composes without a human reading docs.
 
 ## Personas
@@ -133,7 +133,7 @@
 **Personality:** Playful, opinionated, precise, open, unserious-about-itself / serious-about-the-code.
 
 ## Proof Points
-**Metrics:** 31 components, 3 blocks, 1 theme, 1 hook. One command to install. Zero runtime dependencies from the registry. **[assumption — GitHub stars, installs and site traffic not yet tracked; see Goals]**
+**Metrics:** 61 components, 17 blocks, 2 themes, 1 hook. One command to install. Zero runtime dependencies from the registry. **[assumption — GitHub stars, installs and site traffic not yet tracked; see Goals]**
 
 **Customers:** None public yet.
 

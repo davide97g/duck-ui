@@ -2,7 +2,9 @@
 
 A duck-branded design system built on shadcn's distribution rails. Theme-first V1, grown in public through the YouTube channel.
 
-Working name: **duck/ui** (namespace `@duck`). Alternatives if taken: `quackui`, `dacoder/ui`, `papera` (IT for rubber duck vibe). Domain candidates: `duck.dacoder.it` or `duckui.dev`.
+Name settled: **duck/ui**, namespace `@duck`, live at [duckui.davideghiotto.it](https://duckui.davideghiotto.it). The rejected alternatives were `quackui`, `dacoder/ui` and `papera`.
+
+**Sections 1–3, 6, 7 and 9 are the original strategy and still hold. Sections 4, 5, 8 and 10 were rewritten on 2026-08-06 to describe what shipped** — the plan is a year-one record now as much as a plan, and a stale one is worse than none. Per-release detail lives in [`docs/releases/`](releases/); what four real applications asked for, and got, is in [`docs/feature-requests/`](feature-requests/).
 
 ---
 
@@ -63,60 +65,54 @@ Theme tokens ship as CSS variables on top of shadcn's theming contract (`--backg
 
 ## 4. Architecture
 
-Monorepo (pnpm + turborepo):
+**Shipped as a single Next.js app, not a monorepo.** The workspaces-and-turborepo plan above was dropped in Phase 0: one deployable, one `tsconfig`, one `pnpm install`, and the registry sources live beside the site that documents them. `pnpm-workspace.yaml` stays for the lockfile settings, with no packages under it.
 
 ```
 duck-ui/
-├── apps/
-│   └── web/                  # duckui.dev — site, docs, /create editor
-│       ├── app/(marketing)/  # landing
-│       ├── app/docs/         # MDX docs
-│       ├── app/create/       # theme editor
-│       ├── public/r/         # built registry JSON (served statically)
-│       └── scripts/build-llms.ts   # llms.txt generator
-├── packages/
-│   ├── registry/             # source of truth
-│   │   ├── registry.json
-│   │   ├── themes/           # duck-dark, duck-light, holo variants
-│   │   ├── ui/               # restyled + signature components
-│   │   ├── blocks/           # hero, pricing, dashboard shells
-│   │   └── lib/              # cn, holo utilities
-│   └── skill/                # SKILL.md + references for skills.sh
-└── registry.json
+├── app/                      # the site: landing, docs, /create, /compare, /legal
+│   ├── docs/                 # installation, theming, components, blocks, motion, ai
+│   ├── create/               # theme editor
+│   ├── llms.txt/route.ts     # generated from lib/registry-docs.ts at request time
+│   └── llms-full.txt/route.ts
+├── registry/duck/            # source of truth for what ships
+│   ├── ui/                   # 61 components
+│   ├── blocks/               # 17 blocks
+│   └── hooks/use-holo-pointer.ts
+├── components/               # site-only: previews, docs chrome, brand, seo
+├── lib/registry-docs.ts      # prop tables and prose, feeds docs pages and llms-full
+├── skill/duck-ui/SKILL.md    # the skills.sh skill
+├── scripts/                  # check-registry-sync, sync-registry-homepage
+├── registry.json             # hand-maintained manifest, 81 items
+└── public/r/                 # shadcn build output, served statically
 ```
 
-Pipeline: components in `packages/registry` → `shadcn build` → static JSON in `apps/web/public/r/` → consumable by CLI/MCP. Users add to `components.json`:
+Both themes are **inline in `registry.json`** rather than files — `cssVars` for the three token blocks and a `css` object of 24 rules. That is what lets `npx shadcn add @duck/theme` merge tokens into a project's existing stylesheet instead of overwriting it.
+
+Pipeline: `pnpm build` runs `check:registry` → `sync-registry-homepage` → `shadcn build` → `next build`. The first script is the one that matters day to day: it asserts that `registry.json`, `lib/registry-docs.ts`, the previews, the previews barrel, the README tables and `SKILL.md` all name the same set of items, because nothing else links those six places. The second rewrites `registry.json`'s `homepage` from `NEXT_PUBLIC_SITE_URL` so the published JSON never claims a domain the site left.
+
+Users add to `components.json`:
 
 ```json
-{ "registries": { "@duck": "https://duckui.dev/r/{name}.json" } }
+{ "registries": { "@duck": "https://duckui.davideghiotto.it/r/{name}.json" } }
 ```
 
-Stack: Next.js 15, Tailwind v4, Radix (base library), TypeScript. Same as shadcn — least friction for the target audience.
+Stack: Next.js 15 (`output: "standalone"`), React 19, Tailwind v4, Radix for the six components that need a primitive, TypeScript. Deployed by Docker to Dokploy at `duckui.davideghiotto.it`. Docs are TSX pages over `lib/registry-docs.ts`, not MDX — the prop tables had to be one typed source that the docs pages, `/llms-full.txt` and the sync check could all read.
 
 ---
 
-## 5. V1 scope (theme-first)
+## 5. V1 scope — planned, and what actually shipped
 
-**Theme**: `duck-dark` (flagship) + `duck-light`. Full shadcn CSS-variable contract so *every* existing shadcn component looks duck-styled the moment the theme is installed: `npx shadcn add @duck/theme`.
+V1 was theme-first and deliberately small: two themes, ten components, three blocks. All of it shipped, and then six releases kept going. **State as of 2026-08-06: 81 registry items — 61 components, 17 blocks, 2 themes, 1 hook.**
 
-**~10 signature components** (things shadcn doesn't have, or radically restyled):
+**Themes**: `@duck/theme` (dark flagship, light derived) shipped as planned, and `@duck/theme-noir` came later as the proof that the token contract holds — the same variables with the sticker vocabulary dialled to zero, dark in both modes, and not one component's markup changed. The theme also carries the utility classes, the keyframes and a print layer, which the plan did not anticipate.
 
-1. `holo-button` — CTA with animated iridescent border
-2. `sticker-card` — thick border + glow, the ghost-sticker look
-3. `holo-badge`
-4. `glow-input` — holo focus ring
-5. `duck-spinner` — waddling duck loader
-6. `code-window` — macOS-style code block for tutorial content (perfect for your videos)
-7. `video-card` — YouTube embed card with duration/views (dogfood on your own site)
-8. `announcement` — pill banner with shimmer
-9. `terminal` — animated typed CLI demo
-10. `theme-switcher` — dark/light/holo toggle
+**Components**: the ten above all exist, except that `theme-switcher` toggles light / dark / system rather than dark / light / holo — holo is an accent inside a theme, not a mode a reader picks. The other fifty-one came from four migration reports (`docs/feature-requests/`), each one an app built on the registry that recorded what it had to hand-write instead. That is where the inputs, the media controls, the HUD family, `duck-viewport`, `duck-command` and `duck-chart` came from. All four reports are now closed.
 
-**Blocks (3)**: hero, pricing, dashboard shell — all duck-themed.
+**Blocks**: three planned, seventeen shipped. The last twelve landed in one release ([the block layer](releases/2026-08-04-the-block-layer.md)) once the ratio became the problem — sixty-one components of which the blocks only ever composed eleven, so every consuming app was writing the joins by hand.
 
-**Docs**: install per framework, theming, each component, "for AI" page (llms.txt, MCP setup, skill install).
+**Docs**: `/docs/installation`, `/docs/theming`, `/docs/components` (+ a page per item), `/docs/blocks`, `/docs/motion`, `/docs/ai`. Plus what the plan did not list: `/compare` and five comparison pages, `/legal` (terms, privacy, cookies), and structured data across all of it.
 
-**/create editor (V1-lite)**: pick base hue / radius / glow intensity / holo on-off → live preview on real components → export as `globals.css` + `components.json` snippet + `npx shadcn add` command with a preset code (mirroring shadcn's `--preset [CODE]` mechanic: encode the config in a shareable short code, e.g. `duckui.dev/create?c=XYZ`).
+**/create editor**: shipped as scoped. Six sliders — hue, chroma, lightness, radius, glow, sticker border — driving live components, with the generated `.dark` token block to copy and a share link. The preset code is the six values joined by hyphens and carried in `?c=`, which is the plan's `--preset [CODE]` mechanic without a server or a code registry behind it. `decode()` re-applies the slider bounds, because that parameter is the only untrusted input on the site.
 
 ---
 
@@ -147,15 +143,26 @@ Cross-links: dacoder.it → duckui.dev, docs footer → channel, `video-card` co
 
 ## 8. Roadmap
 
-**Phase 0 — Foundation (week 1-2)**: name/domain final, monorepo scaffold, theme tokens, landing page teaser + waitlist.
+Phases 0 to 2 are done. Phase 3 shipped its product half and none of its distribution half — the editor exists, the launch has not happened, and that is the whole of what is left.
 
-**Phase 1 — Theme + registry (week 3-5)**: duck-dark/light complete, registry build pipeline live, 5 components, docs skeleton, llms.txt.
+**Phase 0 — Foundation. Done.** Name, domain and deploy at `duckui.davideghiotto.it`. Flat Next.js app instead of the monorepo. No waitlist — the site shipped with the components on it, which is a better teaser than a form.
 
-**Phase 2 — AI surface (week 6-7)**: MCP docs, skill published, remaining components + blocks.
+**Phase 1 — Theme + registry. Done.** Both themes, the build pipeline, the sync check, docs, `llms.txt` and `llms-full.txt`.
 
-**Phase 3 — /create + launch (week 8-10)**: theme editor, preset codes, Registry Directory submission, launch video.
+**Phase 2 — AI surface. Done.** `/docs/ai` covers the MCP path, the skill is written and published, and the registry grew to 61 components and 17 blocks against four real applications.
 
-**Later**: paid pro blocks (shadcn-style monetization), Figma kit, community registry submissions, dedicated MCP server.
+**Phase 3 — Launch. Editor done, distribution not started.** What is actually blocking, in order:
+
+1. **Screenshots** — 5–8 at 1920×1080. Needed by Product Hunt, Peerlist and every gallery.
+2. **A 60–90s demo video.** The theme editor is the obvious cut. The channel is where it lives.
+3. **Stand up Umami.** `lib/analytics.ts` and the three events ship already; the instance and the two build arguments do not exist, so today a submission cannot be attributed.
+4. **A 1024×1024 logo export.** Everything else in the asset set is done.
+5. **Tier 0 submissions** — shadcn Registry Index and Directory, registry.directory, the awesome-shadcn lists, GitHub topics and repo metadata, verify the skills.sh listing. Free, and the highest-leverage listings that exist for this product.
+6. **Tier 1 as one coordinated launch**, anchored on the video.
+
+Full target list and the copy for each surface: [`docs/marketing/distribution.md`](marketing/distribution.md).
+
+**Later**: use-case pages (`/for/...`), paid pro blocks, Figma kit, community registry submissions, a dedicated MCP server. None of these are gating anything.
 
 ---
 
@@ -164,14 +171,17 @@ Cross-links: dacoder.it → duckui.dev, docs footer → channel, `video-card` co
 - **shadcn schema churn** — you're downstream of their registry spec; pin CLI versions, watch changelog. Mitigation: the spec is now stable and versioned.
 - **"Another shadcn theme" dismissal** — mitigation: signature components + /create + video-native docs are real differentiation; the theme alone isn't the product.
 - **Scope creep toward full parity** — resist restyling all 60 components; the theme covers them automatically. Only hand-build what's *signature*.
-- **Naming/trademark** — check `duck ui` collisions on npm/GitHub before committing (there are minor `duckui` projects; verify).
+- **Naming/trademark** — checked and accepted. The minor `duckui` projects on npm and GitHub do not collide with a registry that publishes no package; the namespace is `@duck` and the domain is owned.
 
 ---
 
 ## 10. Immediate next actions
 
-1. Verify name availability (npm org, GitHub org, domain)
-2. Scaffold monorepo + define the ~40 CSS variables of `duck-dark`
-3. Build `sticker-card` + `holo-button` as proof-of-vibe
-4. Landing page with the two components live on it
-5. Record video #1
+The product is ahead of its distribution by a wide margin. Nothing on this list is a component.
+
+1. Shoot 5–8 screenshots at 1920×1080 — landing, a docs page, the theme editor, two or three blocks in place.
+2. Cut the 60–90s demo video. Publish it on the channel; the launch is the video.
+3. Stand up Umami and set the two build arguments, so the launch is measurable rather than felt.
+4. Export the 1024×1024 logo.
+5. Submit Tier 0 in full — it is free, it takes an afternoon, and the shadcn Registry Index is the single highest-leverage listing available.
+6. Then Tier 1, as one coordinated day.
