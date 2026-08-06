@@ -57,7 +57,8 @@ skill: `skills add dacoder/duck-ui`.
 | Feedback | `quack-toast`, `sticker-skeleton`, `sticker-progress`, `empty-pond`, `duck-thinking`, `sticker-tooltip` |
 | Foundation | `theme`, `theme-noir`, `use-holo-pointer` |
 
-This table is hand-kept. `registry.json` and `/llms-full.txt` are generated, so they cannot drift.
+Both tables below are hand-written prose over a generated list — `pnpm check:registry` fails if a
+registry item is missing from either one. `registry.json` and `/llms-full.txt` are generated outright.
 
 ## Blocks
 
@@ -71,6 +72,18 @@ pulls in every component it renders.
 | `duck-dashboard` | App shell: sidebar drawer, sticky top bar, stat row, your page as children |
 | `duck-site-header` | Content-site top bar: identity, anchors, one action, a real drawer below `lg` |
 | `duck-site-footer` | Content-site bottom: identity and a sentence, link columns, a hairline, the small print |
+| `duck-faq` | Questions and their `FAQPage` JSON-LD from one array, so markup and structured data cannot drift |
+| `duck-logo-wall` | The proof strip, static or marquee. Every logo sized by height alone, brand colour flattened until hover |
+| `duck-cta-band` | The closing ask: one headline, one button, an optional email row that is a plain `<form>` |
+| `duck-workbench` | Editor shell: icon tool rail, pan-and-zoom canvas, inspector, status strip |
+| `duck-chat-thread` | Transcript, wait state and composer as one surface. Follows the stream only from the bottom |
+| `duck-media-shelf` | Rows of artwork from one array. One tile width for the whole wall, skeletons in the tiles' ratio |
+| `duck-player-bar` | The docked transport: fixed middle column, read-out that follows the drag, opt-in shortcuts |
+| `duck-list-view` | The admin list and the four states its data is in — including two different empty screens |
+| `duck-settings-panel` | Label-beside-control rows, and a save bar that appears only when there is something to save |
+| `duck-auth-card` | Sign in with a code: address first, digits second, focus following the step |
+| `duck-upload` | The queue behind the drop zone. You own the transport; it is handed `onProgress` and an `AbortSignal` |
+| `duck-changelog` | Releases down the timeline spine, each anchored on its version so it can be linked |
 
 ```bash
 npx shadcn@latest add @duck/duck-hero
