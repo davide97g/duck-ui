@@ -101,6 +101,35 @@ if (registryBlocks.length === blockDocSlugs.length) {
   }
 }
 
+/* ---- the README tables list every item ---- */
+
+// The README is the only inventory written by hand rather than generated, and
+// it is the first thing a visitor reads. It drifted once already: the block
+// layer shipped twelve blocks and the table kept listing five. Names only —
+// what the row *says* stays prose.
+const readme = readFileSync("README.md", "utf8");
+const undocumented = registry.items
+  .filter((item) => !readme.includes(`\`${item.name}\``))
+  .map((item) => item.name);
+if (undocumented.length) {
+  fail(`in registry.json but not README.md: ${undocumented.join(", ")}`);
+}
+
+/* ---- the skill knows every component and block ---- */
+
+// SKILL.md is what an assistant reads instead of the docs site, so a component
+// missing from it is a component the assistant will not use — or will invent
+// props for. It names exports, not slugs, so match either spelling.
+const skill = readFileSync("skill/duck-ui/SKILL.md", "utf8");
+const pascal = (name) =>
+  name.replace(/(^|-)([a-z])/g, (_, __, letter) => letter.toUpperCase());
+const unskilled = [...registryUi, ...registryBlocks].filter(
+  (name) => !skill.includes(pascal(name)) && !skill.includes(name)
+);
+if (unskilled.length) {
+  fail(`in registry.json but not skill/duck-ui/SKILL.md: ${unskilled.join(", ")}`);
+}
+
 /* ---- every declared file actually exists ---- */
 
 for (const item of registry.items) {
