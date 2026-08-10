@@ -12,7 +12,8 @@ build
 .DS_Store
 npm-debug.log*
 tsconfig.tsbuildinfo
-README.md
+# README.md stays in the build context: scripts/check-registry-sync.mjs reads it
+# as one of the two hand-written inventories, and that check runs inside `pnpm build`.
 docs
 .vscode
 .idea
